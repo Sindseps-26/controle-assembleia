@@ -189,7 +189,6 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   </div>
 
   <span id="contador">0 lidos</span>
-  <button class="btn-sm" id="btn-digitar">✎ Manual</button>
   <button class="btn-sm" id="btn-exportar">⬇ CSV</button>
   <button class="btn-sm" id="btn-limpar">✕</button>
 </div>
@@ -199,40 +198,6 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   <div class="icone" id="vered-icone" aria-hidden="true"></div>
   <div class="titulo" id="vered-titulo"></div>
   <div class="detalhe" id="vered-detalhe"></div>
-</div>
-
-<!-- Modal Entrada manual -->
-<div id="modal-manual" role="dialog" aria-modal="true" aria-label="Entrada manual">
-  <div id="modal-inner">
-    <h3>Registrar sem QR Code</h3>
-    <label class="ml" for="m-nome">Nome completo</label>
-    <input id="m-nome" class="inp-modal" type="text" placeholder="Nome completo"
-      autocomplete="name" maxlength="60">
-    <span class="err-txt" id="m-nome-err" role="alert"></span>
-    <label class="ml" for="m-mat">Matrícula</label>
-    <input id="m-mat" class="inp-modal" type="text" placeholder="Número da matrícula"
-      autocomplete="off" maxlength="30">
-    <span class="err-txt" id="m-mat-err" role="alert"></span>
-    <label class="ml" for="m-org">Órgão de atuação</label>
-    <input id="m-org" class="inp-modal" type="text" placeholder="Ex: SMS, SECULT, SEMGE..."
-      autocomplete="off" maxlength="60">
-    <span class="err-txt" id="m-org-err" role="alert"></span>
-
-    <div class="lgpd-modal-box">
-      <strong>Termo de Consentimento LGPD</strong>
-      Os dados serão usados exclusivamente para cômputo de quórum e formação da ata/lista oficial da Assembleia Geral.
-      <label class="lgpd-check-lbl" for="m-lgpd">
-        <input type="checkbox" id="m-lgpd">
-        <span>Servidor autoriza a coleta de dados para registro de presença.</span>
-      </label>
-    </div>
-    <span class="err-txt" id="m-lgpd-err" role="alert"></span>
-
-    <div class="modal-btns">
-      <button class="btn-modal-ok" id="m-ok">Registrar</button>
-      <button class="btn-modal-cancel" id="m-cancel">Cancelar</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -10735,81 +10700,6 @@ document.getElementById('btn-limpar').addEventListener('click',function(){
   }
 });
 
-/* ---- Modal Entrada manual ---- */
-/* ---- Modal Entrada manual ---- */
-var mNome=document.getElementById('m-nome');
-var mMat=document.getElementById('m-mat');
-var mOrg=document.getElementById('m-org');
-var mLgpd=document.getElementById('m-lgpd');
-var mErrNome=document.getElementById('m-nome-err');
-var mErrMat=document.getElementById('m-mat-err');
-var mErrOrg=document.getElementById('m-org-err');
-var mErrLgpd=document.getElementById('m-lgpd-err');
-var modal=document.getElementById('modal-manual');
-
-if(mLgpd){
-  mLgpd.addEventListener('change', function(){
-    if(this.checked && mErrLgpd) mErrLgpd.textContent = '';
-  });
-}
-
-document.getElementById('btn-digitar').addEventListener('click',function(){
-  mNome.value='';mMat.value='';mOrg.value='';
-  if(mLgpd) mLgpd.checked=false;
-  mErrNome.textContent='';mErrMat.textContent='';mErrOrg.textContent='';
-  if(mErrLgpd) mErrLgpd.textContent='';
-  mNome.classList.remove('erro');mMat.classList.remove('erro');mOrg.classList.remove('erro');
-  modal.style.display='flex';
-  setTimeout(function(){mNome.focus();},50);
-});
-document.getElementById('m-cancel').addEventListener('click',function(){
-  modal.style.display='none';
-});
-
-document.getElementById('m-ok').addEventListener('click',function(){
-  var nome=mNome.value.trim().toUpperCase().replace(/\|/g,'').replace(/\s+/g,' ');
-  var mat=mMat.value.trim().toUpperCase().replace(/\|/g,'');
-  var org=mOrg.value.trim().toUpperCase().replace(/\|/g,'').replace(/\s+/g,' ');
-  var ok=true;
-
-  mErrNome.textContent='';mErrMat.textContent='';mErrOrg.textContent='';
-  if(mErrLgpd) mErrLgpd.textContent='';
-  mNome.classList.remove('erro');mMat.classList.remove('erro');mOrg.classList.remove('erro');
-
-  if(!nome||nome.split(' ').filter(function(p){return p.length>0;}).length<2){
-    mErrNome.textContent='Informe nome e sobrenome.';mNome.classList.add('erro');ok=false;
-  }
-  if(!mat){
-    mErrMat.textContent='Informe a matrícula.';mMat.classList.add('erro');ok=false;
-  }
-  if(!org){
-    mErrOrg.textContent='Informe o órgão de atuação.';mOrg.classList.add('erro');ok=false;
-  }
-  if(mLgpd && !mLgpd.checked){
-    if(mErrLgpd) mErrLgpd.textContent='É obrigatório confirmar a autorização LGPD do servidor.';
-    ok=false;
-  }
-  if(!ok)return;
-
-  modal.style.display='none';
-  var existente=buscarPorMatricula(mat);
-  if(existente){
-    mostrarVeredito('aviso','JÁ REGISTRADO',
-      'Matrícula: '+existente.matricula+' | Conf: '+existente.conferente+' | Fil: '+existente.fileira);
-    return;
-  }
-  var fil=document.getElementById('inp-fileira').value||'—';
-  salvarRegistro({matricula:mat,nome:nome,orgao:org,fileira:fil,conferente:conferente||'manual',
-    hora:new Date().toLocaleTimeString('pt-BR'),origem:'manual',observacao:''});
-  mostrarVeredito('ok','OK (manual)',nome.split(' ')[0] + ' (' + mat + ')');
-});
-
-/* Enter no formulário manual */
-[mNome,mMat,mOrg].forEach(function(inp){
-  inp.addEventListener('keydown',function(e){
-    if(e.key==='Enter')document.getElementById('m-ok').click();
-  });
-});
 </script>
 </body>
 </html>
