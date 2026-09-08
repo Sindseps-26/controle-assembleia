@@ -161,7 +161,11 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   <div id="inicio-inner">
     <img src="logo-sindseps.png" alt="SINDSEPS" onerror="this.style.display='none'">
     <h2>SINDSEPS — Acesso Portaria</h2>
-    <p>Informe a senha de segurança autorizada para liberar a câmera do leitor.</p>
+    <input id="inp-mat-conf" class="inp-grande" type="text"
+      placeholder="Sua matrícula (Conferente)" autocomplete="off" maxlength="30">
+    <div id="erro-mat-conf" style="display:none;color:#ff6b6b;font-size:0.82rem;font-weight:700;margin:-6px 0 10px 0;text-align:left">
+      Informe sua matrícula de conferente.
+    </div>
 
     <input id="inp-senha-conf" class="inp-grande" type="password"
       placeholder="Digite a senha de acesso" autocomplete="current-password" maxlength="40">
@@ -10621,9 +10625,20 @@ function loopScan(){
 
 /* ---- Iniciar Câmera e Autenticar ---- */
 document.getElementById('btn-iniciar').addEventListener('click',function(){
+  var matConf=document.getElementById('inp-mat-conf') ? document.getElementById('inp-mat-conf').value.trim().toUpperCase() : '';
+  var errMat=document.getElementById('erro-mat-conf');
   var senha=document.getElementById('inp-senha-conf').value.trim();
   var errSenha=document.getElementById('erro-senha-conf');
   
+  if(!matConf){
+    if(errMat) errMat.style.display='block';
+    document.getElementById('inp-mat-conf').style.borderColor='#ff6b6b';
+    document.getElementById('inp-mat-conf').focus();
+    return;
+  }
+  if(errMat) errMat.style.display='none';
+  document.getElementById('inp-mat-conf').style.borderColor='';
+
   if(senha !== SENHA_CONFERENTE){
     errSenha.style.display='block';
     document.getElementById('inp-senha-conf').style.borderColor='#ff6b6b';
@@ -10633,8 +10648,10 @@ document.getElementById('btn-iniciar').addEventListener('click',function(){
   errSenha.style.display='none';
   document.getElementById('inp-senha-conf').style.borderColor='';
   
-  conferente='Portaria';
+  /* Identificação oficial do conferente (Ex: Conferente 123456) */
+  conferente = 'Matrícula ' + matConf;
   try{
+    localStorage.setItem('conf_matricula_operador', matConf);
     sessionStorage.setItem('conf_auth_token', 'ok_' + Date.now());
   }catch(e){}
   
