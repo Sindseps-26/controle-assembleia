@@ -1,0 +1,8 @@
+# Dependências do Node (apenas para testes locais)
+node_modules/
+package-lock.json
+
+# Logs e arquivos de sistema
+*.log
+.DS_Store
+Thumbs.db

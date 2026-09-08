@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Painel de consolidação — Assembleia Sindical">
+<title>SINDSEPS — Painel de Consolidação de Presença</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --gov-navy-950: #07101e;
+  --gov-navy-900: #0a182e;
+  --gov-navy-800: #0f2444;
+  --gov-navy-700: #15325b;
+  --gov-blue-600: #1d4ed8;
+  --gov-blue-700: #1e40af;
+  --gov-emerald-700: #047857;
+  --gov-emerald-50: #ecfdf5;
+  --gov-amber-700: #b45309;
+  --gov-amber-50: #fffbeb;
+  --gov-rose-700: #be123c;
+  --gov-rose-50: #fff1f2;
+  --gov-slate-900: #0f172a;
+  --gov-slate-800: #1e293b;
+  --gov-slate-700: #334155;
+  --gov-slate-600: #475569;
+  --gov-slate-500: #64748b;
+  --gov-slate-300: #cbd5e1;
+  --gov-slate-200: #e2e8f0;
+  --gov-slate-100: #f1f5f9;
+  --gov-slate-50: #f8fafc;
+  --white: #ffffff;
+}
+
+html, body {
+  min-height: 100%;
+  background: #f1f4f8;
+  color: var(--gov-slate-900);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header Institucional de Alta Governança */
+header {
+  background: var(--gov-navy-950);
+  color: var(--white);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  border-bottom: 3px solid var(--gov-navy-700);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-logo {
+  height: 38px;
+  background: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: block;
+}
+.header-titles h1 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #fff;
+  line-height: 1.2;
+}
+.header-titles p {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.header-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  padding: 8px 15px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.18s ease;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.btn:focus { outline: 2px solid #60a5fa; outline-offset: 2px; }
+
+.btn-upload {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #2563eb;
+}
+.btn-upload:hover { background: #1e40af; border-color: #1d4ed8; }
+
+.btn-help {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+.btn-help:hover { background: #334155; color: #fff; border-color: #475569; }
+
+.btn-ok {
+  background: #047857;
+  color: #fff;
+  border-color: #059669;
+}
+.btn-ok:hover { background: #065f46; border-color: #047857; }
+
+.btn-print {
+  background: #334155;
+  color: #fff;
+  border-color: #475569;
+}
+.btn-print:hover { background: #1e293b; border-color: #334155; }
+
+main {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+}
+
+/* Banner da Sessão / Painel da Diretoria */
+.session-bar {
+  background: #ffffff;
+  border: 1px solid var(--gov-slate-300);
+  border-left: 4px solid var(--gov-navy-800);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.session-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.session-title-wrap h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  margin: 0;
+  border: none;
+  padding: 0;
+  letter-spacing: -0.01em;
+}
+.session-badge {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+.assembleia-bar-simple {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.ass-simple-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.assembleia-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--gov-slate-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.select-assembleia {
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--gov-navy-900);
+  background: #ffffff;
+  border: 1.5px solid var(--gov-slate-300);
+  border-radius: 6px;
+  min-width: 280px;
+  max-width: 440px;
+  cursor: pointer;
+  transition: border-color 0.18s ease;
+}
+.select-assembleia:focus {
+  outline: none;
+  border-color: var(--gov-blue-600);
+}
+.btn-ass-action {
+  padding: 8px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+.btn-ass-new {
+  background: #1d4ed8;
+  color: #fff;
+  border: 1px solid #2563eb;
+}
+.btn-ass-new:hover { background: #1e40af; }
+.btn-ass-download {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #1e293b;
+}
+.btn-ass-download:hover { background: #1e293b; }
+.ass-pill-tag {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #bfdbfe;
+}
+.ass-card-title {
+  color: var(--gov-slate-900);
+  font-weight: 800;
+  font-size: 0.86rem;
+}
+.ass-card-meta {
+  color: var(--gov-slate-600);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.ass-card-sep {
+  color: var(--gov-slate-300);
+  font-size: 0.75rem;
+}
+.session-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn-action-primary {
+  background: var(--gov-blue-600);
+  color: #fff;
+  border: 1px solid var(--gov-blue-700);
+  padding: 9px 18px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.18s ease;
+}
+.btn-action-primary:hover { background: var(--gov-blue-700); }
+.btn-action-secondary {
+  background: var(--gov-slate-50);
+  color: var(--gov-slate-700);
+  border: 1px solid var(--gov-slate-300);
+  padding: 9px 16px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.btn-action-secondary:hover { background: var(--gov-slate-200); color: var(--gov-slate-900); }
+
+/* KPIS SÓBRIOS E INSTITUCIONAIS (3 INDICADORES DA DIRETORIA) */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+@media (max-width: 860px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--gov-slate-300);
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: border-color 0.18s ease;
+}
+.kpi-card:hover {
+  border-color: var(--gov-slate-500);
+}
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.kpi-caption {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--gov-slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.kpi-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+.tag-total { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.tag-qr { background: var(--gov-emerald-50); color: var(--gov-emerald-700); border: 1px solid #a7f3d0; }
+.tag-manual { background: var(--gov-amber-50); color: var(--gov-amber-700); border: 1px solid #fde68a; }
+.tag-rev { background: var(--gov-rose-50); color: var(--gov-rose-700); border: 1px solid #fecdd3; }
+.tag-conf { background: var(--gov-slate-100); color: var(--gov-slate-700); border: 1px solid var(--gov-slate-300); }
+
+.kpi-metric {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.kpi-footer {
+  font-size: 0.76rem;
+  color: var(--gov-slate-500);
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS */
+.analytics-section {
+  background: #ffffff;
+  border: 1px solid var(--gov-slate-300);
+  border-radius: 8px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.analytics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gov-slate-200);
+}
+.analytics-title h3 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  letter-spacing: -0.01em;
+}
+.analytics-title span {
+  font-size: 0.76rem;
+  color: var(--gov-slate-500);
+}
+.status-indicator {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--gov-slate-100);
+  color: var(--gov-slate-600);
+  border: 1px solid var(--gov-slate-300);
+}
+.status-indicator.active {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.chart-card {
+  background: var(--gov-slate-50);
+  border: 1px solid var(--gov-slate-200);
+  border-radius: 6px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.chart-head {
+  margin-bottom: 14px;
+}
+.chart-head strong {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--gov-slate-800);
+  display: block;
+}
+.chart-head span {
+  font-size: 0.74rem;
+  color: var(--gov-slate-500);
+}
+.chart-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  position: relative;
+}
+.chart-svg { width: 100%; height: auto; max-height: 180px; }
+.chart-empty-msg {
+  color: var(--gov-slate-500);
+  font-size: 0.82rem;
+  font-style: italic;
+  text-align: center;
+  padding: 30px 10px;
+}
+
+/* Donut Chart styles */
+.donut-center-text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.donut-num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.donut-lbl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--gov-slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 12px;
+  font-size: 0.78rem;
+  color: var(--gov-slate-700);
+  flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.dot-qr { background: #047857; }
+.dot-man { background: #d97706; }
+
+/* Horizontal Bar styles */
+.horizontal-bars { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; flex-direction: column; gap: 3px; }
+.bar-meta { display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; color: var(--gov-slate-700); }
+.bar-track { height: 10px; background: var(--gov-slate-200); border-radius: 3px; overflow: hidden; width: 100%; }
+.bar-fill { height: 100%; background: #1d4ed8; border-radius: 3px; transition: width 0.4s ease; }
+
+/* Fileiras Bar Chart Labels */
+.fileiras-axis { display: flex; justify-content: space-around; font-size: 0.74rem; color: var(--gov-slate-600); font-weight: 700; margin-top: 6px; }
+
+/* Tabelas com Acabamento de Relatório Oficial */
+.section-tables {
+  margin-top: 10px;
+}
+.section-header-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  margin: 24px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--gov-slate-300);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th {
+  background: var(--gov-navy-900);
+  color: #fff;
+  text-align: left;
+  padding: 9px 12px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--gov-slate-200);
+  vertical-align: middle;
+  color: var(--gov-slate-800);
+}
+tr:last-child td { border-bottom: none; }
+tr:nth-child(even) td { background: var(--gov-slate-50); }
+tr:hover td { background: #eff6ff; }
+.badge-manual {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  padding: 1px 6px; background: var(--gov-amber-50); color: var(--gov-amber-700);
+  border: 1px solid #fde68a; border-radius: 3px; margin-left: 6px;
+}
+.badge-obs {
+  display: inline-block; font-size: 0.68rem; padding: 1px 6px;
+  background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; border-radius: 3px;
+}
+.rev-motivo { color: var(--gov-rose-700); font-size: 0.78rem; font-weight: 600; }
+.num { font-variant-numeric: tabular-nums; }
+.tbl-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--gov-slate-300);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  margin-bottom: 22px;
+}
+.info-vazia { color: var(--gov-slate-500); font-style: italic; padding: 22px; text-align: center; }
+
+/* Status bars */
+#status-bar {
+  background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px;
+  padding: 10px 14px; margin-bottom: 16px; font-size: 0.84rem; color: #065f46;
+  display: none; font-weight: 600;
+}
+#err-bar {
+  background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px;
+  padding: 10px 14px; margin-bottom: 16px; font-size: 0.84rem; color: #9f1239;
+  display: none; font-weight: 600;
+}
+
+/* Modal de Autenticação */
+#modal-auth {
+  position: fixed; inset: 0; z-index: 9999; background: rgba(7, 16, 30, 0.96);
+  display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+#auth-box {
+  background: var(--gov-navy-900); color: #fff; border: 1px solid #334155;
+  border-radius: 8px; padding: 32px 28px; max-width: 380px; width: 92%; text-align: center;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.4);
+}
+#auth-box img { height: 42px; background: #fff; padding: 3px 8px; border-radius: 4px; margin-bottom: 14px; }
+#auth-box h2 { font-size: 1.15rem; color: #fff; margin: 0 0 6px 0; border: none; padding: 0; font-weight: 800; }
+#auth-box p { font-size: 0.82rem; color: #94a3b8; margin-bottom: 20px; line-height: 1.45; }
+.inp-auth {
+  width: 100%; padding: 11px 14px; font-size: 0.95rem; border: 1px solid #334155;
+  border-radius: 6px; background: var(--gov-navy-800); color: #fff; margin-bottom: 8px; outline: none;
+}
+.inp-auth:focus { border-color: var(--gov-blue-600); }
+#auth-err { display: none; color: #f87171; font-size: 0.8rem; font-weight: 700; margin-bottom: 14px; text-align: left; }
+.btn-auth {
+  width: 100%; padding: 12px; background: var(--gov-blue-600); color: #fff; font-size: 0.92rem;
+  font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: background 0.18s;
+}
+.btn-auth:hover { background: var(--gov-blue-700); }
+
+/* Modais de Ajuda & Upload */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); z-index: 9998;
+  display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); padding: 16px;
+}
+.modal-card {
+  background: #fff; border-radius: 8px; max-width: 640px; width: 100%; max-height: 90vh;
+  display: flex; flex-direction: column; box-shadow: 0 20px 35px rgba(0,0,0,0.25); border: 1px solid var(--gov-slate-300);
+}
+.modal-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--gov-slate-200);
+  display: flex; align-items: center; justify-content: space-between; background: var(--gov-slate-50);
+}
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+.modal-foot {
+  padding: 14px 20px; border-top: 1px solid var(--gov-slate-200);
+  display: flex; justify-content: flex-end; background: var(--gov-slate-50);
+}
+.btn-close {
+  background: transparent; border: none; font-size: 1.2rem; color: var(--gov-slate-500); cursor: pointer;
+}
+.btn-close:hover { color: var(--gov-slate-900); }
+
+.passo-card {
+  display: flex; gap: 12px; background: var(--gov-slate-50); border: 1px solid var(--gov-slate-200);
+  border-radius: 6px; padding: 12px 14px; margin-bottom: 10px;
+}
+.passo-num {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--gov-navy-800); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
+}
+.passo-txt h4 { font-size: 0.86rem; color: var(--gov-slate-900); margin-bottom: 3px; font-weight: 700; }
+.passo-txt p { font-size: 0.8rem; color: var(--gov-slate-600); line-height: 1.45; }
+
+#drop-zone {
+  border: 2px dashed var(--gov-slate-300); background: var(--gov-slate-50); border-radius: 8px;
+  padding: 28px 18px; text-align: center; cursor: pointer; transition: all 0.18s ease;
+}
+#drop-zone:hover, #drop-zone.drag-over { border-color: var(--gov-blue-600); background: #eff6ff; }
+.drop-title { font-size: 1rem; font-weight: 700; color: var(--gov-slate-900); margin-bottom: 4px; }
+.drop-sub { font-size: 0.82rem; color: var(--gov-slate-500); display: block; margin-bottom: 12px; }
+.btn-select-csv {
+  display: inline-block; padding: 8px 16px; background: var(--gov-blue-600); color: #fff;
+  font-size: 0.82rem; font-weight: 700; border-radius: 5px;
+}
+/* Rodapé Institucional da Mesa Diretora */
+footer.diretoria-footer {
+  background: var(--gov-navy-950);
+  color: #cbd5e1;
+  border-top: 3px solid var(--gov-navy-700);
+  margin-top: 50px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+}
+.footer-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 24px 24px;
+}
+.footer-brand-col {
+  max-width: 780px;
+}
+.footer-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+.footer-logo {
+  height: 36px;
+  background: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: block;
+}
+.footer-logo-row h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+.footer-logo-row p {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+.footer-desc {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+.footer-bottom-bar {
+  background: #040913;
+  border-top: 1px solid #0f1c33;
+  padding: 14px 24px;
+}
+.footer-bottom-content {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #64748b;
+  font-size: 0.76rem;
+}
+@media print {
+  footer.diretoria-footer { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Tela de Bloqueio por Senha (Mesa Diretora) -->
+<div id="modal-auth" role="dialog" aria-modal="true" aria-label="Acesso restrito à Mesa Diretora">
+  <div id="auth-box">
+    <img src="logo-sindseps.png" alt="SINDSEPS" onerror="this.style.display='none'">
+    <h2>Mesa Diretora</h2>
+    <p>Painel de consolidação restrito. Digite a senha da coordenação para acessar os dados da assembleia.</p>
+    <input id="inp-senha-painel" class="inp-auth" type="password"
+      placeholder="Senha da coordenação" autocomplete="current-password" maxlength="40">
+    <div id="auth-err">Senha incorreta. Verifique com a coordenação geral.</div>
+    <button class="btn-auth" id="btn-entrar-painel">Acessar Painel Oficial ▶</button>
+  </div>
+</div>
+
+<header>
+  <div class="header-brand">
+    <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
+    <div>
+      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
+      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — Assembleia Geral</p>
+    </div>
+  </div>
+  <div class="header-btns">
+    <button class="btn btn-help" id="btn-abrir-ajuda" title="Guia Passo a Passo da Consolidação">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      Como Funciona
+    </button>
+    <button class="btn btn-upload" id="btn-abrir-upload" title="Carregar relatórios dos conferentes">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+      Carregar Arquivos CSV
+    </button>
+    <button class="btn btn-ok" id="btn-exportar-final" title="Exportar planilha oficial consolidada">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Exportar CSV Final
+    </button>
+    <button class="btn btn-print" id="btn-imprimir" title="Imprimir lista oficial para ata em papel A4">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Imprimir Lista
+    </button>
+  </div>
+</header>
+
+<!-- Modal de Carregamento de Arquivos CSV -->
+<div id="modal-upload" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-upload">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.4rem">📂</span>
+        <h2 id="tit-upload" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Importar Relatórios dos Conferentes</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-upload" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.88rem;color:#64748b;margin-bottom:16px">
+        Selecione ou arraste para cá todos os arquivos CSV exportados pelos conferentes em suas respectivas fileiras ou portarias.
+      </p>
+
+      <!-- Drop zone dentro do modal -->
+      <div id="drop-zone" tabindex="0" role="button"
+        aria-label="Arraste CSVs dos conferentes aqui ou clique para selecionar">
+        <div class="drop-icon">📥</div>
+        <p class="drop-title">
+          Arraste aqui os arquivos CSV
+        </p>
+        <small class="drop-sub">
+          Ou clique para procurar em seu computador (selecione quantos arquivos quiser de uma vez)
+        </small>
+        <span class="btn-select-csv">
+          Procurar Arquivos no Computador 📁
+        </span>
+        <input type="file" id="file-input" accept=".csv,text/csv" multiple>
+      </div>
+
+      <div id="upload-summary" style="margin-top:12px;display:none;padding:12px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:0.86rem;font-weight:600"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" id="btn-concluir-upload" style="padding:10px 24px">Concluir Importação</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Ajuda / Passo a Passo -->
+<div id="modal-ajuda" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-ajuda">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.4rem">📖</span>
+        <h2 id="tit-ajuda" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Manual Passo a Passo da Consolidação</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-ajuda" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.88rem;color:#64748b;margin-bottom:16px">
+        Siga este roteiro simples para consolidar as presenças de todas as fileiras e gerar a ata final da assembleia sem erros nem duplicidades.
+      </p>
+
+      <div class="passo-card">
+        <div class="passo-num">1</div>
+        <div class="passo-txt">
+          <h4>Coleta dos Arquivos nos Celulares dos Conferentes</h4>
+          <p>Ao finalizar a conferência na entrada ou durante a assembleia, cada conferente clica no botão <strong>⬇ CSV</strong> no topo da tela do Leitor. Um arquivo no padrão <code>presenca_Fileira_X_...csv</code> será baixado automaticamente no smartphone dele.</p>
+        </div>
+      </div>
+
+      <div class="passo-card">
+        <div class="passo-num">2</div>
+        <div class="passo-txt">
+          <h4>Envio para o Computador da Mesa Diretora</h4>
+          <p>Cada conferente encaminha seu respectivo arquivo CSV para a coordenação (pode ser via <strong>WhatsApp Web</strong>, <strong>Pendrive</strong>, <strong>E-mail</strong> ou rede local).</p>
+        </div>
+      </div>
+
+      <div class="passo-card">
+        <div class="passo-num">3</div>
+        <div class="passo-txt">
+          <h4>Importação em Lote e Eliminação de Duplicidades</h4>
+          <p>Clique no botão azul <strong>📂 Carregar Arquivos CSV</strong> no topo da tela e selecione todos os arquivos CSV recebidos. O sistema:</p>
+          <ul style="margin:6px 0 0 18px;font-size:0.83rem;color:#475569;line-height:1.5">
+            <li>Unifica todos os servidores em uma lista única em ordem alfabética.</li>
+            <li>Detecta e bloqueia matrículas repetidas (enviando para a aba de revisão com aviso).</li>
+            <li>Calcula os KPIs em tempo real e atualiza os gráficos instantaneamente.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="passo-card">
+        <div class="passo-num">4</div>
+        <div class="passo-txt">
+          <h4>Fechamento e Ata Oficial</h4>
+          <p>Clique em <strong>⬇ Exportar CSV Final</strong> para guardar a planilha consolidada oficial ou clique em <strong>🖨️ Imprimir Lista</strong> para imprimir a ata em papel A4 formatada para assinatura.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" id="btn-entendido-ajuda" style="padding:10px 24px">Entendi, fechar guia</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nova Assembleia -->
+<div id="modal-nova-ass" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-nova-ass">
+  <div class="modal-card" style="max-width: 480px">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.3rem">🏛️</span>
+        <h2 id="tit-nova-ass" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Criar Nova Assembleia</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-nova-ass" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.84rem;color:#64748b;margin-bottom:16px">
+        Inicie uma nova assembleia independente para controle de quórum e ata individualizada.
+      </p>
+      <div style="margin-bottom:14px">
+        <label for="inp-ass-nome" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Nome da Assembleia *</label>
+        <input type="text" id="inp-ass-nome" placeholder="Ex: Campanha Salarial 2026, Prestação de Contas..." 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="80">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-ass-data" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Data da Assembleia *</label>
+        <input type="date" id="inp-ass-data" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-ass-pauta" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Pauta / Observações (opcional)</label>
+        <input type="text" id="inp-ass-pauta" placeholder="Ex: Apreciação da proposta salarial" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="120">
+      </div>
+      <div id="nova-ass-err" style="display:none;color:#dc2626;font-size:0.8rem;font-weight:700;margin-top:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-action-secondary" id="btn-cancelar-nova-ass">Cancelar</button>
+      <button class="btn btn-action-primary" id="btn-salvar-nova-ass">Criar Assembleia</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar Assembleia -->
+<div id="modal-editar-ass" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-edit-ass">
+  <div class="modal-card" style="max-width: 480px">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.3rem">✏️</span>
+        <h2 id="tit-edit-ass" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Editar Dados da Assembleia</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-edit-ass" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.84rem;color:#64748b;margin-bottom:16px">
+        Atualize os dados oficiais de identificação da assembleia ativa.
+      </p>
+      <div style="margin-bottom:14px">
+        <label for="inp-edit-ass-nome" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Nome da Assembleia *</label>
+        <input type="text" id="inp-edit-ass-nome" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="80">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-edit-ass-data" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Data da Assembleia *</label>
+        <input type="date" id="inp-edit-ass-data" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-edit-ass-pauta" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Pauta / Observações</label>
+        <input type="text" id="inp-edit-ass-pauta" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="120">
+      </div>
+      <div id="edit-ass-err" style="display:none;color:#dc2626;font-size:0.8rem;font-weight:700;margin-top:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-action-secondary" id="btn-cancelar-edit-ass">Cancelar</button>
+      <button class="btn btn-action-primary" id="btn-salvar-edit-ass">Salvar Alterações</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Histórico de Assembleias -->
+<div id="modal-historico-ass" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-hist-ass">
+  <div class="modal-card" style="max-width: 720px">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.3rem">📅</span>
+        <h2 id="tit-hist-ass" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Histórico de Assembleias</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-hist-ass" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Barra de Filtro e Métricas do Histórico -->
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <input type="text" id="busca-historico-ass" placeholder="🔍 Buscar por nome, data ou pauta..." 
+          style="flex:1;min-width:220px;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:0.85rem;outline:none">
+        <div style="font-size:0.8rem;color:#334155;font-weight:700;background:#f8fafc;padding:7px 14px;border-radius:6px;border:1px solid #cbd5e1">
+          <span id="hist-total-ass">0</span> assembleia(s) • <span id="hist-total-quorum">0</span> presenças no total
+        </div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-bottom:0">
+        <table>
+          <thead>
+            <tr>
+              <th>Assembleia</th>
+              <th style="width:100px">Data</th>
+              <th style="width:90px;text-align:right">Quórum</th>
+              <th style="width:170px;text-align:center">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-historico-ass">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-action-secondary" id="btn-fechar-hist-rodape">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- Barra Superior: Painel da Diretoria & Gestão de Assembleias -->
+  <div class="session-bar">
+    <div class="session-info">
+      <div class="session-title-wrap">
+        <h2>Painel da Diretoria</h2>
+      </div>
+
+      <!-- Controle e Ações da Assembleia: Novo e Baixar Histórico -->
+      <div class="assembleia-bar-simple">
+        <div class="ass-simple-row">
+          <label class="assembleia-label" for="sel-assembleia">Assembleia:</label>
+          <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
+
+          <button class="btn-ass-action btn-ass-new" id="btn-nova-ass" title="Cadastrar nova assembleia">
+            ➕ Nova
+          </button>
+          <button class="btn-ass-action btn-ass-download" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em CSV">
+            ⬇ Baixar Histórico
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="status-bar"></div>
+  <div id="err-bar"></div>
+
+  <!-- Cards de resumo (3 KPIS ESTRATÉGICOS DA DIRETORIA) -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-caption">Quórum Consolidado</span>
+        <span class="kpi-tag tag-total">Oficial</span>
+      </div>
+      <div class="kpi-metric" id="c-total">0</div>
+      <div class="kpi-footer" id="kpi-meta-total">100% dos servidores validados</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-caption">Validação Digital (QR)</span>
+        <span class="kpi-tag tag-qr">Certificado</span>
+      </div>
+      <div class="kpi-metric" id="c-qr">0</div>
+      <div class="kpi-footer" id="kpi-meta-qr">0% do quórum total</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-caption">Registro Manual</span>
+        <span class="kpi-tag tag-manual">Conferido</span>
+      </div>
+      <div class="kpi-metric" id="c-manual">0</div>
+      <div class="kpi-footer" id="kpi-meta-manual">0% do quórum total</div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS -->
+  <section id="sec-graficos" class="analytics-section">
+    <div class="analytics-header">
+      <div class="analytics-title">
+        <h3>Métricas e Distribuição de Participação</h3>
+        <span>Dados analíticos consolidados em tempo real a partir dos relatórios homologados</span>
+      </div>
+      <span class="status-indicator" id="badge-grafico-status">Aguardando dados</span>
+    </div>
+
+    <div class="charts-grid">
+      <!-- Gráfico 1: Origem das Presenças (Donut Chart) -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Método de Homologação</strong>
+          <span>Proporção entre Credencial Digital e Entrada Manual</span>
+        </div>
+        <div class="chart-container" id="chart-origem-box">
+          <svg id="svg-donut" viewBox="0 0 240 240" class="chart-svg"></svg>
+          <div id="donut-center-info" class="donut-center-text">
+            <span id="donut-total" class="donut-num">0</span>
+            <span class="donut-lbl">Validado(s)</span>
+          </div>
+        </div>
+        <div class="chart-legend" id="donut-legend">
+          <div class="legend-item"><span class="legend-dot dot-qr"></span> QR Code: <strong id="leg-qr-val">0 (0%)</strong></div>
+          <div class="legend-item"><span class="legend-dot dot-man"></span> Manual: <strong id="leg-man-val">0 (0%)</strong></div>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Top Órgãos de Atuação (Barras Horizontais) -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Representatividade por Secretaria / Órgão</strong>
+          <span>Participação por órgão da administração municipal</span>
+        </div>
+        <div class="chart-container" style="padding:10px 0" id="chart-orgaos-box">
+          <div id="bars-orgaos" class="horizontal-bars">
+            <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico 3: Produção por Fileira / Conferente (Barras Verticais) -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Volume por Fileira / Portaria</strong>
+          <span>Distribuição de fluxo por posto de conferência</span>
+        </div>
+        <div class="chart-container" id="chart-fileiras-box">
+          <svg id="svg-barras-fileiras" viewBox="0 0 340 180" class="chart-svg" style="max-height:180px"></svg>
+        </div>
+        <div id="fileiras-labels" class="fileiras-axis"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Tabelas Oficiais -->
+  <div class="section-tables">
+    <!-- Tabela de presentes -->
+    <section id="sec-presentes">
+      <div class="section-header-title">
+        <span>Lista Geral de Servidores Presentes (Ordem Alfabética)</span>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tbl-presentes">
+          <thead><tr>
+            <th style="width:40px">#</th>
+            <th style="width:110px">Matrícula</th>
+            <th>Nome do Servidor</th>
+            <th>Órgão de Atuação</th>
+            <th style="width:90px">Fileira</th>
+            <th style="width:130px">Conferente</th>
+            <th style="width:75px">Hora</th>
+            <th style="width:80px">Origem</th>
+            <th>Observações</th>
+          </tr></thead>
+          <tbody id="tbody-presentes">
+            <tr><td colspan="9" class="info-vazia">Nenhum arquivo consolidado ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Registros a revisar -->
+    <section id="sec-revisar">
+      <div class="section-header-title">
+        <span>Ocorrências de Auditoria / Registros Bloqueados</span>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tbl-revisar">
+          <thead><tr>
+            <th style="width:110px">Matrícula</th>
+            <th>Nome do Servidor</th>
+            <th>Órgão</th>
+            <th>Motivo da Retenção</th>
+            <th>Arquivo de Origem</th>
+            <th>Conferente</th>
+            <th style="width:75px">Hora</th>
+          </tr></thead>
+          <tbody id="tbody-revisar">
+            <tr><td colspan="7" class="info-vazia">Nenhuma ocorrência ou irregularidade detectada.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Conferentes -->
+    <section id="sec-conferentes">
+      <div class="section-header-title">
+        <span>Relatórios e Arquivos Processados por Conferente</span>
+      </div>
+      <div class="tbl-wrap">
+        <table id="tbl-conf">
+          <thead><tr>
+            <th>Conferente Responsável</th>
+            <th>Nome do Arquivo CSV</th>
+            <th style="width:120px;text-align:right">Registros Válidos</th>
+          </tr></thead>
+          <tbody id="tbody-conf">
+            <tr><td colspan="3" class="info-vazia">Nenhum relatório de conferente processado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+</main>
+
+<!-- Rodapé Institucional da Mesa Diretora -->
+<footer class="diretoria-footer">
+  <div class="footer-container">
+    <!-- Governança Institucional -->
+    <div class="footer-brand-col">
+      <div class="footer-logo-row">
+        <img src="logo-sindseps.png" alt="SINDSEPS" class="footer-logo" onerror="this.style.display='none'">
+        <div>
+          <h4>SINDSEPS — Mesa Diretora</h4>
+          <p>Consolidação e Apuração Estatutária de Assembleias</p>
+        </div>
+      </div>
+      <p class="footer-desc">
+        Módulo exclusivo da coordenação geral para validação de quórum, eliminação de duplicidades e homologação oficial das deliberações em assembleias do funcionalismo público municipal.
+      </p>
+    </div>
+  </div>
+
+  <!-- Barra Inferior de Direitos & Versão -->
+  <div class="footer-bottom-bar">
+    <div class="footer-bottom-content">
+      <small>© 2026 SINDSEPS — Sindicato dos Servidores da Prefeitura do Salvador. Todos os direitos reservados.</small>
+      <small>Módulo da Mesa Diretora • Salvador/BA</small>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ========================================================
+   CONFIGURAÇÃO DE ACESSO
+======================================================== */
+var SENHA_PAINEL = 'Sindseps#2026'; /* Senha da Mesa Diretora / Coordenação (Sindseps#2026) */
+/* ======================================================== */
+
+/* ---- Controle de Autenticação ---- */
+(function(){
+  var authed = false;
+  try {
+    authed = sessionStorage.getItem('painel_auth') === 'true';
+  } catch(e){}
+  
+  var modal = document.getElementById('modal-auth');
+  if(authed && modal){
+    modal.style.display = 'none';
+  }
+  
+  document.getElementById('btn-entrar-painel').addEventListener('click', function(){
+    var s = document.getElementById('inp-senha-painel').value.trim();
+    var err = document.getElementById('auth-err');
+    if(s === SENHA_PAINEL){
+      err.style.display = 'none';
+      try { sessionStorage.setItem('painel_auth', 'true'); } catch(e){}
+      modal.style.display = 'none';
+    } else {
+      err.style.display = 'block';
+      document.getElementById('inp-senha-painel').style.borderColor = '#f87171';
+      document.getElementById('inp-senha-painel').focus();
+    }
+  });
+
+  document.getElementById('inp-senha-painel').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') document.getElementById('btn-entrar-painel').click();
+  });
+})();
+
+/* ========================================================
+   SISTEMA DE GESTÃO DE ASSEMBLEIAS (SEPARAÇÃO & HISTÓRICO)
+======================================================== */
+var STORAGE_KEY_ASSEMBLEIAS = 'sindseps_assembleias_v1';
+var STORAGE_KEY_ATIVA = 'sindseps_ass_ativa_id';
+
+var assembleias = [];
+var assembleiaAtiva = null;
+
+/* ---- Estado da Assembleia Ativa ---- */
+var presentes=[];   /* {matricula, nome, orgao, fileira, conferente, hora, origem, observacao, arquivo} */
+var revisar=[];     /* {matricula, nome, orgao, motivo, arquivo, conferente, hora} */
+var conferentes={}; /* {nomeArquivo: {nome, count}} */
+
+function carregarAssembleias(){
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY_ASSEMBLEIAS);
+    if(raw) assembleias = JSON.parse(raw);
+  } catch(e){ assembleias = []; }
+
+  if(!Array.isArray(assembleias) || assembleias.length === 0){
+    var hoje = new Date().toISOString().slice(0, 10);
+    var padrao = {
+      id: 'ass_' + Date.now(),
+      nome: 'Assembleia Geral Ordinária',
+      data: hoje,
+      pauta: 'Prestação de Contas e Deliberações Gerais',
+      presentes: [],
+      revisar: [],
+      conferentes: {},
+      criadoEm: new Date().toISOString()
+    };
+    assembleias = [padrao];
+    salvarTodasAssembleias();
+  }
+
+  var idAtiva = null;
+  try { idAtiva = localStorage.getItem(STORAGE_KEY_ATIVA); } catch(e){}
+
+  assembleiaAtiva = assembleias.find(function(a){ return a.id === idAtiva; }) || assembleias[0];
+  try { localStorage.setItem(STORAGE_KEY_ATIVA, assembleiaAtiva.id); } catch(e){}
+
+  carregarDadosDaAssembleiaAtiva();
+  renderizarSelectAssembleias();
+}
+
+function carregarDadosDaAssembleiaAtiva(){
+  if(!assembleiaAtiva) return;
+  presentes = assembleiaAtiva.presentes || [];
+  revisar = assembleiaAtiva.revisar || [];
+  conferentes = assembleiaAtiva.conferentes || {};
+}
+
+function salvarTodasAssembleias(){
+  try {
+    localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias));
+  } catch(e){
+    console.error('Erro ao salvar assembleias:', e);
+  }
+}
+
+function salvarAssembleiaAtiva(){
+  if(!assembleiaAtiva) return;
+  assembleiaAtiva.presentes = presentes;
+  assembleiaAtiva.revisar = revisar;
+  assembleiaAtiva.conferentes = conferentes;
+  assembleiaAtiva.atualizadoEm = new Date().toISOString();
+  salvarTodasAssembleias();
+}
+
+function alternarAssembleia(id){
+  var encontrada = assembleias.find(function(a){ return a.id === id; });
+  if(!encontrada) return;
+
+  salvarAssembleiaAtiva();
+
+  assembleiaAtiva = encontrada;
+  try { localStorage.setItem(STORAGE_KEY_ATIVA, assembleiaAtiva.id); } catch(e){}
+
+  carregarDadosDaAssembleiaAtiva();
+  renderizarSelectAssembleias();
+  atualizarUI();
+  mostrarOk('Assembleia ativa: ' + assembleiaAtiva.nome);
+}
+
+function formatarDataBR(dataStr){
+  if(!dataStr) return '—';
+  var partes = dataStr.split('-');
+  if(partes.length === 3) return partes[2] + '/' + partes[1] + '/' + partes[0];
+  return dataStr;
+}
+
+function renderizarSelectAssembleias(){
+  var sel = document.getElementById('sel-assembleia');
+  if(!sel) return;
+
+  if(!assembleias.length){
+    sel.innerHTML = '<option value="">Nenhuma assembleia cadastrada</option>';
+    return;
+  }
+
+  sel.innerHTML = assembleias.map(function(a){
+    var selAttr = (assembleiaAtiva && a.id === assembleiaAtiva.id) ? ' selected' : '';
+    var infoData = formatarDataBR(a.data);
+    var label = esc(a.nome) + (infoData && infoData !== '—' ? ' • ' + infoData : '');
+    return '<option value="' + esc(a.id) + '"' + selAttr + '>' + label + '</option>';
+  }).join('');
+}
+
+function baixarHistoricoCompletoCSV(){
+  if(!assembleias || !assembleias.length){
+    alert('Nenhuma assembleia encontrada para exportar.');
+    return;
+  }
+
+  var bom = '\uFEFF';
+  var cab = 'assembleia_id;assembleia_nome;assembleia_data;pauta;matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
+  var linhas = [];
+
+  assembleias.forEach(function(ass){
+    var assId = ass.id || '';
+    var assNome = ass.nome || 'Assembleia';
+    var assData = ass.data || '';
+    var assPauta = ass.pauta || '';
+    var listaPres = (ass.presentes || []).slice().sort(function(a,b){
+      return (a.nome || '').localeCompare(b.nome || '', 'pt-BR');
+    });
+
+    if(!listaPres.length){
+      // Linha registrando a assembleia mesmo que não haja presenças ainda
+      linhas.push([
+        assId, assNome, assData, assPauta,
+        '', '— SEM REGISTROS DE PRESENÇA —', '', '', '', '', '', ''
+      ].map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';'));
+    } else {
+      listaPres.forEach(function(p){
+        linhas.push([
+          assId,
+          assNome,
+          assData,
+          assPauta,
+          p.matricula || '',
+          p.nome || '',
+          p.orgao || '—',
+          p.fileira || '',
+          p.conferente || '',
+          p.hora || '',
+          p.origem || 'qr',
+          p.observacao || ''
+        ].map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';'));
+      });
+    }
+  });
+
+  var blob = new Blob([bom + cab + linhas.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var anoRef = new Date().getFullYear();
+  a.href = url;
+  a.download = 'historico_assembleias_sindseps_' + anoRef + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  mostrarOk('Histórico de assembleias exportado com sucesso (' + assembleias.length + ' assembleias).');
+}
+
+function criarNovaAssembleia(nome, data, pauta){
+  salvarAssembleiaAtiva();
+
+  var nova = {
+    id: 'ass_' + Date.now(),
+    nome: nome,
+    data: data || new Date().toISOString().slice(0, 10),
+    pauta: pauta || '',
+    presentes: [],
+    revisar: [],
+    conferentes: {},
+    criadoEm: new Date().toISOString()
+  };
+
+  assembleias.unshift(nova); // coloca no topo
+  assembleiaAtiva = nova;
+  try { localStorage.setItem(STORAGE_KEY_ATIVA, nova.id); } catch(e){}
+
+  salvarTodasAssembleias();
+  carregarDadosDaAssembleiaAtiva();
+  renderizarSelectAssembleias();
+  atualizarUI();
+  mostrarOk('Nova assembleia criada: ' + nova.nome);
+}
+
+function excluirAssembleia(id){
+  if(assembleias.length <= 1){
+    alert('Não é possível excluir a única assembleia existente.');
+    return;
+  }
+  var alvo = assembleias.find(function(a){ return a.id === id; });
+  if(!alvo) return;
+
+  if(!confirm('Deseja realmente excluir a assembleia "' + alvo.nome + '" e todos os seus registros de presença?')) return;
+
+  assembleias = assembleias.filter(function(a){ return a.id !== id; });
+  if(assembleiaAtiva && assembleiaAtiva.id === id){
+    assembleiaAtiva = assembleias[0];
+    try { localStorage.setItem(STORAGE_KEY_ATIVA, assembleiaAtiva.id); } catch(e){}
+    carregarDadosDaAssembleiaAtiva();
+  }
+
+  salvarTodasAssembleias();
+  renderizarSelectAssembleias();
+  renderizarModalHistorico(document.getElementById('busca-historico-ass') ? document.getElementById('busca-historico-ass').value : '');
+  atualizarUI();
+  mostrarOk('Assembleia excluída.');
+}
+
+function exportarCSVAssembleia(assObj){
+  var lista = (assObj.presentes || []).slice().sort(function(a,b){return a.nome.localeCompare(b.nome,'pt-BR');});
+  if(!lista.length){ alert('Esta assembleia ainda não possui presenças registradas.'); return; }
+  var bom = '\uFEFF';
+  var cab = 'matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
+  var linhas = lista.map(function(p){
+    return [p.matricula, p.nome, p.orgao||'—', p.fileira, p.conferente, p.hora, p.origem, p.observacao||'']
+      .map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';');
+  }).join('\n');
+  var blob = new Blob([bom + cab + linhas], {type: 'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var nomeSeguro = assObj.nome.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+  a.href = url;
+  a.download = 'presenca_' + nomeSeguro + '_' + (assObj.data || 'data') + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function renderizarModalHistorico(termoBusca){
+  var tbody = document.getElementById('tbody-historico-ass');
+  if(!tbody) return;
+
+  var termo = (termoBusca || '').toLowerCase().trim();
+  var filtradas = assembleias.filter(function(a){
+    if(!termo) return true;
+    var n = (a.nome || '').toLowerCase();
+    var d = (formatarDataBR(a.data) || '').toLowerCase();
+    var p = (a.pauta || '').toLowerCase();
+    return n.indexOf(termo) !== -1 || d.indexOf(termo) !== -1 || p.indexOf(termo) !== -1;
+  });
+
+  var elTotAss = document.getElementById('hist-total-ass');
+  if(elTotAss) elTotAss.textContent = assembleias.length;
+  var elTotQ = document.getElementById('hist-total-quorum');
+  if(elTotQ){
+    var soma = assembleias.reduce(function(acc, cur){ return acc + (cur.presentes ? cur.presentes.length : 0); }, 0);
+    elTotQ.textContent = soma;
+  }
+
+  if(!filtradas.length){
+    tbody.innerHTML = '<tr><td colspan="4" class="info-vazia">Nenhuma assembleia encontrada para esta busca.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtradas.map(function(a){
+    var isAtiva = assembleiaAtiva && a.id === assembleiaAtiva.id;
+    var qte = (a.presentes ? a.presentes.length : 0);
+    var badgeAtiva = isAtiva ? ' <span class="session-badge">Ativa</span>' : '';
+    return '<tr>' +
+      '<td><strong>' + esc(a.nome) + '</strong>' + badgeAtiva + 
+        (a.pauta ? '<br><small style="color:#64748b">' + esc(a.pauta) + '</small>' : '') + '</td>' +
+      '<td class="num">' + formatarDataBR(a.data) + '</td>' +
+      '<td class="num" style="text-align:right"><strong>' + qte + '</strong></td>' +
+      '<td style="text-align:center">' +
+        (!isAtiva ? '<button class="btn btn-action-secondary" style="padding:4px 8px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Ativar</button> ' : '') +
+        '<button class="btn btn-action-primary" style="padding:4px 8px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')">⬇ CSV</button> ' +
+        (assembleias.length > 1 ? '<button class="btn btn-danger" style="padding:4px 8px;font-size:0.75rem;color:#e11d48" onclick="excluirAssembleia(\'' + a.id + '\')">🗑️</button>' : '') +
+      '</td>' +
+    '</tr>';
+  }).join('');
+}
+window._exportarAss = function(id){
+  var a = assembleias.find(function(x){ return x.id === id; });
+  if(a) exportarCSVAssembleia(a);
+};
+
+/* Controle dos Modais de Assembleias */
+var modalNovaAss = document.getElementById('modal-nova-ass');
+var modalHistoricoAss = document.getElementById('modal-historico-ass');
+var modalEditarAss = document.getElementById('modal-editar-ass');
+
+function abrirModalNovaAss(){
+  document.getElementById('inp-ass-nome').value = '';
+  document.getElementById('inp-ass-data').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('inp-ass-pauta').value = '';
+  document.getElementById('nova-ass-err').style.display = 'none';
+  if(modalNovaAss) modalNovaAss.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('inp-ass-nome').focus(); }, 60);
+}
+function fecharModalNovaAss(){
+  if(modalNovaAss) modalNovaAss.style.display = 'none';
+}
+
+function abrirModalHistorico(){
+  var busca = document.getElementById('busca-historico-ass');
+  if(busca) busca.value = '';
+  renderizarModalHistorico();
+  if(modalHistoricoAss) modalHistoricoAss.style.display = 'flex';
+}
+function fecharModalHistorico(){
+  if(modalHistoricoAss) modalHistoricoAss.style.display = 'none';
+}
+
+function abrirModalEditarAss(){
+  if(!assembleiaAtiva) return;
+  document.getElementById('inp-edit-ass-nome').value = assembleiaAtiva.nome || '';
+  document.getElementById('inp-edit-ass-data').value = assembleiaAtiva.data || '';
+  document.getElementById('inp-edit-ass-pauta').value = assembleiaAtiva.pauta || '';
+  document.getElementById('edit-ass-err').style.display = 'none';
+  if(modalEditarAss) modalEditarAss.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('inp-edit-ass-nome').focus(); }, 60);
+}
+function fecharModalEditarAss(){
+  if(modalEditarAss) modalEditarAss.style.display = 'none';
+}
+
+/* ---- Parser de CSV próprio ---- */
+function parseCSV(texto){
+  /* Remove BOM */
+  if(texto.charCodeAt(0)===0xFEFF)texto=texto.slice(1);
+  var rows=[],row=[],campo='',inQ=false;
+  function pushCampo(){row.push(campo);campo='';}
+  function pushRow(){if(row.some(function(c){return c!==''}))rows.push(row);row=[];}
+  for(var i=0;i<=texto.length;i++){
+    var c=i<texto.length?texto[i]:'\n';
+    if(inQ){
+      if(c==='"'){
+        if(i+1<texto.length&&texto[i+1]==='"'){campo+='"';i++;}
+        else inQ=false;
+      } else campo+=c;
+    } else {
+      if(c==='"'){inQ=true;}
+      else if(c===';'||c===','){pushCampo();}
+      else if(c==='\r'){if(texto[i+1]==='\n')i++;pushCampo();pushRow();}
+      else if(c==='\n'){pushCampo();pushRow();}
+      else campo+=c;
+    }
+  }
+  return rows;
+}
+
+/* ---- Processar um arquivo CSV ---- */
+function processarCSV(texto,nomeArq){
+  var rows=parseCSV(texto);
+  if(rows.length<2)return;
+  /* Encontrar índices das colunas pelo cabeçalho */
+  var hdr=rows[0].map(function(h){return h.trim().toLowerCase();});
+  function idx(n){return hdr.indexOf(n);}
+  var iMat=idx('matricula');
+  if(iMat<0) iMat=idx('cpf'); // compatibilidade
+  var iNome=idx('nome'),iOrg=idx('orgao'),iFil=idx('fileira');
+  var iConf=idx('conferente'),iHora=idx('hora'),iOrig=idx('origem'),iObs=idx('observacao');
+  if(iMat<0||iNome<0){
+    mostrarErro('Arquivo '+nomeArq+' não tem colunas esperadas (matricula/nome).');return;
+  }
+  var confNome='';var addConf=0;
+  for(var i=1;i<rows.length;i++){
+    var r=rows[i];
+    if(r.length<2)continue;
+    var mat=(r[iMat]||'').trim();
+    var nome=(r[iNome]||'').trim();
+    var orgao=iOrg>=0?(r[iOrg]||'').trim():'—';
+    var fil=iFil>=0?(r[iFil]||'').trim():'—';
+    var conf=iConf>=0?(r[iConf]||'').trim():'—';
+    var hora=iHora>=0?(r[iHora]||'').trim():'—';
+    var orig=iOrig>=0?(r[iOrig]||'').trim():'qr';
+    var obs=iObs>=0?(r[iObs]||'').trim():'';
+    if(!mat||!nome)continue;
+    if(!confNome)confNome=conf;
+    addConf++;
+    /* verificar duplicata por Matrícula */
+    var existeIdx=indicePorMatricula(mat);
+    if(existeIdx>=0){
+      revisar.push({matricula:mat,nome:nome,orgao:orgao,
+        motivo:'Matrícula duplicada (primeiro: '+presentes[existeIdx].arquivo+')',
+        arquivo:nomeArq,conferente:conf,hora:hora});
+      continue;
+    }
+    /* se obs não estiver vazia, vai para revisar também mas mantém em presentes */
+    presentes.push({matricula:mat,nome:nome,orgao:orgao,fileira:fil,conferente:conf,hora:hora,
+      origem:orig,observacao:obs,arquivo:nomeArq});
+    if(obs){
+      revisar.push({matricula:mat,nome:nome,orgao:orgao,motivo:'Observação: '+obs,
+        arquivo:nomeArq,conferente:conf,hora:hora});
+    }
+  }
+  conferentes[nomeArq]={nome:confNome||nomeArq,count:addConf};
+}
+
+function indicePorMatricula(mat){
+  for(var i=0;i<presentes.length;i++)if(presentes[i].matricula===mat)return i;
+  return-1;
+}
+
+/* ---- Controle dos Modais (Ajuda e Upload de CSV) ---- */
+(function(){
+  var modalAjuda = document.getElementById('modal-ajuda');
+  var btnAbrirAjuda = document.getElementById('btn-abrir-ajuda');
+  var btnFecharAjuda = document.getElementById('btn-fechar-ajuda');
+  var btnEntendidoAjuda = document.getElementById('btn-entendido-ajuda');
+
+  function abrirAjuda(){ if(modalAjuda) modalAjuda.style.display = 'flex'; }
+  function fecharAjuda(){ if(modalAjuda) modalAjuda.style.display = 'none'; }
+
+  if(btnAbrirAjuda) btnAbrirAjuda.addEventListener('click', abrirAjuda);
+  if(btnFecharAjuda) btnFecharAjuda.addEventListener('click', fecharAjuda);
+  if(btnEntendidoAjuda) btnEntendidoAjuda.addEventListener('click', fecharAjuda);
+
+  if(modalAjuda){
+    modalAjuda.addEventListener('click', function(e){
+      if(e.target === modalAjuda) fecharAjuda();
+    });
+  }
+
+  /* Modal de Upload de CSV */
+  var modalUpload = document.getElementById('modal-upload');
+  var btnAbrirUpload = document.getElementById('btn-abrir-upload');
+  var btnFecharUpload = document.getElementById('btn-fechar-upload');
+  var btnConcluirUpload = document.getElementById('btn-concluir-upload');
+
+  function abrirUpload(){ if(modalUpload) modalUpload.style.display = 'flex'; }
+  function fecharUpload(){ if(modalUpload) modalUpload.style.display = 'none'; }
+
+  if(btnAbrirUpload) btnAbrirUpload.addEventListener('click', abrirUpload);
+  if(btnFecharUpload) btnFecharUpload.addEventListener('click', fecharUpload);
+  if(btnConcluirUpload) btnConcluirUpload.addEventListener('click', fecharUpload);
+
+  if(modalUpload){
+    modalUpload.addEventListener('click', function(e){
+      if(e.target === modalUpload) fecharUpload();
+    });
+  }
+})();
+
+/* ---- Atualizar UI & KPIs Modernos & Gráficos ---- */
+function atualizarUI(){
+  var presOrdenados=presentes.slice().sort(function(a,b){return a.nome.localeCompare(b.nome,'pt-BR');});
+  var total = presentes.length;
+  var qrCount=presentes.filter(function(p){return p.origem==='qr';}).length;
+  var manCount=presentes.filter(function(p){return p.origem==='manual';}).length;
+  var revCount = revisar.length;
+  var confKeys=Object.keys(conferentes);
+
+  /* Atualizar valores dos KPIs */
+  var elTotal = document.getElementById('c-total');
+  if(elTotal) elTotal.textContent = total;
+  var elQr = document.getElementById('c-qr');
+  if(elQr) elQr.textContent = qrCount;
+  var elManual = document.getElementById('c-manual');
+  if(elManual) elManual.textContent = manCount;
+  var elRev = document.getElementById('c-rev');
+  if(elRev) elRev.textContent = revCount;
+  var elConf = document.getElementById('c-conf');
+  if(elConf) elConf.textContent = confKeys.length;
+
+  /* Metadados / porcentagens dinâmicas */
+  var pQr = total > 0 ? Math.round((qrCount / total) * 100) : 0;
+  var pMan = total > 0 ? Math.round((manCount / total) * 100) : 0;
+  
+  var elMetaTotal = document.getElementById('kpi-meta-total');
+  if(elMetaTotal) elMetaTotal.textContent = total > 0 ? '100% dos registros consolidados' : 'Aguardando CSVs';
+
+  var elMetaQr = document.getElementById('kpi-meta-qr');
+  if(elMetaQr) elMetaQr.textContent = pQr + '% do quórum (' + qrCount + ' lidos)';
+
+  var elMetaMan = document.getElementById('kpi-meta-manual');
+  if(elMetaMan) elMetaMan.textContent = pMan + '% do quórum (' + manCount + ' digitados)';
+
+  var elMetaRev = document.getElementById('kpi-meta-rev');
+  if(elMetaRev) elMetaRev.textContent = revCount > 0 ? revCount + ' ocorrência(s) barradas' : 'Nenhuma duplicata';
+
+  var elMetaConf = document.getElementById('kpi-meta-conf');
+  if(elMetaConf) elMetaConf.textContent = confKeys.length + ' arquivo(s) de fileiras lidos';
+
+  /* Status badge do painel gráfico */
+  var badgeGraf = document.getElementById('badge-grafico-status');
+  if(badgeGraf){
+    if(total > 0){
+      badgeGraf.textContent = '● ' + total + ' presenças ativas';
+      badgeGraf.className = 'badge-live active';
+    } else {
+      badgeGraf.textContent = 'Aguardando dados';
+      badgeGraf.className = 'badge-live';
+    }
+  }
+
+  /* Renderizar Gráficos Interativos (SVG / HTML5 nativo) */
+  renderizarGraficos(total, qrCount, manCount);
+
+  /* tabela presentes */
+  var tbP=document.getElementById('tbody-presentes');
+  if(!presentes.length){
+    tbP.innerHTML='<tr><td colspan="9" class="info-vazia">Nenhum presente registrado.</td></tr>';
+  } else {
+    tbP.innerHTML=presOrdenados.map(function(p,i){
+      var isMan=p.origem==='manual';
+      var nomeCell=esc(p.nome)+(isMan?'<span class="badge-manual">manual</span>':'');
+      var obsCell=p.observacao?'<span class="badge-obs">'+esc(p.observacao)+'</span>':'';
+      return'<tr><td class="num">'+(i+1)+'</td><td class="num">'+esc(p.matricula)+'</td>'+
+        '<td>'+nomeCell+'</td><td>'+esc(p.orgao||'—')+'</td><td class="num">'+esc(p.fileira)+'</td>'+
+        '<td>'+esc(p.conferente)+'</td><td class="num">'+esc(p.hora)+'</td>'+
+        '<td>'+esc(p.origem)+'</td><td>'+obsCell+'</td></tr>';
+    }).join('');
+  }
+  /* tabela revisar */
+  var tbR=document.getElementById('tbody-revisar');
+  if(!revisar.length){
+    tbR.innerHTML='<tr><td colspan="7" class="info-vazia">Nenhum registro a revisar. ✓</td></tr>';
+  } else {
+    tbR.innerHTML=revisar.map(function(r){
+      return'<tr><td class="num">'+esc(r.matricula)+'</td><td>'+esc(r.nome)+'</td>'+
+        '<td>'+esc(r.orgao||'—')+'</td>'+
+        '<td><span class="rev-motivo">'+esc(r.motivo)+'</span></td>'+
+        '<td>'+esc(r.arquivo)+'</td><td>'+esc(r.conferente)+'</td><td class="num">'+esc(r.hora)+'</td></tr>';
+    }).join('');
+  }
+  /* tabela conferentes */
+  var tbC=document.getElementById('tbody-conf');
+  if(!confKeys.length){
+    tbC.innerHTML='<tr><td colspan="3" class="info-vazia">Nenhum arquivo carregado.</td></tr>';
+  } else {
+    tbC.innerHTML=confKeys.map(function(k){
+      var c=conferentes[k];
+      return'<tr><td>'+esc(c.nome)+'</td><td>'+esc(k)+'</td><td class="num">'+c.count+'</td></tr>';
+    }).join('');
+  }
+}
+
+/* ========================================================
+   RENDERIZADOR DE GRÁFICOS (PURO SVG / DOM - 100% OFFLINE)
+======================================================== */
+function renderizarGraficos(total, qrCount, manCount){
+  /* 1. Gráfico Donut: Origem das Presenças */
+  var svgDonut = document.getElementById('svg-donut');
+  var donTotal = document.getElementById('donut-total');
+  var legQr = document.getElementById('leg-qr-val');
+  var legMan = document.getElementById('leg-man-val');
+
+  if(donTotal) donTotal.textContent = total;
+
+  if(total === 0){
+    if(svgDonut) svgDonut.innerHTML = '<circle cx="120" cy="120" r="80" fill="none" stroke="#e2e8f0" stroke-width="26"/>';
+    if(legQr) legQr.textContent = '0 (0%)';
+    if(legMan) legMan.textContent = '0 (0%)';
+  } else {
+    var pQr = Math.round((qrCount / total) * 100);
+    var pMan = 100 - pQr;
+    if(legQr) legQr.textContent = qrCount + ' (' + pQr + '%)';
+    if(legMan) legMan.textContent = manCount + ' (' + pMan + '%)';
+
+    var r = 80;
+    var c = 2 * Math.PI * r; // ~502.65
+    var qrDash = (qrCount / total) * c;
+    var manDash = (manCount / total) * c;
+
+    var donutHtml = '';
+    /* Base background track */
+    donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f1f5f9" stroke-width="28"/>';
+
+    if(qrCount > 0 && manCount === 0){
+      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#10b981" stroke-width="28"/>';
+    } else if(manCount > 0 && qrCount === 0){
+      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f59e0b" stroke-width="28"/>';
+    } else {
+      /* Segmento QR Code (Verde) */
+      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#10b981" stroke-width="28" '+
+        'stroke-dasharray="'+qrDash.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="0" transform="rotate(-90 120 120)"/>';
+      /* Segmento Manual (Âmbar/Laranja) */
+      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f59e0b" stroke-width="28" '+
+        'stroke-dasharray="'+manDash.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="'+(-qrDash).toFixed(1)+'" transform="rotate(-90 120 120)"/>';
+    }
+    if(svgDonut) svgDonut.innerHTML = donutHtml;
+  }
+
+  /* 2. Gráfico Horizontal: Top 5 Órgãos */
+  var barsOrgaos = document.getElementById('bars-orgaos');
+  if(barsOrgaos){
+    if(total === 0){
+      barsOrgaos.innerHTML = '<div class="chart-empty-msg">Nenhum órgão consolidado ainda.</div>';
+    } else {
+      var contagemOrg = {};
+      presentes.forEach(function(p){
+        var o = (p.orgao || 'Não informado').trim();
+        contagemOrg[o] = (contagemOrg[o] || 0) + 1;
+      });
+
+      var ranking = Object.keys(contagemOrg).map(function(nome){
+        return { nome: nome, count: contagemOrg[nome] };
+      }).sort(function(a,b){ return b.count - a.count; }).slice(0, 5);
+
+      var maxCount = ranking[0].count || 1;
+
+      barsOrgaos.innerHTML = ranking.map(function(item){
+        var pct = Math.round((item.count / total) * 100);
+        var barWidth = Math.max(10, Math.round((item.count / maxCount) * 100));
+        return '<div class="bar-row">' +
+          '<div class="bar-meta">' +
+            '<span>' + esc(item.nome) + '</span>' +
+            '<span>' + item.count + ' (' + pct + '%)</span>' +
+          '</div>' +
+          '<div class="bar-track">' +
+            '<div class="bar-fill" style="width:' + barWidth + '%"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  /* 3. Gráfico de Barras Verticais: Presenças por Fileira */
+  var svgFileiras = document.getElementById('svg-barras-fileiras');
+  var axisFileiras = document.getElementById('fileiras-labels');
+  if(svgFileiras && axisFileiras){
+    if(total === 0){
+      svgFileiras.innerHTML = '<text x="170" y="90" text-anchor="middle" fill="#94a3b8" font-size="13" font-style="italic">Aguardando dados das fileiras</text>';
+      axisFileiras.innerHTML = '';
+    } else {
+      var contagemFil = {};
+      presentes.forEach(function(p){
+        var f = (p.fileira || 'F1').trim();
+        contagemFil[f] = (contagemFil[f] || 0) + 1;
+      });
+
+      var listaFil = Object.keys(contagemFil).sort();
+      if(!listaFil.length) listaFil = ['F1'];
+
+      var maxFil = 1;
+      listaFil.forEach(function(f){ if(contagemFil[f] > maxFil) maxFil = contagemFil[f]; });
+
+      var svgW = 340, svgH = 180;
+      var paddingH = 30, chartBottom = 150, chartTop = 20;
+      var chartHeight = chartBottom - chartTop;
+      var numBars = listaFil.length;
+      var barWidth = Math.min(46, Math.floor((svgW - (paddingH * 2) - ((numBars - 1) * 16)) / numBars));
+      var gap = numBars > 1 ? Math.floor((svgW - (paddingH * 2) - (numBars * barWidth)) / (numBars - 1)) : 0;
+
+      var barsSvg = '';
+      /* Linhas de grade sutis */
+      barsSvg += '<line x1="20" y1="'+chartBottom+'" x2="320" y2="'+chartBottom+'" stroke="#cbd5e1" stroke-width="1.5"/>';
+      barsSvg += '<line x1="20" y1="'+(chartBottom - chartHeight/2)+'" x2="320" y2="'+(chartBottom - chartHeight/2)+'" stroke="#f1f5f9" stroke-dasharray="4"/>';
+
+      var labelsHtml = '';
+
+      listaFil.forEach(function(f, idx){
+        var count = contagemFil[f] || 0;
+        var h = Math.round((count / maxFil) * chartHeight);
+        var x = paddingH + (idx * (barWidth + gap));
+        var y = chartBottom - h;
+
+        /* Barra SVG com cantos arredondados no topo */
+        barsSvg += '<rect x="'+x+'" y="'+y+'" width="'+barWidth+'" height="'+h+'" rx="4" fill="#3b82f6"/>';
+        /* Número no topo da barra */
+        barsSvg += '<text x="'+(x + barWidth/2)+'" y="'+(y - 6)+'" text-anchor="middle" fill="#1e293b" font-weight="700" font-size="12">'+count+'</text>';
+
+        labelsHtml += '<span style="flex:1;text-align:center">'+esc(f)+'</span>';
+      });
+
+      svgFileiras.innerHTML = barsSvg;
+      axisFileiras.innerHTML = labelsHtml;
+    }
+  }
+}
+
+function esc(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+function mostrarOk(msg){
+  var el=document.getElementById('status-bar');
+  el.textContent=msg;el.style.display='block';
+  document.getElementById('err-bar').style.display='none';
+}
+function mostrarErro(msg){
+  var el=document.getElementById('err-bar');
+  el.textContent=msg;el.style.display='block';
+}
+
+/* ---- Carregamento de arquivos ---- */
+function carregarArquivo(file){
+  var reader=new FileReader();
+  reader.onload=function(e){
+    processarCSV(e.target.result,file.name);
+    salvarAssembleiaAtiva();
+    renderizarSelectAssembleias();
+    atualizarUI();
+    var msg = Object.keys(conferentes).length+' arquivo(s) carregado(s). '+presentes.length+' presentes na "'+(assembleiaAtiva ? assembleiaAtiva.nome : 'Assembleia')+'".';
+    mostrarOk(msg);
+    var summary = document.getElementById('upload-summary');
+    if(summary){
+      summary.textContent = '✓ ' + msg;
+      summary.style.display = 'block';
+    }
+  };
+  reader.readAsText(file,'utf-8');
+}
+
+var dropZone=document.getElementById('drop-zone');
+var fileInput=document.getElementById('file-input');
+
+dropZone.addEventListener('click',function(){fileInput.click();});
+dropZone.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')fileInput.click();});
+fileInput.addEventListener('change',function(){
+  var files=this.files;for(var i=0;i<files.length;i++)carregarArquivo(files[i]);
+  this.value='';
+});
+dropZone.addEventListener('dragover',function(e){e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave',function(){dropZone.classList.remove('drag-over');});
+dropZone.addEventListener('drop',function(e){
+  e.preventDefault();dropZone.classList.remove('drag-over');
+  var files=e.dataTransfer.files;for(var i=0;i<files.length;i++)carregarArquivo(files[i]);
+});
+
+/* ---- Exportar CSV Final da Assembleia Ativa ---- */
+document.getElementById('btn-exportar-final').addEventListener('click',function(){
+  if(!presentes.length){alert('Nenhum dado para exportar na assembleia atual.');return;}
+  exportarCSVAssembleia(assembleiaAtiva);
+});
+
+/* ---- Imprimir Lista Oficial da Assembleia Ativa (PDF Moderno com Logo e Cabeçalho) ---- */
+document.getElementById('btn-imprimir').addEventListener('click', function(){
+  var presOrdenados = presentes.slice().sort(function(a,b){ return a.nome.localeCompare(b.nome, 'pt-BR'); });
+  var nomeAss = assembleiaAtiva ? assembleiaAtiva.nome : 'Assembleia Geral Ordinária';
+  var dataAss = assembleiaAtiva ? formatarDataBR(assembleiaAtiva.data) : formatarDataBR(new Date().toISOString().slice(0,10));
+  var pautaAss = (assembleiaAtiva && assembleiaAtiva.pauta) ? assembleiaAtiva.pauta : 'Apreciação e Deliberações da Ordem do Dia';
+  var total = presentes.length;
+  var totalQr = presentes.filter(function(p){ return p.origem === 'qr'; }).length;
+  var totalMan = presentes.filter(function(p){ return p.origem === 'manual'; }).length;
+  var dataEmissao = new Date().toLocaleString('pt-BR');
+
+  var janela = window.open('', '_blank', 'width=960,height=750');
+  
+  var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">' +
+    '<title>Ata de Presença — ' + esc(nomeAss) + '</title>' +
+    '<style>' +
+    '@page { size: A4 portrait; margin: 14mm 12mm 16mm 12mm; }' +
+    '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+    'body { font-family: "Segoe UI", Roboto, Arial, sans-serif; color: #0f172a; font-size: 9.5pt; line-height: 1.4; background: #fff; }' +
+    
+    /* Cabeçalho Institucional */
+    '.doc-header { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 2.5px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px; }' +
+    '.doc-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }' +
+    '.doc-logo { height: 48px; max-width: 180px; object-fit: contain; }' +
+    '.doc-subtitle { font-size: 8.5pt; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em; }' +
+    '.doc-badge-auth { text-align: right; font-size: 8pt; color: #64748b; }' +
+    '.doc-badge-auth strong { color: #0f172a; display: block; font-size: 8.5pt; }' +
+
+    /* Bloco da Assembleia e Metadados */
+    '.session-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; }' +
+    '.session-title { font-size: 11pt; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }' +
+    '.session-pauta { font-size: 8.5pt; color: #334155; margin-bottom: 8px; }' +
+    '.session-stats { display: flex; gap: 20px; font-size: 8.5pt; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 6px; }' +
+    '.session-stats span strong { color: #0f172a; }' +
+
+    /* Tabela de Presença */
+    'table { width: 100%; border-collapse: collapse; font-size: 8.5pt; margin-bottom: 20px; }' +
+    'th { background: #0f172a; color: #ffffff; text-align: left; padding: 6px 8px; font-weight: 700; font-size: 8pt; letter-spacing: 0.02em; }' +
+    'th.center, td.center { text-align: center; }' +
+    'th.right, td.right { text-align: right; }' +
+    'td { padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #1e293b; vertical-align: middle; }' +
+    'tr:nth-child(even) td { background: #f8fafc; }' +
+    '.num { font-variant-numeric: tabular-nums; }' +
+    '.badge-tag { display: inline-block; font-size: 7pt; font-weight: 700; padding: 1px 5px; border-radius: 3px; }' +
+    '.badge-tag.qr { background: #e0f2fe; color: #0369a1; }' +
+    '.badge-tag.man { background: #fef3c7; color: #92400e; }' +
+
+    /* Rodapé do Relatório & Assinaturas */
+    '.sign-section { margin-top: 32px; page-break-inside: avoid; }' +
+    '.sign-row { display: flex; justify-content: space-between; gap: 40px; margin-top: 48px; }' +
+    '.sign-box { flex: 1; text-align: center; border-top: 1px solid #0f172a; padding-top: 6px; font-size: 8.5pt; }' +
+    '.sign-box strong { display: block; font-size: 9pt; color: #0f172a; }' +
+    '.sign-box span { font-size: 7.5pt; color: #64748b; }' +
+
+    '.doc-footer { margin-top: 24px; padding-top: 8px; border-top: 1px solid #e2e8f0; font-size: 7.5pt; color: #64748b; display: flex; justify-content: space-between; align-items: center; }' +
+    '</style></head><body>' +
+
+    /* Cabeçalho com Logomarca */
+    '<div class="doc-header">' +
+      '<div class="doc-brand">' +
+        '<img src="logo-sindseps.png" alt="SINDSEPS" class="doc-logo" onerror="this.style.display=\'none\'">' +
+        '<p class="doc-subtitle">Sindicato dos Servidores da Prefeitura do Salvador</p>' +
+      '</div>' +
+      '<div class="doc-badge-auth">' +
+        '<strong>LISTA OFICIAL DE QUÓRUM</strong>' +
+        '<span>Documento de Validação Estatutária</span>' +
+      '</div>' +
+    '</div>' +
+
+    /* Card da Sessão */
+    '<div class="session-card">' +
+      '<div class="session-title">' +
+        '<span>' + esc(nomeAss) + '</span>' +
+        '<span style="font-size:9pt;font-weight:700;color:#0369a1">Data: ' + esc(dataAss) + '</span>' +
+      '</div>' +
+      '<div class="session-pauta"><strong>Pauta / Objeto:</strong> ' + esc(pautaAss) + '</div>' +
+      '<div class="session-stats">' +
+        '<span>Quórum Homologado: <strong>' + total + ' servidores</strong></span>' +
+        '<span>Validação Digital (QR): <strong>' + totalQr + '</strong></span>' +
+        '<span>Registro Manual: <strong>' + totalMan + '</strong></span>' +
+        '<span>Emissão: <strong>' + esc(dataEmissao) + '</strong></span>' +
+      '</div>' +
+    '</div>' +
+
+    /* Tabela de Presença */
+    '<table>' +
+      '<thead>' +
+        '<tr>' +
+          '<th class="center" style="width:36px">#</th>' +
+          '<th style="width:90px">Matrícula</th>' +
+          '<th>Nome do Servidor Público</th>' +
+          '<th>Órgão / Lotação</th>' +
+          '<th class="center" style="width:70px">Fileira</th>' +
+          '<th class="center" style="width:60px">Hora</th>' +
+          '<th class="center" style="width:65px">Validação</th>' +
+        '</tr>' +
+      '</thead>' +
+      '<tbody>';
+
+  if (!presOrdenados.length) {
+    html += '<tr><td colspan="7" style="text-align:center;padding:18px;color:#64748b;font-style:italic">Nenhum registro de presença cadastrado para esta assembleia.</td></tr>';
+  } else {
+    html += presOrdenados.map(function(p, i){
+      var isQr = (p.origem === 'qr');
+      var tagHtml = isQr ? '<span class="badge-tag qr">QR Digital</span>' : '<span class="badge-tag man">Manual</span>';
+      return '<tr>' +
+        '<td class="num center">' + (i + 1) + '</td>' +
+        '<td class="num"><strong>' + esc(p.matricula) + '</strong></td>' +
+        '<td>' + esc(p.nome) + '</td>' +
+        '<td>' + esc(p.orgao || '—') + '</td>' +
+        '<td class="num center">' + esc(p.fileira || '—') + '</td>' +
+        '<td class="num center">' + esc(p.hora || '—') + '</td>' +
+        '<td class="center">' + tagHtml + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  html += '</tbody></table>' +
+
+    /* Seção de Assinaturas da Mesa Diretora */
+    '<div class="sign-section">' +
+      '<p style="font-size:8pt;color:#475569;text-align:justify">' +
+        'Certificamos que a presente lista expressa fidedignamente o quórum de servidores municipais participantes da assembleia ' +
+        'acima caracterizada, devidamente credenciados por meio dos sistemas oficiais de validação e conferência presencial.' +
+      '</p>' +
+      '<div class="sign-row">' +
+        '<div class="sign-box">' +
+          '<strong>Coordenação Geral</strong>' +
+          '<span>Mesa Diretora — SINDSEPS</span>' +
+        '</div>' +
+        '<div class="sign-box">' +
+          '<strong>Secretaria Geral de Atas</strong>' +
+          '<span>Validação e Apuração de Quórum</span>' +
+        '</div>' +
+        '<div class="sign-box">' +
+          '<strong>Comissão de Credenciamento</strong>' +
+          '<span>Supervisão e Conferência</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    /* Rodapé com Direitos e Hora de Emissão */
+    '<div class="doc-footer">' +
+      '<span>SINDSEPS — Sindicato dos Servidores da Prefeitura do Salvador • CNPJ Oficial</span>' +
+      '<span>Relatório emitido em ' + esc(dataEmissao) + ' • Sistema de Quórum Sindseps</span>' +
+    '</div>' +
+
+    '</body></html>';
+
+  janela.document.write(html);
+  janela.document.close();
+  janela.focus();
+  setTimeout(function(){ janela.print(); }, 400);
+});
+
+/* ---- Limpar registros da assembleia ativa (se botão existir) ---- */
+var btnLimpar = document.getElementById('btn-limpar');
+if(btnLimpar){
+  btnLimpar.addEventListener('click',function(){
+    var nomeAss = assembleiaAtiva ? assembleiaAtiva.nome : 'esta assembleia';
+    if(confirm('Remover todos os dados carregados na assembleia "' + nomeAss + '"?')){
+      presentes=[];revisar=[];conferentes={};
+      salvarAssembleiaAtiva();
+      renderizarSelectAssembleias();
+      document.getElementById('status-bar').style.display='none';
+      document.getElementById('err-bar').style.display='none';
+      atualizarUI();
+      mostrarOk('Dados da assembleia "' + nomeAss + '" limpos.');
+    }
+  });
+}
+
+/* ---- Listeners de Gestão de Assembleias ---- */
+document.getElementById('sel-assembleia').addEventListener('change', function(){
+  alternarAssembleia(this.value);
+});
+
+document.getElementById('btn-nova-ass').addEventListener('click', abrirModalNovaAss);
+document.getElementById('btn-fechar-nova-ass').addEventListener('click', fecharModalNovaAss);
+document.getElementById('btn-cancelar-nova-ass').addEventListener('click', fecharModalNovaAss);
+
+var btnBaixarHist = document.getElementById('btn-baixar-historico');
+if(btnBaixarHist){
+  btnBaixarHist.addEventListener('click', baixarHistoricoCompletoCSV);
+}
+
+document.getElementById('btn-salvar-nova-ass').addEventListener('click', function(){
+  var nome = document.getElementById('inp-ass-nome').value.trim();
+  var data = document.getElementById('inp-ass-data').value;
+  var pauta = document.getElementById('inp-ass-pauta').value.trim();
+  var err = document.getElementById('nova-ass-err');
+
+  if(!nome){
+    err.textContent = 'Informe o nome da assembleia.';
+    err.style.display = 'block';
+    document.getElementById('inp-ass-nome').focus();
+    return;
+  }
+  if(!data){
+    err.textContent = 'Informe a data da assembleia.';
+    err.style.display = 'block';
+    return;
+  }
+  criarNovaAssembleia(nome, data, pauta);
+  fecharModalNovaAss();
+});
+
+/* Listeners Modal Editar Assembleia */
+var btnEditAss = document.getElementById('btn-editar-ass');
+if(btnEditAss) btnEditAss.addEventListener('click', abrirModalEditarAss);
+var btnFecharEdit = document.getElementById('btn-fechar-edit-ass');
+if(btnFecharEdit) btnFecharEdit.addEventListener('click', fecharModalEditarAss);
+var btnCancEdit = document.getElementById('btn-cancelar-edit-ass');
+if(btnCancEdit) btnCancEdit.addEventListener('click', fecharModalEditarAss);
+
+var btnSalvarEdit = document.getElementById('btn-salvar-edit-ass');
+if(btnSalvarEdit){
+  btnSalvarEdit.addEventListener('click', function(){
+    var nome = document.getElementById('inp-edit-ass-nome').value.trim();
+    var data = document.getElementById('inp-edit-ass-data').value;
+    var pauta = document.getElementById('inp-edit-ass-pauta').value.trim();
+    var err = document.getElementById('edit-ass-err');
+
+    if(!nome){
+      err.textContent = 'Informe o nome da assembleia.';
+      err.style.display = 'block';
+      document.getElementById('inp-edit-ass-nome').focus();
+      return;
+    }
+    if(!data){
+      err.textContent = 'Informe a data da assembleia.';
+      err.style.display = 'block';
+      return;
+    }
+
+    assembleiaAtiva.nome = nome;
+    assembleiaAtiva.data = data;
+    assembleiaAtiva.pauta = pauta;
+    assembleiaAtiva.atualizadoEm = new Date().toISOString();
+
+    salvarTodasAssembleias();
+    renderizarSelectAssembleias();
+    atualizarUI();
+    fecharModalEditarAss();
+    mostrarOk('Assembleia atualizada: ' + nome);
+  });
+}
+
+/* Busca no Histórico */
+var buscaHist = document.getElementById('busca-historico-ass');
+if(buscaHist){
+  buscaHist.addEventListener('input', function(){
+    renderizarModalHistorico(this.value);
+  });
+}
+
+var btnHistAss = document.getElementById('btn-historico-ass');
+if(btnHistAss) btnHistAss.addEventListener('click', abrirModalHistorico);
+var btnFecharHistAss = document.getElementById('btn-fechar-hist-ass');
+if(btnFecharHistAss) btnFecharHistAss.addEventListener('click', fecharModalHistorico);
+var btnFecharHistRodape = document.getElementById('btn-fechar-hist-rodape');
+if(btnFecharHistRodape) btnFecharHistRodape.addEventListener('click', fecharModalHistorico);
+
+/* Listeners do Rodapé Institucional */
+var btnFootAjuda = document.getElementById('btn-footer-ajuda');
+if(btnFootAjuda) btnFootAjuda.addEventListener('click', function(){
+  var modalAjuda = document.getElementById('modal-ajuda');
+  if(modalAjuda) modalAjuda.style.display = 'flex';
+});
+
+var btnFootNova = document.getElementById('btn-footer-nova-ass');
+if(btnFootNova) btnFootNova.addEventListener('click', abrirModalNovaAss);
+
+var btnFootHist = document.getElementById('btn-footer-historico');
+if(btnFootHist) btnFootHist.addEventListener('click', abrirModalHistorico);
+
+var btnBloquear = document.getElementById('btn-bloquear-sessao');
+if(btnBloquear) btnBloquear.addEventListener('click', function(){
+  try { sessionStorage.removeItem('painel_auth'); } catch(e){}
+  var modal = document.getElementById('modal-auth');
+  if(modal) modal.style.display = 'flex';
+  var inp = document.getElementById('inp-senha-painel');
+  if(inp) inp.value = '';
+  mostrarOk('Sessão bloqueada com segurança.');
+});
+
+var btnTopo = document.getElementById('btn-voltar-topo');
+if(btnTopo) btnTopo.addEventListener('click', function(){
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+if(modalNovaAss){
+  modalNovaAss.addEventListener('click', function(e){ if(e.target === modalNovaAss) fecharModalNovaAss(); });
+}
+if(modalHistoricoAss){
+  modalHistoricoAss.addEventListener('click', function(e){ if(e.target === modalHistoricoAss) fecharModalHistorico(); });
+}
+if(modalEditarAss){
+  modalEditarAss.addEventListener('click', function(e){ if(e.target === modalEditarAss) fecharModalEditarAss(); });
+}
+
+/* Inicializar assembleias e carregar dados */
+carregarAssembleias();
+
+/* Modo demonstração / teste via URL: ?demo=1 */
+if(window.location.search.indexOf('demo=') !== -1){
+  var demoCSV = 'matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n' +
+    '20412;Carlos Alberto Santana;SMS - Saúde;Fileira 1;Conferente Ana;08:14;qr;\n' +
+    '31980;Maria das Graças Oliveira;SMED - Educação;Fileira 1;Conferente Ana;08:18;qr;\n' +
+    '15420;João Paulo Fernandes;SEINFRA;Fileira 2;Conferente Roberto;08:22;manual;Documento físico\n' +
+    '44102;Patricia Souza Ramos;SMS - Saúde;Fileira 2;Conferente Roberto;08:25;qr;\n' +
+    '50123;Renato Vieira Costa;Guarda Municipal;Fileira 3;Conferente Mariana;08:28;qr;\n' +
+    '33214;Juliana Costa Lima;SEFAD;Fileira 3;Conferente Mariana;08:31;qr;\n' +
+    '19842;Fabio Henrique Silva;SMS - Saúde;Fileira 1;Conferente Ana;08:35;manual;Sem smartphone\n' +
+    '28941;Aline Moreira Dias;SMED - Educação;Fileira 2;Conferente Roberto;08:39;qr;\n' +
+    '62310;Luciana Nogueira;SEDES;Fileira 3;Conferente Mariana;08:42;qr;\n' +
+    '20412;Carlos Alberto Santana (Duplicado);SMS - Saúde;Fileira 2;Conferente Roberto;08:45;qr;\n';
+  processarCSV(demoCSV, 'presenca_demo.csv');
+}
+
+/* Inicializar cards e gráficos */
+atualizarUI();
+</script>
+</body>
+</html>
