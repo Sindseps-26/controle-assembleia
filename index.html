@@ -325,21 +325,30 @@
     user-select: all;
   }
   .btn-copy {
-    background: var(--primary-navy);
-    color: var(--white);
-    border: none;
-    padding: 11px 20px;
+    background: #0f172a;
+    color: #ffffff;
+    border: 1.5px solid #1e293b;
+    padding: 10px 18px;
     font-size: 0.88rem;
     font-weight: 700;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(11, 31, 72, 0.15);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
   }
   .btn-copy:hover {
-    background: var(--accent-blue);
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #ffffff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+  }
+  .btn-copy:active {
+    transform: translateY(0);
   }
   .wifi-qr-box {
     display: flex;
@@ -460,7 +469,10 @@
       </p>
       <div class="wifi-url-box">
         <span class="url-pill" id="mobile-url">http://192.168.1.96:8080/cadastro.html</span>
-        <button class="btn-copy" id="btn-copy" onclick="copiarLink()">Copiar Link</button>
+        <button class="btn-copy" id="btn-copy" onclick="copiarLink()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span>Copiar Link</span>
+        </button>
       </div>
     </div>
     <div class="wifi-qr-box">
@@ -506,13 +518,40 @@ new QRCode(qrBox, {
 
 function copiarLink(){
   var url = document.getElementById('mobile-url').textContent;
-  navigator.clipboard.writeText(url).then(function(){
-    var btn = document.getElementById('btn-copy');
-    var original = btn.textContent;
-    btn.textContent = 'Copiado! ✓';
+  var btn = document.getElementById('btn-copy');
+  var originalHtml = btn.innerHTML;
+  
+  function sucesso(){
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copiado!</span>';
     btn.style.background = '#059669';
-    setTimeout(function(){ btn.textContent = original; btn.style.background = ''; }, 2000);
-  });
+    btn.style.borderColor = '#047857';
+    setTimeout(function(){ 
+      btn.innerHTML = originalHtml; 
+      btn.style.background = ''; 
+      btn.style.borderColor = ''; 
+    }, 2000);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(sucesso).catch(function(){
+      /* Fallback com input temporário */
+      var temp = document.createElement('input');
+      temp.value = url;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      sucesso();
+    });
+  } else {
+    var temp = document.createElement('input');
+    temp.value = url;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+    sucesso();
+  }
 }
 </script>
 </body>
