@@ -997,7 +997,8 @@ footer.diretoria-footer {
   <div id="err-bar"></div>
 
   <!-- Cards de resumo (3 KPIS ESTRATÉGICOS DA DIRETORIA) -->
-  <div class="kpi-grid">
+  <!-- Cards de resumo (KPIS ESTRATÉGICOS DA DIRETORIA) -->
+  <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr);">
     <div class="kpi-card">
       <div class="kpi-header">
         <span class="kpi-caption">Quórum Consolidado</span>
@@ -1009,20 +1010,11 @@ footer.diretoria-footer {
 
     <div class="kpi-card">
       <div class="kpi-header">
-        <span class="kpi-caption">Validação Digital (QR)</span>
+        <span class="kpi-caption">Validação Digital (QR Code)</span>
         <span class="kpi-tag tag-qr">Certificado</span>
       </div>
       <div class="kpi-metric" id="c-qr">0</div>
-      <div class="kpi-footer" id="kpi-meta-qr">0% do quórum total</div>
-    </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <span class="kpi-caption">Registro Manual</span>
-        <span class="kpi-tag tag-manual">Conferido</span>
-      </div>
-      <div class="kpi-metric" id="c-manual">0</div>
-      <div class="kpi-footer" id="kpi-meta-manual">0% do quórum total</div>
+      <div class="kpi-footer" id="kpi-meta-qr">100% do quórum oficial</div>
     </div>
   </div>
 
@@ -1036,27 +1028,8 @@ footer.diretoria-footer {
       <span class="status-indicator" id="badge-grafico-status">Aguardando dados</span>
     </div>
 
-    <div class="charts-grid">
-      <!-- Gráfico 1: Origem das Presenças (Donut Chart) -->
-      <div class="chart-card">
-        <div class="chart-head">
-          <strong>Método de Homologação</strong>
-          <span>Proporção entre Credencial Digital e Entrada Manual</span>
-        </div>
-        <div class="chart-container" id="chart-origem-box">
-          <svg id="svg-donut" viewBox="0 0 240 240" class="chart-svg"></svg>
-          <div id="donut-center-info" class="donut-center-text">
-            <span id="donut-total" class="donut-num">0</span>
-            <span class="donut-lbl">Validado(s)</span>
-          </div>
-        </div>
-        <div class="chart-legend" id="donut-legend">
-          <div class="legend-item"><span class="legend-dot dot-qr"></span> QR Code: <strong id="leg-qr-val">0 (0%)</strong></div>
-          <div class="legend-item"><span class="legend-dot dot-man"></span> Manual: <strong id="leg-man-val">0 (0%)</strong></div>
-        </div>
-      </div>
-
-      <!-- Gráfico 2: Top Órgãos de Atuação (Barras Horizontais) -->
+    <div class="charts-grid" style="grid-template-columns: 1fr;">
+      <!-- Gráfico de Órgãos de Atuação (Barras Horizontais) -->
       <div class="chart-card">
         <div class="chart-head">
           <strong>Representatividade por Secretaria / Órgão</strong>
@@ -1067,18 +1040,6 @@ footer.diretoria-footer {
             <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
           </div>
         </div>
-      </div>
-
-      <!-- Gráfico 3: Produção por Fileira / Conferente (Barras Verticais) -->
-      <div class="chart-card">
-        <div class="chart-head">
-          <strong>Volume por Fileira / Portaria</strong>
-          <span>Distribuição de fluxo por posto de conferência</span>
-        </div>
-        <div class="chart-container" id="chart-fileiras-box">
-          <svg id="svg-barras-fileiras" viewBox="0 0 340 180" class="chart-svg" style="max-height:180px"></svg>
-        </div>
-        <div id="fileiras-labels" class="fileiras-axis"></div>
       </div>
     </div>
   </section>
@@ -1681,17 +1642,11 @@ function atualizarUI(){
   if(elConf) elConf.textContent = confKeys.length;
 
   /* Metadados / porcentagens dinâmicas */
-  var pQr = total > 0 ? Math.round((qrCount / total) * 100) : 0;
-  var pMan = total > 0 ? Math.round((manCount / total) * 100) : 0;
-  
   var elMetaTotal = document.getElementById('kpi-meta-total');
   if(elMetaTotal) elMetaTotal.textContent = total > 0 ? '100% dos registros consolidados' : 'Aguardando CSVs';
 
   var elMetaQr = document.getElementById('kpi-meta-qr');
-  if(elMetaQr) elMetaQr.textContent = pQr + '% do quórum (' + qrCount + ' lidos)';
-
-  var elMetaMan = document.getElementById('kpi-meta-manual');
-  if(elMetaMan) elMetaMan.textContent = pMan + '% do quórum (' + manCount + ' digitados)';
+  if(elMetaQr) elMetaQr.textContent = total > 0 ? '100% validados por credencial oficial' : '0% do quórum total';
 
   var elMetaRev = document.getElementById('kpi-meta-rev');
   if(elMetaRev) elMetaRev.textContent = revCount > 0 ? revCount + ' ocorrência(s) barradas' : 'Nenhuma duplicata';
@@ -1712,7 +1667,7 @@ function atualizarUI(){
   }
 
   /* Renderizar Gráficos Interativos (SVG / HTML5 nativo) */
-  renderizarGraficos(total, qrCount, manCount);
+  renderizarGraficos(total);
 
   /* tabela presentes */
   var tbP=document.getElementById('tbody-presentes');
@@ -1753,53 +1708,8 @@ function atualizarUI(){
   }
 }
 
-/* ========================================================
-   RENDERIZADOR DE GRÁFICOS (PURO SVG / DOM - 100% OFFLINE)
-======================================================== */
-function renderizarGraficos(total, qrCount, manCount){
-  /* 1. Gráfico Donut: Origem das Presenças */
-  var svgDonut = document.getElementById('svg-donut');
-  var donTotal = document.getElementById('donut-total');
-  var legQr = document.getElementById('leg-qr-val');
-  var legMan = document.getElementById('leg-man-val');
-
-  if(donTotal) donTotal.textContent = total;
-
-  if(total === 0){
-    if(svgDonut) svgDonut.innerHTML = '<circle cx="120" cy="120" r="80" fill="none" stroke="#e2e8f0" stroke-width="26"/>';
-    if(legQr) legQr.textContent = '0 (0%)';
-    if(legMan) legMan.textContent = '0 (0%)';
-  } else {
-    var pQr = Math.round((qrCount / total) * 100);
-    var pMan = 100 - pQr;
-    if(legQr) legQr.textContent = qrCount + ' (' + pQr + '%)';
-    if(legMan) legMan.textContent = manCount + ' (' + pMan + '%)';
-
-    var r = 80;
-    var c = 2 * Math.PI * r; // ~502.65
-    var qrDash = (qrCount / total) * c;
-    var manDash = (manCount / total) * c;
-
-    var donutHtml = '';
-    /* Base background track */
-    donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f1f5f9" stroke-width="28"/>';
-
-    if(qrCount > 0 && manCount === 0){
-      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#10b981" stroke-width="28"/>';
-    } else if(manCount > 0 && qrCount === 0){
-      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f59e0b" stroke-width="28"/>';
-    } else {
-      /* Segmento QR Code (Verde) */
-      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#10b981" stroke-width="28" '+
-        'stroke-dasharray="'+qrDash.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="0" transform="rotate(-90 120 120)"/>';
-      /* Segmento Manual (Âmbar/Laranja) */
-      donutHtml += '<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#f59e0b" stroke-width="28" '+
-        'stroke-dasharray="'+manDash.toFixed(1)+' '+c.toFixed(1)+'" stroke-dashoffset="'+(-qrDash).toFixed(1)+'" transform="rotate(-90 120 120)"/>';
-    }
-    if(svgDonut) svgDonut.innerHTML = donutHtml;
-  }
-
-  /* 2. Gráfico Horizontal: Top 5 Órgãos */
+function renderizarGraficos(total){
+  /* Gráfico Horizontal: Top 5 Órgãos / Secretarias */
   var barsOrgaos = document.getElementById('bars-orgaos');
   if(barsOrgaos){
     if(total === 0){
@@ -1830,59 +1740,6 @@ function renderizarGraficos(total, qrCount, manCount){
           '</div>' +
         '</div>';
       }).join('');
-    }
-  }
-
-  /* 3. Gráfico de Barras Verticais: Presenças por Fileira */
-  var svgFileiras = document.getElementById('svg-barras-fileiras');
-  var axisFileiras = document.getElementById('fileiras-labels');
-  if(svgFileiras && axisFileiras){
-    if(total === 0){
-      svgFileiras.innerHTML = '<text x="170" y="90" text-anchor="middle" fill="#94a3b8" font-size="13" font-style="italic">Aguardando dados das fileiras</text>';
-      axisFileiras.innerHTML = '';
-    } else {
-      var contagemFil = {};
-      presentes.forEach(function(p){
-        var f = (p.fileira || 'F1').trim();
-        contagemFil[f] = (contagemFil[f] || 0) + 1;
-      });
-
-      var listaFil = Object.keys(contagemFil).sort();
-      if(!listaFil.length) listaFil = ['F1'];
-
-      var maxFil = 1;
-      listaFil.forEach(function(f){ if(contagemFil[f] > maxFil) maxFil = contagemFil[f]; });
-
-      var svgW = 340, svgH = 180;
-      var paddingH = 30, chartBottom = 150, chartTop = 20;
-      var chartHeight = chartBottom - chartTop;
-      var numBars = listaFil.length;
-      var barWidth = Math.min(46, Math.floor((svgW - (paddingH * 2) - ((numBars - 1) * 16)) / numBars));
-      var gap = numBars > 1 ? Math.floor((svgW - (paddingH * 2) - (numBars * barWidth)) / (numBars - 1)) : 0;
-
-      var barsSvg = '';
-      /* Linhas de grade sutis */
-      barsSvg += '<line x1="20" y1="'+chartBottom+'" x2="320" y2="'+chartBottom+'" stroke="#cbd5e1" stroke-width="1.5"/>';
-      barsSvg += '<line x1="20" y1="'+(chartBottom - chartHeight/2)+'" x2="320" y2="'+(chartBottom - chartHeight/2)+'" stroke="#f1f5f9" stroke-dasharray="4"/>';
-
-      var labelsHtml = '';
-
-      listaFil.forEach(function(f, idx){
-        var count = contagemFil[f] || 0;
-        var h = Math.round((count / maxFil) * chartHeight);
-        var x = paddingH + (idx * (barWidth + gap));
-        var y = chartBottom - h;
-
-        /* Barra SVG com cantos arredondados no topo */
-        barsSvg += '<rect x="'+x+'" y="'+y+'" width="'+barWidth+'" height="'+h+'" rx="4" fill="#3b82f6"/>';
-        /* Número no topo da barra */
-        barsSvg += '<text x="'+(x + barWidth/2)+'" y="'+(y - 6)+'" text-anchor="middle" fill="#1e293b" font-weight="700" font-size="12">'+count+'</text>';
-
-        labelsHtml += '<span style="flex:1;text-align:center">'+esc(f)+'</span>';
-      });
-
-      svgFileiras.innerHTML = barsSvg;
-      axisFileiras.innerHTML = labelsHtml;
     }
   }
 }
