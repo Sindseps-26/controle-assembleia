@@ -1666,6 +1666,18 @@ function carregarDadosDaAssembleiaAtiva(){
   conferentes = assembleiaAtiva.conferentes || {};
 }
 
+function obterCandidatasAssembleias(path){
+  var rotas = [path];
+  var host = window.location.hostname || 'localhost';
+  if(host && host !== 'localhost' && host !== '127.0.0.1'){
+    rotas.push('http://' + host + ':8080' + path);
+  }
+  rotas.push('http://localhost:8080' + path);
+  rotas.push('http://127.0.0.1:8080' + path);
+  rotas.push('http://192.168.1.96:8080' + path);
+  return rotas;
+}
+
 function salvarTodasAssembleias(){
   try {
     localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias));
@@ -1673,16 +1685,12 @@ function salvarTodasAssembleias(){
     console.error('Erro ao salvar assembleias no localStorage:', e);
   }
 
-  // Tenta salvar também no servidor backend se acessível
+  // Tenta salvar também no servidor backend se acessível em todas as rotas
   try {
     var payload = JSON.stringify({ assembleias: assembleias });
-    fetch('/api/assembleias', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: payload
-    }).catch(function(){
-      // Fallback para porta 8080 se estiver aberto em IP diferente
-      fetch('http://' + (window.location.hostname || 'localhost') + ':8080/api/assembleias', {
+    var rotas = obterCandidatasAssembleias('/api/assembleias');
+    rotas.forEach(function(url){
+      fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload
@@ -1692,23 +1700,39 @@ function salvarTodasAssembleias(){
 }
 
 function sincronizarAssembleiasComServidor(){
-  var urlSync = '/api/assembleias';
-  fetch(urlSync, { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if(data && Array.isArray(data.assembleias) && data.assembleias.length > 0){
-        // Se o servidor tem dados válidos, sincroniza
-        assembleias = data.assembleias;
-        try { localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias)); } catch(e){}
-        var idAtiva = null;
-        try { idAtiva = localStorage.getItem(STORAGE_KEY_ATIVA); } catch(e){}
-        assembleiaAtiva = assembleias.find(function(a){ return a.id === idAtiva; }) || assembleias[0];
-        carregarDadosDaAssembleiaAtiva();
-        renderizarSelectAssembleias();
-        atualizarUI();
-      }
-    })
-    .catch(function(){});
+  var rotas = obterCandidatasAssembleias('/api/assembleias');
+  var idx = 0;
+
+  function tentarRota(){
+    if(idx >= rotas.length) return;
+    var url = rotas[idx++];
+    fetch(url, { cache: 'no-store' })
+      .then(function(r){
+        if(!r.ok) throw new Error('Status ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        if(data && Array.isArray(data.assembleias) && data.assembleias.length > 0){
+          // Se o servidor tem dados salvos de assembleias
+          assembleias = data.assembleias;
+          try { localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias)); } catch(e){}
+          var idAtiva = null;
+          try { idAtiva = localStorage.getItem(STORAGE_KEY_ATIVA); } catch(e){}
+          assembleiaAtiva = assembleias.find(function(a){ return a.id === idAtiva; }) || assembleias[0];
+          carregarDadosDaAssembleiaAtiva();
+          renderizarSelectAssembleias();
+          atualizarUI();
+        } else if(data && Array.isArray(data.assembleias) && data.assembleias.length === 0 && assembleias.length > 0){
+          // Servidor ainda não tem registros em disco, envia os locais para inicializá-lo!
+          salvarTodasAssembleias();
+        }
+      })
+      .catch(function(){
+        tentarRota();
+      });
+  }
+
+  tentarRota();
 }
 
 function salvarAssembleiaAtiva(){
@@ -3044,7 +3068,8 @@ atualizarUI();
     var candidatas = [
       '/api/presencas',
       'http://localhost:8080/api/presencas',
-      'http://127.0.0.1:8080/api/presencas'
+      'http://127.0.0.1:8080/api/presencas',
+      'http://192.168.1.96:8080/api/presencas'
     ];
     // Se estiver em outra máquina ou celular
     if(window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'){

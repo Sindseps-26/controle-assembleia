@@ -188,8 +188,40 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
     <span id="status-leitor-badge" class="badge-aguardando">⏳ Digite a matrícula</span>
   </div>
 
+  <button class="btn-sm" id="btn-digitar" style="background:#2563eb;color:#fff;margin-left:4px" title="Registrar presença manual se não tiver celular">✏️ Manual</button>
+
+  <div id="badge-sync-conf" style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:12px;font-size:0.72rem;font-weight:700;background:rgba(255,255,255,0.1);color:#cbd5e1" title="Status de conexão com o computador central">
+    <span id="dot-sync-conf" style="width:7px;height:7px;border-radius:50%;background:#ef4444"></span>
+    <span id="txt-sync-conf">Servidor...</span>
+  </div>
+
   <span id="contador">0 lidos</span>
   <button class="btn-sm" id="btn-limpar" title="Limpar leituras">✕</button>
+</div>
+
+<!-- Modal Entrada Manual de Presença -->
+<div id="modal-manual" role="dialog" aria-modal="true" aria-labelledby="tit-modal-manual">
+  <div id="modal-inner">
+    <h3 id="tit-modal-manual">Registrar Presença Manual</h3>
+    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">Para servidores sem celular ou com dificuldades técnicas.</p>
+    
+    <label class="ml" for="man-matricula">Matrícula do Servidor *</label>
+    <input id="man-matricula" class="inp-modal" type="text" placeholder="Ex: 123456" maxlength="30" autocomplete="off">
+    <span id="man-err-mat" class="err-txt"></span>
+
+    <label class="ml" for="man-nome">Nome Completo *</label>
+    <input id="man-nome" class="inp-modal" type="text" placeholder="Nome do servidor" maxlength="80" autocomplete="off">
+    <span id="man-err-nome" class="err-txt"></span>
+
+    <label class="ml" for="man-orgao">Órgão / Secretaria (opcional)</label>
+    <input id="man-orgao" class="inp-modal" type="text" placeholder="Ex: SMS, SECULT, etc." maxlength="80" autocomplete="off">
+    <span id="man-err-orgao" class="err-txt"></span>
+
+    <div class="modal-btns">
+      <button type="button" class="btn-modal-cancel" id="man-btn-cancelar">Cancelar</button>
+      <button type="button" class="btn-modal-ok" id="man-btn-confirmar">Confirmar Presença</button>
+    </div>
+  </div>
 </div>
 
 <!-- Veredito em tela cheia -->
@@ -10350,25 +10382,79 @@ function mascaraCPFInput(e){
     Math.max(0,Math.min(pos+diff,inp.value.length)));
 }
 
-/* ---- Persistência ---- */
+/* ---- Persistência e Sincronização em Tempo Real ---- */
 var CHAVE_STORAGE='conf_registros_v3';
 function carregarRegistros(){try{return JSON.parse(localStorage.getItem(CHAVE_STORAGE)||'[]');}catch(e){return[];}}
+
+var _apiUrlConf = '';
+function obterCandidatasApi(path){
+  var rotas = [path];
+  var host = window.location.hostname || 'localhost';
+  if(host && host !== 'localhost' && host !== '127.0.0.1'){
+    rotas.push('http://' + host + ':8080' + path);
+  }
+  rotas.push('http://localhost:8080' + path);
+  rotas.push('http://127.0.0.1:8080' + path);
+  rotas.push('http://192.168.1.96:8080' + path);
+  return rotas;
+}
+
+function atualizarStatusServidorConf(online, texto){
+  var dot = document.getElementById('dot-sync-conf');
+  var txt = document.getElementById('txt-sync-conf');
+  if(dot) dot.style.background = online ? '#10b981' : '#ef4444';
+  if(txt) txt.textContent = texto || (online ? 'Online' : 'Offline');
+}
+
+function testarConexaoServidorConf(callback){
+  if(_apiUrlConf){
+    fetch(_apiUrlConf.replace('/api/presenca', '/api/status'), { cache: 'no-store' })
+      .then(function(res){ return res.json(); })
+      .then(function(d){
+        atualizarStatusServidorConf(true, 'Online');
+        if(callback) callback(true);
+      })
+      .catch(function(){
+        _apiUrlConf = '';
+        testarConexaoServidorConf(callback);
+      });
+    return;
+  }
+
+  var urls = obterCandidatasApi('/api/status');
+  var idx = 0;
+  function testar(){
+    if(idx >= urls.length){
+      atualizarStatusServidorConf(false, 'Offline');
+      if(callback) callback(false);
+      return;
+    }
+    var u = urls[idx++];
+    fetch(u, { cache: 'no-store' })
+      .then(function(res){
+        if(!res.ok) throw new Error('Status ' + res.status);
+        return res.json();
+      })
+      .then(function(){
+        _apiUrlConf = u.replace('/api/status', '/api/presenca');
+        atualizarStatusServidorConf(true, 'Online');
+        if(callback) callback(true);
+      })
+      .catch(function(){
+        testar();
+      });
+  }
+  testar();
+}
+
 function salvarRegistro(rec){
   var lista=carregarRegistros();lista.push(rec);
   try{localStorage.setItem(CHAVE_STORAGE,JSON.stringify(lista));}catch(e){}
   atualizarContador();
 
   /* Enviar automaticamente ao servidor em tempo real (sem bloquear se offline) */
-  try {
-    var apiUrl = '/api/presenca';
-    if(window.location.protocol.indexOf('http') === 0 && window.location.port !== '8080'){
-      var host = window.location.hostname || 'localhost';
-      apiUrl = 'http://' + host + ':8080/api/presenca';
-    } else if(window.location.protocol === 'file:'){
-      apiUrl = 'http://localhost:8080/api/presenca';
-    }
-
-    fetch(apiUrl, {
+  function enviar(urlEnvio){
+    fetch(urlEnvio, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rec)
@@ -10377,12 +10463,27 @@ function salvarRegistro(rec){
     }).then(function(data){
       if(data && data.ok){
         console.log('[SINDSEPS] Presença sincronizada com o servidor:', rec.matricula);
+        atualizarStatusServidorConf(true, 'Sincronizado');
       }
     }).catch(function(err){
-      console.warn('[SINDSEPS] Servidor offline ou inacessível. Registro mantido localmente:', err.message);
+      console.warn('[SINDSEPS] Servidor offline ou inacessível:', err.message);
+      atualizarStatusServidorConf(false, 'Offline');
     });
-  } catch(e){}
+  }
+
+  if(_apiUrlConf){
+    enviar(_apiUrlConf);
+  } else {
+    testarConexaoServidorConf(function(ok){
+      if(ok && _apiUrlConf) enviar(_apiUrlConf);
+    });
+  }
 }
+
+// Checagem periódica da conexão
+testarConexaoServidorConf();
+setInterval(testarConexaoServidorConf, 5000);
+
 function buscarPorMatricula(mat){
   var lista=carregarRegistros(),i;
   for(i=0;i<lista.length;i++)if(lista[i].matricula===mat)return lista[i];
@@ -10695,6 +10796,109 @@ document.getElementById('btn-iniciar').addEventListener('click',function(){
 document.getElementById('inp-senha-conf').addEventListener('keydown',function(e){
   if(e.key === 'Enter') document.getElementById('btn-iniciar').click();
 });
+
+/* ---- Modal Entrada Manual ---- */
+var modalManual = document.getElementById('modal-manual');
+var btnDigitar = document.getElementById('btn-digitar');
+var btnCancManual = document.getElementById('man-btn-cancelar');
+var btnConfManual = document.getElementById('man-btn-confirmar');
+var inpManMat = document.getElementById('man-matricula');
+var inpManNome = document.getElementById('man-nome');
+var inpManOrg = document.getElementById('man-orgao');
+var errManMat = document.getElementById('man-err-mat');
+var errManNome = document.getElementById('man-err-nome');
+
+function abrirModalManual(matPreenchida){
+  if(errManMat) errManMat.textContent = '';
+  if(errManNome) errManNome.textContent = '';
+  if(inpManMat) {
+    inpManMat.value = matPreenchida || (inpMatServidor ? inpMatServidor.value.trim() : '');
+    inpManMat.classList.remove('erro');
+  }
+  if(inpManNome) {
+    inpManNome.value = '';
+    inpManNome.classList.remove('erro');
+  }
+  if(inpManOrg) inpManOrg.value = '';
+  if(modalManual) modalManual.style.display = 'flex';
+  setTimeout(function(){
+    if(inpManMat && !inpManMat.value) inpManMat.focus();
+    else if(inpManNome) inpManNome.focus();
+  }, 100);
+}
+
+function fecharModalManual(){
+  if(modalManual) modalManual.style.display = 'none';
+  if(inpMatServidor) inpMatServidor.focus();
+}
+
+if(btnDigitar) btnDigitar.addEventListener('click', function(){ abrirModalManual(); });
+if(btnCancManual) btnCancManual.addEventListener('click', fecharModalManual);
+
+if(btnConfManual){
+  btnConfManual.addEventListener('click', function(){
+    var mat = inpManMat ? inpManMat.value.trim().toUpperCase() : '';
+    var nome = inpManNome ? inpManNome.value.trim().toUpperCase() : '';
+    var org = inpManOrg ? inpManOrg.value.trim().toUpperCase() : '';
+    var valido = true;
+
+    if(!mat){
+      errManMat.textContent = 'Informe a matrícula.';
+      inpManMat.classList.add('erro');
+      valido = false;
+    } else {
+      errManMat.textContent = '';
+      inpManMat.classList.remove('erro');
+    }
+
+    if(!nome || nome.split(' ').filter(function(x){return x.length>0;}).length < 2){
+      errManNome.textContent = 'Informe nome e sobrenome.';
+      inpManNome.classList.add('erro');
+      valido = false;
+    } else {
+      errManNome.textContent = '';
+      inpManNome.classList.remove('erro');
+    }
+
+    if(!valido) return;
+
+    var existente = buscarPorMatricula(mat);
+    if(existente){
+      alert('Esta matrícula (' + mat + ') já foi registrada neste dispositivo anteriormente!');
+      return;
+    }
+
+    salvarRegistro({
+      matricula: mat,
+      nome: nome,
+      orgao: org || '—',
+      fileira: '—',
+      conferente: conferente || 'Portaria',
+      hora: new Date().toLocaleTimeString('pt-BR'),
+      origem: 'manual',
+      observacao: 'Registro manual portaria'
+    });
+
+    fecharModalManual();
+    mostrarVeredito('ok', 'CONFIRMADO!', nome.split(' ')[0] + ' (' + mat + ') - MANUAL');
+
+    if(inpMatServidor){
+      inpMatServidor.value = '';
+      atualizarStatusLeitor();
+    }
+  });
+}
+
+// Tecla Enter no campo da matrícula da barra superior
+if(inpMatServidor){
+  inpMatServidor.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      var mat = this.value.trim().toUpperCase();
+      if(!mat) return;
+      abrirModalManual(mat);
+    }
+  });
+}
 
 /* ---- Exportar CSV (se disponível) ---- */
 var btnExportar = document.getElementById('btn-exportar');
