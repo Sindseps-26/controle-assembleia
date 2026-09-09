@@ -5,9 +5,11 @@ const path = require('path');
 const PORT     = 8080;
 const BASE_DIR = __dirname;
 const DB_FILE  = path.join(BASE_DIR, 'presencas.json'); // persistência em disco
+const ASS_FILE = path.join(BASE_DIR, 'assembleias.json'); // persistência de assembleias em disco
 
 /* ── Banco de dados em memória (carregado do arquivo ao iniciar) ─────────── */
-let presencasDB = [];
+let presencasDB   = [];
+let assembleiasDB = [];
 
 function carregarDB() {
   try {
@@ -19,6 +21,16 @@ function carregarDB() {
     presencasDB = [];
     console.warn('[API] Não foi possível carregar presencas.json, iniciando vazio.');
   }
+
+  try {
+    if (fs.existsSync(ASS_FILE)) {
+      assembleiasDB = JSON.parse(fs.readFileSync(ASS_FILE, 'utf-8'));
+      console.log(`[API] ${assembleiasDB.length} assembleias carregadas de assembleias.json`);
+    }
+  } catch (e) {
+    assembleiasDB = [];
+    console.warn('[API] Não foi possível carregar assembleias.json, iniciando vazio.');
+  }
 }
 
 function salvarDB() {
@@ -26,6 +38,14 @@ function salvarDB() {
     fs.writeFileSync(DB_FILE, JSON.stringify(presencasDB, null, 2), 'utf-8');
   } catch (e) {
     console.error('[API] Erro ao salvar presencas.json:', e.message);
+  }
+}
+
+function salvarAssembleiasDB() {
+  try {
+    fs.writeFileSync(ASS_FILE, JSON.stringify(assembleiasDB, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('[API] Erro ao salvar assembleias.json:', e.message);
   }
 }
 
@@ -154,6 +174,29 @@ const server = http.createServer(async (req, res) => {
     salvarDB();
     console.log(`[API] Sessão limpa — ${total} registros removidos.`);
     jsonOk(res, { ok: true, removidos: total });
+    return;
+  }
+
+  /* ── GET /api/assembleias ── painel busca lista de assembleias salvas ─── */
+  if (url === '/api/assembleias' && method === 'GET') {
+    jsonOk(res, { assembleias: assembleiasDB, total: assembleiasDB.length });
+    return;
+  }
+
+  /* ── POST /api/assembleias ── painel salva lista de assembleias no disco ─ */
+  if (url === '/api/assembleias' && method === 'POST') {
+    let dados;
+    try { dados = await lerBody(req); }
+    catch (e) { jsonErro(res, 400, 'Body inválido'); return; }
+
+    if (Array.isArray(dados.assembleias)) {
+      assembleiasDB = dados.assembleias;
+      salvarAssembleiasDB();
+      console.log(`[API] ${assembleiasDB.length} assembleia(s) sincronizada(s) no disco.`);
+      jsonOk(res, { ok: true, total: assembleiasDB.length });
+      return;
+    }
+    jsonErro(res, 422, 'Campo assembleias deve ser um array');
     return;
   }
 

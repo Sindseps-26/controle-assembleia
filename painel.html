@@ -1335,6 +1335,9 @@ footer.diretoria-footer {
     <div class="session-info">
       <div class="session-title-wrap">
         <h2>Painel da Diretoria</h2>
+        <span class="session-badge" id="badge-ass-ativa-header" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-weight:700;display:inline-flex;align-items:center;gap:5px" title="Assembleia selecionada atualmente">
+          🏛️ <span id="txt-ass-ativa-header">Assembleia Geral Ordinária</span>
+        </span>
       </div>
 
       <!-- Controle e Ações da Assembleia: Dropdown Executivo -->
@@ -1468,7 +1471,7 @@ footer.diretoria-footer {
       <div class="section-header-title">
         <div style="display:flex;align-items:center;gap:12px">
           <img src="logo-sindseps.png" alt="SINDSEPS" style="height:26px;background:#fff;padding:2px 6px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1)" onerror="this.style.display='none'">
-          <span>Planilha Geral de Servidores Presentes (Tempo Real)</span>
+          <span id="tit-tabela-presentes">Planilha Geral de Servidores Presentes (Tempo Real)</span>
         </div>
       </div>
       <div class="search-bar-wrap">
@@ -1653,6 +1656,7 @@ function carregarAssembleias(){
 
   carregarDadosDaAssembleiaAtiva();
   renderizarSelectAssembleias();
+  sincronizarAssembleiasComServidor();
 }
 
 function carregarDadosDaAssembleiaAtiva(){
@@ -1666,8 +1670,45 @@ function salvarTodasAssembleias(){
   try {
     localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias));
   } catch(e){
-    console.error('Erro ao salvar assembleias:', e);
+    console.error('Erro ao salvar assembleias no localStorage:', e);
   }
+
+  // Tenta salvar também no servidor backend se acessível
+  try {
+    var payload = JSON.stringify({ assembleias: assembleias });
+    fetch('/api/assembleias', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    }).catch(function(){
+      // Fallback para porta 8080 se estiver aberto em IP diferente
+      fetch('http://' + (window.location.hostname || 'localhost') + ':8080/api/assembleias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      }).catch(function(){});
+    });
+  } catch(e){}
+}
+
+function sincronizarAssembleiasComServidor(){
+  var urlSync = '/api/assembleias';
+  fetch(urlSync, { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data && Array.isArray(data.assembleias) && data.assembleias.length > 0){
+        // Se o servidor tem dados válidos, sincroniza
+        assembleias = data.assembleias;
+        try { localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias)); } catch(e){}
+        var idAtiva = null;
+        try { idAtiva = localStorage.getItem(STORAGE_KEY_ATIVA); } catch(e){}
+        assembleiaAtiva = assembleias.find(function(a){ return a.id === idAtiva; }) || assembleias[0];
+        carregarDadosDaAssembleiaAtiva();
+        renderizarSelectAssembleias();
+        atualizarUI();
+      }
+    })
+    .catch(function(){});
 }
 
 function salvarAssembleiaAtiva(){
@@ -1676,6 +1717,13 @@ function salvarAssembleiaAtiva(){
   assembleiaAtiva.revisar = revisar;
   assembleiaAtiva.conferentes = conferentes;
   assembleiaAtiva.atualizadoEm = new Date().toISOString();
+
+  // Garante que o item no array assembleias tenha a mesma referência/conteúdo
+  var idx = assembleias.findIndex(function(a){ return a.id === assembleiaAtiva.id; });
+  if(idx !== -1){
+    assembleias[idx] = assembleiaAtiva;
+  }
+
   salvarTodasAssembleias();
 }
 
@@ -1703,6 +1751,12 @@ function formatarDataBR(dataStr){
 
 function renderizarSelectAssembleias(){
   var sel = document.getElementById('sel-assembleia');
+  var txtHeader = document.getElementById('txt-ass-ativa-header');
+
+  if(assembleiaAtiva && txtHeader){
+    txtHeader.textContent = assembleiaAtiva.nome || 'Assembleia';
+  }
+
   if(!sel) return;
 
   if(!assembleias.length){
@@ -2294,6 +2348,16 @@ function atualizarUI(){
   var revCount = revisar.length;
   var confKeys=Object.keys(conferentes);
 
+  /* Atualizar identificação da assembleia ativa na interface */
+  var txtHeader = document.getElementById('txt-ass-ativa-header');
+  if(txtHeader && assembleiaAtiva){
+    txtHeader.textContent = assembleiaAtiva.nome || 'Assembleia';
+  }
+  var titTblPres = document.getElementById('tit-tabela-presentes');
+  if(titTblPres && assembleiaAtiva){
+    titTblPres.textContent = 'Lista de Presença — ' + (assembleiaAtiva.nome || 'Assembleia Geral');
+  }
+
   /* Atualizar valores dos KPIs */
   var elTotal = document.getElementById('c-total');
   if(elTotal) elTotal.textContent = total;
@@ -2834,16 +2898,37 @@ if(btnSalvarEdit){
       return;
     }
 
+    if(!assembleiaAtiva){
+      fecharModalEditarAss();
+      return;
+    }
+
+    // Atualiza o objeto ativo
     assembleiaAtiva.nome = nome;
     assembleiaAtiva.data = data;
     assembleiaAtiva.pauta = pauta;
     assembleiaAtiva.atualizadoEm = new Date().toISOString();
 
+    // Garante sincronização no array geral de assembleias
+    var idx = assembleias.findIndex(function(a){ return a.id === assembleiaAtiva.id; });
+    if(idx !== -1){
+      assembleias[idx].nome = nome;
+      assembleias[idx].data = data;
+      assembleias[idx].pauta = pauta;
+      assembleias[idx].atualizadoEm = assembleiaAtiva.atualizadoEm;
+    } else {
+      assembleias.push(assembleiaAtiva);
+    }
+
+    // Persistência no LocalStorage e no Servidor
     salvarTodasAssembleias();
+    try { localStorage.setItem(STORAGE_KEY_ATIVA, assembleiaAtiva.id); } catch(e){}
+
+    // Atualização visual imediata
     renderizarSelectAssembleias();
     atualizarUI();
     fecharModalEditarAss();
-    mostrarOk('Assembleia atualizada: ' + nome);
+    mostrarOk('Assembleia atualizada com sucesso: ' + nome);
   });
 }
 
