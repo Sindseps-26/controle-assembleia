@@ -2784,103 +2784,131 @@ atualizarUI();
     }
   }
 
-  function obterApiUrl(endpoint){
-    // Se a página foi aberta via servidor na mesma porta/origem
-    if(window.location.protocol.indexOf('http') === 0 && window.location.port === '8080'){
-      return endpoint;
+  var _apiUrlPreferida = '';
+
+  function testarConexaoApi(callback){
+    var candidatas = [
+      '/api/presencas',
+      'http://localhost:8080/api/presencas',
+      'http://127.0.0.1:8080/api/presencas'
+    ];
+    // Se estiver em outra máquina ou celular
+    if(window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'){
+      candidatas.unshift('http://' + window.location.hostname + ':8080/api/presencas');
     }
-    // Se foi aberta com porta diferente ou file://, direciona para o servidor Node
-    var host = window.location.hostname || 'localhost';
-    if(host === 'localhost' || host === '127.0.0.1' || !host){
-      return 'http://localhost:8080' + endpoint;
+
+    var i = 0;
+    function tentarProxima(){
+      if(i >= candidatas.length){
+        callback(null, new Error('Nenhuma URL acessível'));
+        return;
+      }
+      var urlTeste = candidatas[i++];
+      fetch(urlTeste, { cache: 'no-store' })
+        .then(function(res){
+          if(!res.ok) throw new Error('Status ' + res.status);
+          return res.json();
+        })
+        .then(function(data){
+          _apiUrlPreferida = urlTeste;
+          callback(data, null);
+        })
+        .catch(function(e){
+          tentarProxima();
+        });
     }
-    return 'http://' + host + ':8080' + endpoint;
+
+    if(_apiUrlPreferida){
+      fetch(_apiUrlPreferida, { cache: 'no-store' })
+        .then(function(res){ return res.json(); })
+        .then(function(data){ callback(data, null); })
+        .catch(function(e){
+          _apiUrlPreferida = '';
+          tentarProxima();
+        });
+    } else {
+      tentarProxima();
+    }
   }
 
   function sincronizarTempoReal(){
-    var url = obterApiUrl('/api/presencas');
-    fetch(url, { cache: 'no-store' })
-      .then(function(res){
-        if(!res.ok) throw new Error('Status ' + res.status);
-        return res.json();
-      })
-      .then(function(data){
-        setStatusSync(true, '● AO VIVO (' + (data.total || 0) + ')');
+    testarConexaoApi(function(data, err){
+      if(err || !data){
+        setStatusSync(false, 'Servidor Offline');
+        return;
+      }
 
-        if(data && Array.isArray(data.presencas) && data.presencas.length > 0){
-          var novosAdicionados = false;
+      setStatusSync(true, '● AO VIVO (' + (data.total || 0) + ')');
 
-          data.presencas.forEach(function(item){
-            var mat = String(item.matricula || '').trim().toUpperCase();
-            if(!mat) return;
+      if(data && Array.isArray(data.presencas) && data.presencas.length > 0){
+        var novosAdicionados = false;
 
-            var existeIdx = indicePorMatricula(mat);
-            if(existeIdx >= 0){
-              // Já existe na lista de presentes. Se for duplicado vindo do servidor, garante na auditoria
-              if(item.duplicado){
-                var jaAuditado = revisar.some(function(r){
-                  return String(r.matricula || '').trim().toUpperCase() === mat;
+        data.presencas.forEach(function(item){
+          var mat = String(item.matricula || '').trim().toUpperCase();
+          if(!mat) return;
+
+          var existeIdx = indicePorMatricula(mat);
+          if(existeIdx >= 0){
+            if(item.duplicado){
+              var jaAuditado = revisar.some(function(r){
+                return String(r.matricula || '').trim().toUpperCase() === mat;
+              });
+              if(!jaAuditado){
+                revisar.push({
+                  matricula: mat,
+                  nome: item.nome || '',
+                  orgao: item.orgao || '—',
+                  motivo: 'Leitura repetida na portaria (Tempo Real)',
+                  arquivo: 'tempo-real',
+                  conferente: item.conferente || '',
+                  hora: item.hora || ''
                 });
-                if(!jaAuditado){
-                  revisar.push({
-                    matricula: mat,
-                    nome: item.nome || '',
-                    orgao: item.orgao || '—',
-                    motivo: 'Leitura repetida na portaria (Tempo Real)',
-                    arquivo: 'tempo-real',
-                    conferente: item.conferente || '',
-                    hora: item.hora || ''
-                  });
-                  novosAdicionados = true;
-                }
+                novosAdicionados = true;
               }
-              return;
             }
+            return;
+          }
 
-            // Novo servidor presente
-            var confNome = item.conferente || 'Portaria';
-            var arqKey = 'Tempo Real (' + confNome + ')';
-            if(!conferentes[arqKey]){
-              conferentes[arqKey] = { nome: confNome, count: 0 };
-            }
-            conferentes[arqKey].count++;
+          var confNome = item.conferente || 'Portaria';
+          var arqKey = 'Tempo Real (' + confNome + ')';
+          if(!conferentes[arqKey]){
+            conferentes[arqKey] = { nome: confNome, count: 0 };
+          }
+          conferentes[arqKey].count++;
 
-            presentes.push({
+          presentes.push({
+            matricula: mat,
+            nome: item.nome || '',
+            orgao: item.orgao || '—',
+            fileira: item.fileira || '—',
+            conferente: confNome,
+            hora: item.hora || new Date().toLocaleTimeString('pt-BR'),
+            origem: item.origem || 'qr',
+            observacao: item.observacao || '',
+            arquivo: 'tempo-real'
+          });
+
+          if(item.observacao){
+            revisar.push({
               matricula: mat,
               nome: item.nome || '',
               orgao: item.orgao || '—',
-              fileira: item.fileira || '—',
+              motivo: 'Observação: ' + item.observacao,
+              arquivo: 'tempo-real',
               conferente: confNome,
-              hora: item.hora || new Date().toLocaleTimeString('pt-BR'),
-              origem: item.origem || 'qr',
-              observacao: item.observacao || '',
-              arquivo: 'tempo-real'
+              hora: item.hora || ''
             });
-
-            if(item.observacao){
-              revisar.push({
-                matricula: mat,
-                nome: item.nome || '',
-                orgao: item.orgao || '—',
-                motivo: 'Observação: ' + item.observacao,
-                arquivo: 'tempo-real',
-                conferente: confNome,
-                hora: item.hora || ''
-              });
-            }
-
-            novosAdicionados = true;
-          });
-
-          if(novosAdicionados){
-            salvarAssembleiaAtiva();
-            atualizarUI();
           }
+
+          novosAdicionados = true;
+        });
+
+        if(novosAdicionados){
+          salvarAssembleiaAtiva();
+          atualizarUI();
         }
-      })
-      .catch(function(err){
-        setStatusSync(false, 'Servidor Offline');
-      });
+      }
+    });
   }
 
   // Executa checagem imediata e repete a cada 3 segundos
