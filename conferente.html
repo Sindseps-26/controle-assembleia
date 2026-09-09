@@ -108,40 +108,6 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
 #aviso-bd{display:none;background:#7a5c00;color:#fff;
   padding:8px 12px;font-size:.8rem;text-align:center;margin-top:10px;
   border-radius:2px;line-height:1.4}
-
-/* modal entrada manual */
-#modal-manual{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.82);
-  display:none;align-items:center;justify-content:center}
-#modal-inner{background:var(--white);border-radius:2px;padding:26px 20px;
-  max-width:360px;width:92%;max-height:90vh;overflow-y:auto}
-#modal-inner h3{font-size:1.05rem;color:var(--ink);margin-bottom:14px;font-weight:700}
-.ml{display:block;font-size:.8rem;font-weight:700;color:var(--ink);margin-bottom:5px}
-.inp-modal{width:100%;padding:12px;font-size:1rem;border:2px solid var(--brd);
-  border-radius:2px;margin-bottom:4px;-webkit-appearance:none}
-.inp-modal:focus{outline:2px solid #4a90e2;border-color:#4a90e2}
-.inp-modal.erro{border-color:var(--err)}
-.err-txt{font-size:.78rem;color:var(--err);min-height:1.1em;font-weight:600;
-  margin-bottom:10px;display:block}
-.lgpd-modal-box{
-  background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;
-  padding:10px 12px;margin:8px 0 12px;font-size:.75rem;color:#475569;line-height:1.4;
-}
-.lgpd-modal-box strong{color:var(--ink);display:block;margin-bottom:4px;font-size:.78rem;}
-.lgpd-check-lbl{
-  display:flex;align-items:flex-start;gap:8px;font-size:.78rem;color:var(--txt);
-  font-weight:600;margin-top:6px;cursor:pointer;line-height:1.3;
-}
-.lgpd-check-lbl input[type=checkbox]{
-  width:16px;height:16px;accent-color:var(--ink);margin-top:1px;flex-shrink:0;cursor:pointer;
-}
-.modal-btns{display:flex;gap:10px;margin-top:6px}
-.btn-modal-ok{flex:1;padding:13px;background:var(--ink);color:#fff;
-  font-size:.95rem;font-weight:700;border:none;border-radius:2px;cursor:pointer;
-  min-height:48px}
-.btn-modal-ok:focus{outline:2px solid #4a90e2}
-.btn-modal-cancel{flex:1;padding:13px;background:#888;color:#fff;
-  font-size:.95rem;font-weight:700;border:none;border-radius:2px;cursor:pointer;
-  min-height:48px}
 </style>
 </head>
 <body>
@@ -177,51 +143,17 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   </div>
 </div>
 
-<!-- Barra superior -->
+<!-- Barra superior limpa: 100% Leitura QR Direta Antifraude -->
 <div id="topbar">
   <span id="topbar-brand">SINDSEPS</span>
 
-  <!-- Validação Prévia de Matrícula -->
-  <div id="mat-verify-wrap">
-    <label for="inp-mat-servidor">Matrícula:</label>
-    <input id="inp-mat-servidor" type="text" placeholder="Digite..." maxlength="30" autocomplete="off">
-    <span id="status-leitor-badge" class="badge-aguardando">⏳ Digite a matrícula</span>
-  </div>
-
-  <button class="btn-sm" id="btn-digitar" style="background:#2563eb;color:#fff;margin-left:4px" title="Registrar presença manual se não tiver celular">✏️ Manual</button>
-
-  <div id="badge-sync-conf" style="display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:12px;font-size:0.72rem;font-weight:700;background:rgba(255,255,255,0.1);color:#cbd5e1" title="Status de conexão com o computador central">
-    <span id="dot-sync-conf" style="width:7px;height:7px;border-radius:50%;background:#ef4444"></span>
+  <div id="badge-sync-conf" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;font-size:0.75rem;font-weight:700;background:rgba(255,255,255,0.12);color:#cbd5e1;cursor:pointer" title="Clique para configurar o endereço do servidor">
+    <span id="dot-sync-conf" style="width:8px;height:8px;border-radius:50%;background:#ef4444"></span>
     <span id="txt-sync-conf">Servidor...</span>
   </div>
 
   <span id="contador">0 lidos</span>
   <button class="btn-sm" id="btn-limpar" title="Limpar leituras">✕</button>
-</div>
-
-<!-- Modal Entrada Manual de Presença -->
-<div id="modal-manual" role="dialog" aria-modal="true" aria-labelledby="tit-modal-manual">
-  <div id="modal-inner">
-    <h3 id="tit-modal-manual">Registrar Presença Manual</h3>
-    <p style="font-size:.78rem;color:#64748b;margin-bottom:12px">Para servidores sem celular ou com dificuldades técnicas.</p>
-    
-    <label class="ml" for="man-matricula">Matrícula do Servidor *</label>
-    <input id="man-matricula" class="inp-modal" type="text" placeholder="Ex: 123456" maxlength="30" autocomplete="off">
-    <span id="man-err-mat" class="err-txt"></span>
-
-    <label class="ml" for="man-nome">Nome Completo *</label>
-    <input id="man-nome" class="inp-modal" type="text" placeholder="Nome do servidor" maxlength="80" autocomplete="off">
-    <span id="man-err-nome" class="err-txt"></span>
-
-    <label class="ml" for="man-orgao">Órgão / Secretaria (opcional)</label>
-    <input id="man-orgao" class="inp-modal" type="text" placeholder="Ex: SMS, SECULT, etc." maxlength="80" autocomplete="off">
-    <span id="man-err-orgao" class="err-txt"></span>
-
-    <div class="modal-btns">
-      <button type="button" class="btn-modal-cancel" id="man-btn-cancelar">Cancelar</button>
-      <button type="button" class="btn-modal-ok" id="man-btn-confirmar">Confirmar Presença</button>
-    </div>
-  </div>
 </div>
 
 <!-- Veredito em tela cheia -->
@@ -10382,13 +10314,28 @@ function mascaraCPFInput(e){
     Math.max(0,Math.min(pos+diff,inp.value.length)));
 }
 
-/* ---- Persistência e Sincronização em Tempo Real ---- */
+/* ---- Persistência e Sincronização em Tempo Real com Fila Antifraude ---- */
 var CHAVE_STORAGE='conf_registros_v3';
+var CHAVE_FILA='conf_fila_offline_v3';
+var CHAVE_CUSTOM_SERVER='conf_custom_server_url';
+
 function carregarRegistros(){try{return JSON.parse(localStorage.getItem(CHAVE_STORAGE)||'[]');}catch(e){return[];}}
+function carregarFila(){try{return JSON.parse(localStorage.getItem(CHAVE_FILA)||'[]');}catch(e){return[];}}
+function salvarFila(f){try{localStorage.setItem(CHAVE_FILA, JSON.stringify(f));}catch(e){}}
 
 var _apiUrlConf = '';
 function obterCandidatasApi(path){
-  var rotas = [path];
+  var rotas = [];
+  var custom = '';
+  try { custom = (localStorage.getItem(CHAVE_CUSTOM_SERVER)||'').trim(); } catch(e){}
+  if(custom){
+    var base = custom.replace(/\/+$/, '');
+    rotas.push(base + path);
+  }
+
+  // Se a página estiver rodando pelo servidor local
+  rotas.push(path);
+
   var host = window.location.hostname || 'localhost';
   if(host && host !== 'localhost' && host !== '127.0.0.1'){
     rotas.push('http://' + host + ':8080' + path);
@@ -10406,12 +10353,38 @@ function atualizarStatusServidorConf(online, texto){
   if(txt) txt.textContent = texto || (online ? 'Online' : 'Offline');
 }
 
+// Configurar IP do servidor ao clicar no status
+var badgeSyncConfEl = document.getElementById('badge-sync-conf');
+if(badgeSyncConfEl){
+  badgeSyncConfEl.addEventListener('click', function(){
+    var atual = '';
+    try { atual = localStorage.getItem(CHAVE_CUSTOM_SERVER) || 'http://192.168.1.96:8080'; } catch(e){}
+    var novo = prompt('Endereço do Servidor Central (Painel):', atual);
+    if(novo !== null){
+      novo = novo.trim().replace(/\/+$/, '');
+      if(novo){
+        if(!/^https?:\/\//i.test(novo)) novo = 'http://' + novo;
+        try { localStorage.setItem(CHAVE_CUSTOM_SERVER, novo); } catch(e){}
+        _apiUrlConf = '';
+        testarConexaoServidorConf(function(ok){
+          alert(ok ? 'Conectado com sucesso ao servidor central!' : 'Não foi possível conectar a este endereço. Verifique se o servidor está rodando.');
+        });
+      } else {
+        try { localStorage.removeItem(CHAVE_CUSTOM_SERVER); } catch(e){}
+        _apiUrlConf = '';
+        testarConexaoServidorConf();
+      }
+    }
+  });
+}
+
 function testarConexaoServidorConf(callback){
   if(_apiUrlConf){
     fetch(_apiUrlConf.replace('/api/presenca', '/api/status'), { cache: 'no-store' })
       .then(function(res){ return res.json(); })
       .then(function(d){
         atualizarStatusServidorConf(true, 'Online');
+        processarFilaOffline();
         if(callback) callback(true);
       })
       .catch(function(){
@@ -10438,6 +10411,7 @@ function testarConexaoServidorConf(callback){
       .then(function(){
         _apiUrlConf = u.replace('/api/status', '/api/presenca');
         atualizarStatusServidorConf(true, 'Online');
+        processarFilaOffline();
         if(callback) callback(true);
       })
       .catch(function(){
@@ -10447,12 +10421,44 @@ function testarConexaoServidorConf(callback){
   testar();
 }
 
+var _processandoFila = false;
+function processarFilaOffline(){
+  if(_processandoFila || !_apiUrlConf) return;
+  var fila = carregarFila();
+  if(!fila.length) return;
+  _processandoFila = true;
+
+  var item = fila[0];
+  fetch(_apiUrlConf, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(item)
+  }).then(function(res){ return res.json(); })
+    .then(function(data){
+      _processandoFila = false;
+      if(data && data.ok){
+        var atualizada = carregarFila();
+        atualizada.shift();
+        salvarFila(atualizada);
+        if(atualizada.length > 0) setTimeout(processarFilaOffline, 200);
+      }
+    }).catch(function(){
+      _processandoFila = false;
+    });
+}
+
 function salvarRegistro(rec){
-  var lista=carregarRegistros();lista.push(rec);
-  try{localStorage.setItem(CHAVE_STORAGE,JSON.stringify(lista));}catch(e){}
+  var lista = carregarRegistros();
+  lista.push(rec);
+  try { localStorage.setItem(CHAVE_STORAGE, JSON.stringify(lista)); } catch(e){}
   atualizarContador();
 
-  /* Enviar automaticamente ao servidor em tempo real (sem bloquear se offline) */
+  // Enfileira para garantia antifraude
+  var fila = carregarFila();
+  fila.push(rec);
+  salvarFila(fila);
+
+  /* Dispara envio imediato */
   function enviar(urlEnvio){
     fetch(urlEnvio, {
       method: 'POST',
@@ -10464,10 +10470,12 @@ function salvarRegistro(rec){
       if(data && data.ok){
         console.log('[SINDSEPS] Presença sincronizada com o servidor:', rec.matricula);
         atualizarStatusServidorConf(true, 'Sincronizado');
+        var f = carregarFila().filter(function(x){ return x.matricula !== rec.matricula; });
+        salvarFila(f);
       }
     }).catch(function(err){
-      console.warn('[SINDSEPS] Servidor offline ou inacessível:', err.message);
-      atualizarStatusServidorConf(false, 'Offline');
+      console.warn('[SINDSEPS] Servidor offline ou inacessível no momento, enfileirado:', err.message);
+      atualizarStatusServidorConf(false, 'Offline (Salvo)');
     });
   }
 
@@ -10480,9 +10488,9 @@ function salvarRegistro(rec){
   }
 }
 
-// Checagem periódica da conexão
+// Checagem periódica da conexão e reenvio de fila a cada 3 segundos
 testarConexaoServidorConf();
-setInterval(testarConexaoServidorConf, 5000);
+setInterval(testarConexaoServidorConf, 3000);
 
 function buscarPorMatricula(mat){
   var lista=carregarRegistros(),i;
@@ -10552,78 +10560,54 @@ function validarPayload(raw){
   return{ok:true,matricula:p[1],nome:p[2],orgao:p[3],nDisp:parseInt(p[5],10)||1};
 }
 
-/* ---- Controle do Leitor e Validação Dupla de Matrícula ---- */
-var inpMatServidor = document.getElementById('inp-mat-servidor');
-var badgeStatusLeitor = document.getElementById('status-leitor-badge');
+/* ---- Controle do Leitor e Status ---- */
 var dicaMira = document.getElementById('dica-mira');
+if(dicaMira) dicaMira.textContent = 'Aponte a câmera para o QR Code da credencial';
 
-function atualizarStatusLeitor(){
-  var mat = inpMatServidor ? inpMatServidor.value.trim().toUpperCase() : '';
-  if(!mat){
-    if(badgeStatusLeitor){
-      badgeStatusLeitor.className = 'badge-aguardando';
-      badgeStatusLeitor.textContent = '⏳ Digite a matrícula';
-    }
-    if(dicaMira) dicaMira.textContent = 'Digite a matrícula do servidor para liberar o leitor';
-  } else {
-    if(badgeStatusLeitor){
-      badgeStatusLeitor.className = 'badge-habilitado';
-      badgeStatusLeitor.textContent = '✓ Leitor Habilitado: ' + mat;
-    }
-    if(dicaMira) dicaMira.textContent = 'Aponte a câmera para o QR Code da credencial';
-  }
-}
-
-if(inpMatServidor){
-  inpMatServidor.addEventListener('input', atualizarStatusLeitor);
-}
-
-/* ---- Processar código lido ---- */
+/* ---- Processar código lido 100% Automático via Câmera ---- */
 var _ultimoCod='',_ultimoTick=0;
 function processarCodigo(raw){
-  if(!raw)return;
+  if(!raw) return;
   var agora=Date.now();
-  if(raw===_ultimoCod&&agora-_ultimoTick<1500)return;
+  if(raw===_ultimoCod && agora-_ultimoTick<2500) return;
 
-  var matEsperada = inpMatServidor ? inpMatServidor.value.trim().toUpperCase().replace(/\|/g,'') : '';
-  if(!matEsperada){
-    _ultimoCod=raw;_ultimoTick=agora;
-    mostrarVeredito('aviso','DIGITE A MATRÍCULA','Informe a matrícula do servidor antes de ler a credencial.');
-    if(inpMatServidor) inpMatServidor.focus();
-    return;
-  }
-
-  _ultimoCod=raw;_ultimoTick=agora;
   var v=validarPayload(raw);
-  if(!v.ok){mostrarVeredito(v.tipo,v.msg,v.det);return;}
+  if(!v.ok){
+    _ultimoCod=raw; _ultimoTick=agora;
+    mostrarVeredito(v.tipo, v.msg, v.det);
+    return;
+  }
 
-  /* Validação Dupla Antifraude: Matrícula digitada vs Matrícula criptografada no QR */
   var matQr = String(v.matricula||'').trim().toUpperCase();
-  if(matQr !== matEsperada){
-    mostrarVeredito('erro','DIVERGÊNCIA!',
-      'Matrícula digitada (' + matEsperada + ') é diferente da credencial (' + matQr + ')');
+  if(!matQr){
+    _ultimoCod=raw; _ultimoTick=agora;
+    mostrarVeredito('erro', 'SEM MATRÍCULA', 'Credencial sem número de matrícula.');
     return;
   }
 
-  var existente=buscarPorMatricula(v.matricula);
+  var existente = buscarPorMatricula(matQr);
   if(existente){
-    mostrarVeredito('aviso','JÁ REGISTRADO',
-      'Matrícula: '+existente.matricula+' | Conf: '+existente.conferente);
+    _ultimoCod=raw; _ultimoTick=agora;
+    mostrarVeredito('aviso', 'JÁ REGISTRADO',
+      'Matrícula: ' + existente.matricula + ' | ' + (existente.nome ? existente.nome.split(' ')[0] : ''));
     return;
   }
 
-  var obs=v.nDisp>1?'aparelho com '+v.nDisp+' cadastros':'';
-  salvarRegistro({matricula:v.matricula,nome:v.nome,orgao:v.orgao,fileira:'—',conferente:conferente,
-    hora:new Date().toLocaleTimeString('pt-BR'),origem:'qr',observacao:obs});
+  _ultimoCod=raw; _ultimoTick=agora;
+  var obs = v.nDisp > 1 ? 'aparelho com ' + v.nDisp + ' cadastros' : '';
   
-  mostrarVeredito('ok','CONFIRMADO!',v.nome.split(' ')[0] + ' (' + v.matricula + ')');
+  salvarRegistro({
+    matricula: matQr,
+    nome: v.nome || 'Servidor',
+    orgao: v.orgao || '—',
+    fileira: '—',
+    conferente: conferente || 'Portaria',
+    hora: new Date().toLocaleTimeString('pt-BR'),
+    origem: 'qr',
+    observacao: obs
+  });
 
-  /* Limpa a matrícula e prepara imediatamente para o próximo servidor */
-  if(inpMatServidor){
-    inpMatServidor.value = '';
-    atualizarStatusLeitor();
-    setTimeout(function(){ inpMatServidor.focus(); }, 1600);
-  }
+  mostrarVeredito('ok', 'CONFIRMADO!', (v.nome ? v.nome.split(' ')[0] : 'Servidor') + ' (' + matQr + ')');
 }
 
 /* ---- Câmera e leitura (Híbrido: BarcodeDetector nativo + jsQR universal) ---- */
@@ -10797,108 +10781,7 @@ document.getElementById('inp-senha-conf').addEventListener('keydown',function(e)
   if(e.key === 'Enter') document.getElementById('btn-iniciar').click();
 });
 
-/* ---- Modal Entrada Manual ---- */
-var modalManual = document.getElementById('modal-manual');
-var btnDigitar = document.getElementById('btn-digitar');
-var btnCancManual = document.getElementById('man-btn-cancelar');
-var btnConfManual = document.getElementById('man-btn-confirmar');
-var inpManMat = document.getElementById('man-matricula');
-var inpManNome = document.getElementById('man-nome');
-var inpManOrg = document.getElementById('man-orgao');
-var errManMat = document.getElementById('man-err-mat');
-var errManNome = document.getElementById('man-err-nome');
 
-function abrirModalManual(matPreenchida){
-  if(errManMat) errManMat.textContent = '';
-  if(errManNome) errManNome.textContent = '';
-  if(inpManMat) {
-    inpManMat.value = matPreenchida || (inpMatServidor ? inpMatServidor.value.trim() : '');
-    inpManMat.classList.remove('erro');
-  }
-  if(inpManNome) {
-    inpManNome.value = '';
-    inpManNome.classList.remove('erro');
-  }
-  if(inpManOrg) inpManOrg.value = '';
-  if(modalManual) modalManual.style.display = 'flex';
-  setTimeout(function(){
-    if(inpManMat && !inpManMat.value) inpManMat.focus();
-    else if(inpManNome) inpManNome.focus();
-  }, 100);
-}
-
-function fecharModalManual(){
-  if(modalManual) modalManual.style.display = 'none';
-  if(inpMatServidor) inpMatServidor.focus();
-}
-
-if(btnDigitar) btnDigitar.addEventListener('click', function(){ abrirModalManual(); });
-if(btnCancManual) btnCancManual.addEventListener('click', fecharModalManual);
-
-if(btnConfManual){
-  btnConfManual.addEventListener('click', function(){
-    var mat = inpManMat ? inpManMat.value.trim().toUpperCase() : '';
-    var nome = inpManNome ? inpManNome.value.trim().toUpperCase() : '';
-    var org = inpManOrg ? inpManOrg.value.trim().toUpperCase() : '';
-    var valido = true;
-
-    if(!mat){
-      errManMat.textContent = 'Informe a matrícula.';
-      inpManMat.classList.add('erro');
-      valido = false;
-    } else {
-      errManMat.textContent = '';
-      inpManMat.classList.remove('erro');
-    }
-
-    if(!nome || nome.split(' ').filter(function(x){return x.length>0;}).length < 2){
-      errManNome.textContent = 'Informe nome e sobrenome.';
-      inpManNome.classList.add('erro');
-      valido = false;
-    } else {
-      errManNome.textContent = '';
-      inpManNome.classList.remove('erro');
-    }
-
-    if(!valido) return;
-
-    var existente = buscarPorMatricula(mat);
-    if(existente){
-      alert('Esta matrícula (' + mat + ') já foi registrada neste dispositivo anteriormente!');
-      return;
-    }
-
-    salvarRegistro({
-      matricula: mat,
-      nome: nome,
-      orgao: org || '—',
-      fileira: '—',
-      conferente: conferente || 'Portaria',
-      hora: new Date().toLocaleTimeString('pt-BR'),
-      origem: 'manual',
-      observacao: 'Registro manual portaria'
-    });
-
-    fecharModalManual();
-    mostrarVeredito('ok', 'CONFIRMADO!', nome.split(' ')[0] + ' (' + mat + ') - MANUAL');
-
-    if(inpMatServidor){
-      inpMatServidor.value = '';
-      atualizarStatusLeitor();
-    }
-  });
-}
-
-// Tecla Enter no campo da matrícula da barra superior
-if(inpMatServidor){
-  inpMatServidor.addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){
-      var mat = this.value.trim().toUpperCase();
-      if(!mat) return;
-      abrirModalManual(mat);
-    }
-  });
-}
 
 /* ---- Exportar CSV (se disponível) ---- */
 var btnExportar = document.getElementById('btn-exportar');
