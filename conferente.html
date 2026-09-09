@@ -127,6 +127,16 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   <div id="inicio-inner">
     <img src="logo-sindseps.png" alt="SINDSEPS" onerror="this.style.display='none'">
     <h2>SINDSEPS — Acesso Portaria</h2>
+
+    <!-- Alerta de URL incorreta (GitHub Pages / HTTPS) -->
+    <div id="aviso-url-errada" style="display:none;background:#7a1a1a;color:#fff;border-radius:4px;padding:12px;margin-bottom:14px;font-size:0.82rem;line-height:1.5;border:2px solid #ff6b6b">
+      <strong style="font-size:0.9rem">⚠️ ATENÇÃO — URL INCORRETA</strong><br>
+      Você está acessando pelo GitHub Pages (HTTPS).<br>
+      O sistema <strong>NÃO conseguirá enviar presenças</strong> ao servidor desta forma.<br><br>
+      <strong>Use este endereço no celular:</strong><br>
+      <span id="url-correta-conf" style="font-size:0.95rem;font-weight:800;color:#ffd700;word-break:break-all">http://192.168.1.96:8080/conferente.html</span>
+    </div>
+
     <input id="inp-mat-conf" class="inp-grande" type="text"
       placeholder="Sua matrícula (Conferente)" autocomplete="off" maxlength="30">
     <div id="erro-mat-conf" style="display:none;color:#ff6b6b;font-size:0.82rem;font-weight:700;margin:-6px 0 10px 0;text-align:left">
@@ -10324,6 +10334,25 @@ function carregarFila(){try{return JSON.parse(localStorage.getItem(CHAVE_FILA)||
 function salvarFila(f){try{localStorage.setItem(CHAVE_FILA, JSON.stringify(f));}catch(e){}}
 
 var _apiUrlConf = '';
+
+/* ---- Detectar se está no GitHub Pages (HTTPS) e bloquear com aviso ---- */
+(function(){
+  var proto = window.location.protocol;
+  var host  = window.location.hostname;
+  var isGitHubPages = (proto === 'https:' && host.indexOf('github') !== -1);
+  var isFileProtocol = (proto === 'file:');
+  var avisoBanner = document.getElementById('aviso-url-errada');
+
+  if(isGitHubPages || isFileProtocol){
+    /* Tenta montar URL local com IP salvo ou padrão */
+    var ipSalvo = '';
+    try { ipSalvo = (localStorage.getItem(CHAVE_CUSTOM_SERVER)||'').replace(/\/+$/,''); } catch(e){}
+    var urlCorreta = (ipSalvo || 'http://192.168.1.96:8080') + '/conferente.html';
+    var el = document.getElementById('url-correta-conf');
+    if(el) el.textContent = urlCorreta;
+    if(avisoBanner) avisoBanner.style.display = 'block';
+  }
+}());
 function obterCandidatasApi(path){
   var rotas = [];
   var custom = '';
