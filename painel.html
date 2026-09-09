@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Painel de consolidação — Assembleia Sindical">
 <title>SINDSEPS — Painel de Consolidação de Presença</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -36,7 +39,7 @@ html, body {
   min-height: 100%;
   background: #f1f4f8;
   color: var(--gov-slate-900);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -133,6 +136,49 @@ header {
   border-color: #475569;
 }
 .btn-print:hover { background: #1e293b; border-color: #334155; }
+
+/* Badge de sincronização em tempo real */
+.badge-live-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+.badge-live-sync.online {
+  background: rgba(4, 120, 87, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+.badge-live-sync.online .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseGreen 1.5s infinite;
+}
+.badge-live-sync.offline {
+  background: rgba(100, 116, 139, 0.2);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+.badge-live-sync.offline .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+}
+@keyframes pulseGreen {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 12px #34d399; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
 
 main {
   max-width: 1240px;
@@ -644,6 +690,71 @@ tr:hover td { background: #eff6ff; }
   display: inline-block; padding: 8px 16px; background: var(--gov-blue-600); color: #fff;
   font-size: 0.82rem; font-weight: 700; border-radius: 5px;
 }
+/* Botão Flutuante Topo */
+#btn-voltar-topo {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  background: var(--gov-navy-900); color: #fff; border: none;
+  border-radius: 50%; width: 46px; height: 46px;
+  display: none; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.3rem; font-weight: 700;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  transition: background 0.2s, transform 0.2s;
+}
+#btn-voltar-topo:hover { background: var(--gov-blue-600); transform: translateY(-2px); }
+
+/* Classes de botão ausentes nos modais */
+.btn-primary {
+  background: var(--gov-blue-600);
+  color: #fff;
+  border-color: var(--gov-blue-700);
+}
+.btn-primary:hover { background: var(--gov-blue-700); }
+
+.btn-danger {
+  background: transparent;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  line-height: 1;
+  transition: all 0.18s;
+}
+.btn-danger:hover { background: #fff1f2; border-color: #fda4af; }
+
+/* Badges de origem na tabela de presentes */
+.badge-qr-orig {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  padding: 2px 7px; background: #ecfdf5; color: #047857;
+  border: 1px solid #a7f3d0; border-radius: 3px; white-space: nowrap;
+}
+.badge-manual-orig {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  padding: 2px 7px; background: var(--gov-amber-50); color: var(--gov-amber-700);
+  border: 1px solid #fde68a; border-radius: 3px; white-space: nowrap;
+}
+
+/* Barra de busca na tabela de presentes */
+.search-bar-wrap {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.search-input {
+  flex: 1; min-width: 220px;
+  padding: 8px 14px; font-size: 0.84rem; font-family: inherit;
+  border: 1.5px solid var(--gov-slate-300); border-radius: 6px;
+  outline: none; transition: border-color 0.18s;
+  background: #fff; color: var(--gov-slate-900);
+}
+.search-input:focus { border-color: var(--gov-blue-600); }
+.search-count {
+  font-size: 0.78rem; color: var(--gov-slate-500);
+  font-weight: 600; white-space: nowrap;
+  background: var(--gov-slate-100); padding: 6px 12px;
+  border-radius: 5px; border: 1px solid var(--gov-slate-200);
+}
+
 /* Rodapé Institucional da Mesa Diretora */
 footer.diretoria-footer {
   background: var(--gov-navy-950);
@@ -735,6 +846,10 @@ footer.diretoria-footer {
     </div>
   </div>
   <div class="header-btns">
+    <div id="badge-sync-servidor" class="badge-live-sync offline" title="Status da sincronização em tempo real">
+      <span class="pulse-dot"></span>
+      <span id="txt-sync-servidor">Verificando Servidor...</span>
+    </div>
     <button class="btn btn-help" id="btn-abrir-ajuda" title="Guia Passo a Passo da Consolidação">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
       Como Funciona
@@ -750,6 +865,10 @@ footer.diretoria-footer {
     <button class="btn btn-print" id="btn-imprimir" title="Imprimir lista oficial para ata em papel A4">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
       Imprimir Lista
+    </button>
+    <button class="btn btn-help" id="btn-bloquear-sessao" title="Bloquear sessão e retornar à tela de senha">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      Bloquear
     </button>
   </div>
 </header>
@@ -988,6 +1107,12 @@ footer.diretoria-footer {
           <button class="btn-ass-action btn-ass-download" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em CSV">
             ⬇ Baixar Histórico
           </button>
+          <button class="btn-ass-action" id="btn-editar-ass" title="Editar dados da assembleia ativa" style="background:#334155;color:#f1f5f9;border:1px solid #475569">
+            ✏️ Editar
+          </button>
+          <button class="btn-ass-action btn-ass-download" id="btn-historico-ass" title="Ver histórico completo de assembleias">
+            📅 Histórico
+          </button>
         </div>
       </div>
     </div>
@@ -996,16 +1121,15 @@ footer.diretoria-footer {
   <div id="status-bar"></div>
   <div id="err-bar"></div>
 
-  <!-- Cards de resumo (3 KPIS ESTRATÉGICOS DA DIRETORIA) -->
-  <!-- Cards de resumo (KPIS ESTRATÉGICOS DA DIRETORIA) -->
-  <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr);">
+  <!-- Cards KPIs Estratégicos da Diretoria -->
+  <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-header">
         <span class="kpi-caption">Quórum Consolidado</span>
         <span class="kpi-tag tag-total">Oficial</span>
       </div>
       <div class="kpi-metric" id="c-total">0</div>
-      <div class="kpi-footer" id="kpi-meta-total">100% dos servidores validados</div>
+      <div class="kpi-footer" id="kpi-meta-total">Aguardando CSVs</div>
     </div>
 
     <div class="kpi-card">
@@ -1014,7 +1138,16 @@ footer.diretoria-footer {
         <span class="kpi-tag tag-qr">Certificado</span>
       </div>
       <div class="kpi-metric" id="c-qr">0</div>
-      <div class="kpi-footer" id="kpi-meta-qr">100% do quórum oficial</div>
+      <div class="kpi-footer" id="kpi-meta-qr">0% do quórum total</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <span class="kpi-caption">Ocorrências de Auditoria</span>
+        <span class="kpi-tag tag-rev">Revisão</span>
+      </div>
+      <div class="kpi-metric" id="c-rev" style="color:var(--gov-rose-700)">0</div>
+      <div class="kpi-footer" id="kpi-meta-rev">Nenhuma duplicata</div>
     </div>
   </div>
 
@@ -1028,12 +1161,40 @@ footer.diretoria-footer {
       <span class="status-indicator" id="badge-grafico-status">Aguardando dados</span>
     </div>
 
-    <div class="charts-grid" style="grid-template-columns: 1fr;">
+    <div class="charts-grid">
+      <!-- Gráfico Donut: QR Digital x Manual -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Validação: QR Digital × Manual</strong>
+          <span>Método de confirmação por presentes</span>
+        </div>
+        <div class="chart-container" id="chart-donut-box">
+          <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
+        </div>
+        <div class="chart-legend" id="chart-donut-legend" style="display:none">
+          <span class="legend-item"><span class="legend-dot dot-qr"></span> QR Digital</span>
+          <span class="legend-item"><span class="legend-dot dot-man"></span> Manual</span>
+        </div>
+      </div>
+
+      <!-- Gráfico de Registros por Conferente -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Registros por Conferente</strong>
+          <span>Distribuição de presenças por portaria/fileira</span>
+        </div>
+        <div class="chart-container" style="padding:10px 0" id="chart-conf-box">
+          <div id="bars-conferentes" class="horizontal-bars">
+            <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Gráfico de Órgãos de Atuação (Barras Horizontais) -->
       <div class="chart-card">
         <div class="chart-head">
           <strong>Representatividade por Secretaria / Órgão</strong>
-          <span>Participação por órgão da administração municipal</span>
+          <span>Top 8 órgãos por participação na assembleia</span>
         </div>
         <div class="chart-container" style="padding:10px 0" id="chart-orgaos-box">
           <div id="bars-orgaos" class="horizontal-bars">
@@ -1050,6 +1211,11 @@ footer.diretoria-footer {
     <section id="sec-presentes">
       <div class="section-header-title">
         <span>Lista Geral de Servidores Presentes (Ordem Alfabética)</span>
+      </div>
+      <div class="search-bar-wrap">
+        <input type="search" id="busca-presentes" class="search-input"
+          placeholder="🔍 Buscar por nome, matrícula ou órgão..." autocomplete="off">
+        <span class="search-count" id="search-count-presentes"></span>
       </div>
       <div class="tbl-wrap">
         <table id="tbl-presentes">
@@ -1129,6 +1295,11 @@ footer.diretoria-footer {
       <p class="footer-desc">
         Módulo exclusivo da coordenação geral para validação de quórum, eliminação de duplicidades e homologação oficial das deliberações em assembleias do funcionalismo público municipal.
       </p>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button class="btn btn-help" id="btn-footer-ajuda" style="font-size:0.75rem;padding:6px 12px">📖 Manual Passo a Passo</button>
+        <button class="btn btn-help" id="btn-footer-nova-ass" style="font-size:0.75rem;padding:6px 12px">➕ Nova Assembleia</button>
+        <button class="btn btn-help" id="btn-footer-historico" style="font-size:0.75rem;padding:6px 12px">📅 Histórico de Assembleias</button>
+      </div>
     </div>
   </div>
 
@@ -1643,10 +1814,11 @@ function atualizarUI(){
 
   /* Metadados / porcentagens dinâmicas */
   var elMetaTotal = document.getElementById('kpi-meta-total');
-  if(elMetaTotal) elMetaTotal.textContent = total > 0 ? '100% dos registros consolidados' : 'Aguardando CSVs';
+  if(elMetaTotal) elMetaTotal.textContent = total > 0 ? total + ' registro(s) consolidado(s)' : 'Aguardando CSVs';
 
+  var pctQr = total > 0 ? Math.round((qrCount / total) * 100) : 0;
   var elMetaQr = document.getElementById('kpi-meta-qr');
-  if(elMetaQr) elMetaQr.textContent = total > 0 ? '100% validados por credencial oficial' : '0% do quórum total';
+  if(elMetaQr) elMetaQr.textContent = total > 0 ? pctQr + '% do quórum validado por QR' : '0% do quórum total';
 
   var elMetaRev = document.getElementById('kpi-meta-rev');
   if(elMetaRev) elMetaRev.textContent = revCount > 0 ? revCount + ' ocorrência(s) barradas' : 'Nenhuma duplicata';
@@ -1659,31 +1831,18 @@ function atualizarUI(){
   if(badgeGraf){
     if(total > 0){
       badgeGraf.textContent = '● ' + total + ' presenças ativas';
-      badgeGraf.className = 'badge-live active';
+      badgeGraf.className = 'status-indicator active';
     } else {
       badgeGraf.textContent = 'Aguardando dados';
-      badgeGraf.className = 'badge-live';
+      badgeGraf.className = 'status-indicator';
     }
   }
 
   /* Renderizar Gráficos Interativos (SVG / HTML5 nativo) */
   renderizarGraficos(total);
 
-  /* tabela presentes */
-  var tbP=document.getElementById('tbody-presentes');
-  if(!presentes.length){
-    tbP.innerHTML='<tr><td colspan="9" class="info-vazia">Nenhum presente registrado.</td></tr>';
-  } else {
-    tbP.innerHTML=presOrdenados.map(function(p,i){
-      var isMan=p.origem==='manual';
-      var nomeCell=esc(p.nome)+(isMan?'<span class="badge-manual">manual</span>':'');
-      var obsCell=p.observacao?'<span class="badge-obs">'+esc(p.observacao)+'</span>':'';
-      return'<tr><td class="num">'+(i+1)+'</td><td class="num">'+esc(p.matricula)+'</td>'+
-        '<td>'+nomeCell+'</td><td>'+esc(p.orgao||'—')+'</td><td class="num">'+esc(p.fileira)+'</td>'+
-        '<td>'+esc(p.conferente)+'</td><td class="num">'+esc(p.hora)+'</td>'+
-        '<td>'+esc(p.origem)+'</td><td>'+obsCell+'</td></tr>';
-    }).join('');
-  }
+  /* tabela presentes (delegação a filtrarPresentes para suporte à busca) */
+  filtrarPresentes();
   /* tabela revisar */
   var tbR=document.getElementById('tbody-revisar');
   if(!revisar.length){
@@ -1709,7 +1868,16 @@ function atualizarUI(){
 }
 
 function renderizarGraficos(total){
-  /* Gráfico Horizontal: Top 5 Órgãos / Secretarias */
+  var qrCount = presentes.filter(function(p){ return p.origem === 'qr'; }).length;
+  var manCount = presentes.filter(function(p){ return p.origem === 'manual'; }).length;
+
+  /* Gráfico 1: Donut QR x Manual */
+  renderizarDonut(qrCount, manCount, total);
+
+  /* Gráfico 2: Barras por Conferente */
+  renderizarBarrasConferentes(total);
+
+  /* Gráfico 3: Top 8 Órgãos / Secretarias */
   var barsOrgaos = document.getElementById('bars-orgaos');
   if(barsOrgaos){
     if(total === 0){
@@ -1720,24 +1888,16 @@ function renderizarGraficos(total){
         var o = (p.orgao || 'Não informado').trim();
         contagemOrg[o] = (contagemOrg[o] || 0) + 1;
       });
-
       var ranking = Object.keys(contagemOrg).map(function(nome){
         return { nome: nome, count: contagemOrg[nome] };
-      }).sort(function(a,b){ return b.count - a.count; }).slice(0, 5);
-
+      }).sort(function(a,b){ return b.count - a.count; }).slice(0, 8);
       var maxCount = ranking[0].count || 1;
-
       barsOrgaos.innerHTML = ranking.map(function(item){
         var pct = Math.round((item.count / total) * 100);
-        var barWidth = Math.max(10, Math.round((item.count / maxCount) * 100));
+        var barWidth = Math.max(8, Math.round((item.count / maxCount) * 100));
         return '<div class="bar-row">' +
-          '<div class="bar-meta">' +
-            '<span>' + esc(item.nome) + '</span>' +
-            '<span>' + item.count + ' (' + pct + '%)</span>' +
-          '</div>' +
-          '<div class="bar-track">' +
-            '<div class="bar-fill" style="width:' + barWidth + '%"></div>' +
-          '</div>' +
+          '<div class="bar-meta"><span>' + esc(item.nome) + '</span><span>' + item.count + ' (' + pct + '%)</span></div>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:' + barWidth + '%"></div></div>' +
         '</div>';
       }).join('');
     }
@@ -1747,6 +1907,126 @@ function renderizarGraficos(total){
 function esc(s){
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;');
+}
+
+/* ---- Filtro de Busca na Tabela de Presentes ---- */
+function filtrarPresentes(termoBusca){
+  var busca = document.getElementById('busca-presentes');
+  var termo = ((termoBusca !== undefined ? termoBusca : (busca ? busca.value : '')) || '').toLowerCase().trim();
+  var presOrdenados = presentes.slice().sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); });
+  var filtrados = termo ? presOrdenados.filter(function(p){
+    return (p.nome||'').toLowerCase().indexOf(termo) !== -1 ||
+           (p.matricula||'').toLowerCase().indexOf(termo) !== -1 ||
+           (p.orgao||'').toLowerCase().indexOf(termo) !== -1;
+  }) : presOrdenados;
+
+  var counter = document.getElementById('search-count-presentes');
+  if(counter){
+    if(presentes.length === 0){
+      counter.textContent = '';
+    } else if(termo){
+      counter.textContent = filtrados.length + ' de ' + presentes.length + ' resultado(s)';
+    } else {
+      counter.textContent = presentes.length + ' servidor(es)';
+    }
+  }
+
+  var tbP = document.getElementById('tbody-presentes');
+  if(!tbP) return;
+  if(!filtrados.length){
+    tbP.innerHTML = '<tr><td colspan="9" class="info-vazia">' +
+      (termo ? 'Nenhum resultado para "' + esc(termo) + '".' : 'Nenhum presente registrado.') +
+      '</td></tr>';
+    return;
+  }
+  tbP.innerHTML = filtrados.map(function(p, i){
+    var isMan = p.origem === 'manual';
+    var nomeCell = esc(p.nome) + (isMan ? '<span class="badge-manual">manual</span>' : '');
+    var obsCell = p.observacao ? '<span class="badge-obs">' + esc(p.observacao) + '</span>' : '';
+    var origBadge = isMan
+      ? '<span class="badge-manual-orig">Manual</span>'
+      : '<span class="badge-qr-orig">QR</span>';
+    return '<tr>' +
+      '<td class="num">' + (i + 1) + '</td>' +
+      '<td class="num">' + esc(p.matricula) + '</td>' +
+      '<td>' + nomeCell + '</td>' +
+      '<td>' + esc(p.orgao || '—') + '</td>' +
+      '<td class="num">' + esc(p.fileira) + '</td>' +
+      '<td>' + esc(p.conferente) + '</td>' +
+      '<td class="num">' + esc(p.hora) + '</td>' +
+      '<td>' + origBadge + '</td>' +
+      '<td>' + obsCell + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+/* ---- Donut Chart SVG (QR vs Manual) ---- */
+function renderizarDonut(qr, manual, total){
+  var box = document.getElementById('chart-donut-box');
+  var legend = document.getElementById('chart-donut-legend');
+  if(!box) return;
+  if(total === 0){
+    box.innerHTML = '<div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>';
+    if(legend) legend.style.display = 'none';
+    return;
+  }
+  var r = 58, cx = 80, cy = 80;
+  var C = parseFloat((2 * Math.PI * r).toFixed(3));
+  var qrLen = parseFloat(((qr / total) * C).toFixed(3));
+  var manLen = parseFloat(((manual / total) * C).toFixed(3));
+  var qrOff = parseFloat((C / 4).toFixed(3));
+  var manOff = parseFloat((qrOff - qrLen).toFixed(3));
+  var qrPct = Math.round((qr / total) * 100);
+  var manPct = 100 - qrPct;
+  var svg = '<svg width="160" height="160" viewBox="0 0 160 160">';
+  svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#e2e8f0" stroke-width="22"/>';
+  if(qr > 0){
+    svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#047857" stroke-width="22"' +
+      ' stroke-dasharray="'+qrLen+' '+(C-qrLen)+'"' +
+      ' stroke-dashoffset="'+qrOff+'"/>';
+  }
+  if(manual > 0){
+    svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#d97706" stroke-width="22"' +
+      ' stroke-dasharray="'+manLen+' '+(C-manLen)+'"' +
+      ' stroke-dashoffset="'+manOff+'"/>';
+  }
+  svg += '</svg>';
+  box.innerHTML = '<div style="position:relative;display:inline-flex;align-items:center;justify-content:center">' +
+    svg +
+    '<div class="donut-center-text">' +
+      '<span class="donut-num">' + total + '</span>' +
+      '<span class="donut-lbl">Total</span>' +
+    '</div>' +
+  '</div>';
+  if(legend){
+    legend.style.display = 'flex';
+    legend.innerHTML =
+      '<span class="legend-item"><span class="legend-dot dot-qr"></span> QR (' + qrPct + '%)</span>' +
+      (manual > 0 ? '<span class="legend-item"><span class="legend-dot dot-man"></span> Manual (' + manPct + '%)</span>' : '');
+  }
+}
+
+/* ---- Barras por Conferente ---- */
+function renderizarBarrasConferentes(total){
+  var box = document.getElementById('bars-conferentes');
+  if(!box) return;
+  var confKeys = Object.keys(conferentes);
+  if(total === 0 || !confKeys.length){
+    box.innerHTML = '<div class="chart-empty-msg">Nenhum conferente carregado.</div>';
+    return;
+  }
+  var dados = confKeys.map(function(k){
+    return { nome: conferentes[k].nome || k, count: conferentes[k].count };
+  }).sort(function(a,b){ return b.count - a.count; });
+  var maxC = dados[0].count || 1;
+  box.innerHTML = dados.map(function(item){
+    var pct = Math.round((item.count / total) * 100);
+    var w = Math.max(6, Math.round((item.count / maxC) * 100));
+    return '<div class="bar-row">' +
+      '<div class="bar-meta"><span>' + esc(item.nome) + '</span><span>' + item.count + ' (' + pct + '%)</span></div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + w + '%;background:#047857"></div></div>' +
+    '</div>';
+  }).join('');
 }
 function mostrarOk(msg){
   var el=document.getElementById('status-bar');
@@ -2121,6 +2401,131 @@ if(window.location.search.indexOf('demo=') !== -1){
 
 /* Inicializar cards e gráficos */
 atualizarUI();
+
+/* ---- Busca na tabela de presentes ---- */
+(function(){
+  var buscaPres = document.getElementById('busca-presentes');
+  if(buscaPres){
+    buscaPres.addEventListener('input', function(){ filtrarPresentes(this.value); });
+  }
+
+  /* ---- Botão Voltar ao Topo ---- */
+  window.addEventListener('scroll', function(){
+    var btn = document.getElementById('btn-voltar-topo');
+    if(btn) btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
+  });
+
+  /* ========================================================
+     SINCRONIZAÇÃO EM TEMPO REAL COM O SERVIDOR (SEM CSV MANUAL)
+  ======================================================== */
+  var badgeSync = document.getElementById('badge-sync-servidor');
+  var txtSync = document.getElementById('txt-sync-servidor');
+  var intervalSync = null;
+
+  function setStatusSync(online, texto){
+    if(!badgeSync || !txtSync) return;
+    if(online){
+      badgeSync.className = 'badge-live-sync online';
+      txtSync.textContent = texto || '● AO VIVO';
+    } else {
+      badgeSync.className = 'badge-live-sync offline';
+      txtSync.textContent = texto || 'OFFLINE';
+    }
+  }
+
+  function sincronizarTempoReal(){
+    fetch('/api/presencas', { cache: 'no-store' })
+      .then(function(res){
+        if(!res.ok) throw new Error('Status ' + res.status);
+        return res.json();
+      })
+      .then(function(data){
+        setStatusSync(true, '● AO VIVO (' + (data.total || 0) + ')');
+
+        if(data && Array.isArray(data.presencas) && data.presencas.length > 0){
+          var novosAdicionados = false;
+
+          data.presencas.forEach(function(item){
+            var mat = String(item.matricula || '').trim().toUpperCase();
+            if(!mat) return;
+
+            var existeIdx = indicePorMatricula(mat);
+            if(existeIdx >= 0){
+              // Já existe na lista de presentes. Se for duplicado vindo do servidor, garante na auditoria
+              if(item.duplicado){
+                var jaAuditado = revisar.some(function(r){
+                  return String(r.matricula || '').trim().toUpperCase() === mat;
+                });
+                if(!jaAuditado){
+                  revisar.push({
+                    matricula: mat,
+                    nome: item.nome || '',
+                    orgao: item.orgao || '—',
+                    motivo: 'Leitura repetida na portaria (Tempo Real)',
+                    arquivo: 'tempo-real',
+                    conferente: item.conferente || '',
+                    hora: item.hora || ''
+                  });
+                  novosAdicionados = true;
+                }
+              }
+              return;
+            }
+
+            // Novo servidor presente
+            var confNome = item.conferente || 'Portaria';
+            var arqKey = 'Tempo Real (' + confNome + ')';
+            if(!conferentes[arqKey]){
+              conferentes[arqKey] = { nome: confNome, count: 0 };
+            }
+            conferentes[arqKey].count++;
+
+            presentes.push({
+              matricula: mat,
+              nome: item.nome || '',
+              orgao: item.orgao || '—',
+              fileira: item.fileira || '—',
+              conferente: confNome,
+              hora: item.hora || new Date().toLocaleTimeString('pt-BR'),
+              origem: item.origem || 'qr',
+              observacao: item.observacao || '',
+              arquivo: 'tempo-real'
+            });
+
+            if(item.observacao){
+              revisar.push({
+                matricula: mat,
+                nome: item.nome || '',
+                orgao: item.orgao || '—',
+                motivo: 'Observação: ' + item.observacao,
+                arquivo: 'tempo-real',
+                conferente: confNome,
+                hora: item.hora || ''
+              });
+            }
+
+            novosAdicionados = true;
+          });
+
+          if(novosAdicionados){
+            salvarAssembleiaAtiva();
+            atualizarUI();
+          }
+        }
+      })
+      .catch(function(err){
+        setStatusSync(false, 'Servidor Offline');
+      });
+  }
+
+  // Executa checagem imediata e repete a cada 3 segundos
+  sincronizarTempoReal();
+  intervalSync = setInterval(sincronizarTempoReal, 3000);
+})();
 </script>
+
+<!-- Botão Flutuante: Voltar ao Topo -->
+<button id="btn-voltar-topo" title="Voltar ao topo da página" aria-label="Voltar ao topo">&#8593;</button>
+
 </body>
 </html>

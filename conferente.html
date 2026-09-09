@@ -10358,6 +10358,23 @@ function salvarRegistro(rec){
   var lista=carregarRegistros();lista.push(rec);
   try{localStorage.setItem(CHAVE_STORAGE,JSON.stringify(lista));}catch(e){}
   atualizarContador();
+
+  /* Enviar automaticamente ao servidor em tempo real (sem bloquear se offline) */
+  try {
+    fetch('/api/presenca', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rec)
+    }).then(function(res){
+      return res.json();
+    }).then(function(data){
+      if(data && data.ok){
+        console.log('[SINDSEPS] Presença sincronizada com o servidor:', rec.matricula);
+      }
+    }).catch(function(err){
+      console.warn('[SINDSEPS] Servidor offline ou inacessível. Registro mantido localmente:', err.message);
+    });
+  } catch(e){}
 }
 function buscarPorMatricula(mat){
   var lista=carregarRegistros(),i;
