@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Completo de Leitura e Validação QR</title>
+  <script src="node_modules/qrcodejs/qrcode.min.js"></script>
+  <script src="node_modules/jsqr/dist/jsQR.js"></script>
+</head>
+<body style="font-family:sans-serif;padding:20px;">
+  <h2>Teste de Geração e Decodificação do QR Code (Nome + Matrícula + Órgão)</h2>
+  <div id="qrcode" style="display:inline-block;padding:16px;background:#fff;border:2px solid #ccc;border-radius:8px"></div>
+  <div id="result" style="margin-top:20px;font-size:18px;font-weight:bold;"></div>
+  <div id="validation" style="margin-top:10px;font-size:16px;"></div>
+
+  <script>
+    var EVENTO = 'ASSEMBLEIA-2026';
+    var CHAVE = 'mude-a-cada-assembleia';
+    var ROTACAO = 10;
+    var TOLERANCIA = 300;
+
+    function fnv1a(s){
+      var h=0x811c9dc5,i;
+      for(i=0;i<s.length;i++){
+        h=(h^s.charCodeAt(i))>>>0;
+        h=((h>>>16)*16777619%65536*65536+(h&0xFFFF)*16777619)%4294967296;
+      }
+      return('00000000'+(h>>>0).toString(16)).slice(-8);
+    }
+
+    function validarPayload(raw){
+      var p=raw.split('|');
+      if(p.length!==7)return{ok:false,msg:'CÓDIGO INVÁLIDO: formato desconhecido'};
+      if(p[0]!==EVENTO)return{ok:false,msg:'CÓDIGO INVÁLIDO: Evento '+p[0]};
+      var campos=p.slice(0,6).join('|');
+      if(fnv1a(campos+'|'+CHAVE)!==p[6])return{ok:false,msg:'CÓDIGO ADULTERADO: Assinatura inválida'};
+      var janela=parseInt(p[4],10);
+      var agora=Math.floor(Date.now()/1000);
+      var janelaNow=Math.floor(agora/ROTACAO)*ROTACAO;
+      if(Math.abs(janelaNow-janela)>TOLERANCIA)
+        return{ok:false,msg:'CÓDIGO PARADO / EXPIRADO'};
+      return{ok:true,matricula:p[1],nome:p[2],orgao:p[3],nDisp:parseInt(p[5],10)||1};
+    }
+
+    var agora = Math.floor(Date.now() / 1000);
+    var janela = Math.floor(agora / ROTACAO) * ROTACAO;
+    var matricula = '984512';
+    var nome = 'CARLOS EDUARDO PEREIRA';
+    var orgao = 'SECRETARIA MUNICIPAL DE SAUDE - SMS';
+    var campos = [EVENTO, matricula, nome, orgao, janela, 1].join('|');
+    var sig = fnv1a(campos + '|' + CHAVE);
+    var payload = campos + '|' + sig;
+
+    console.log('Payload a testar:', payload);
+
+    var qr = new QRCode(document.getElementById('qrcode'), {
+      text: payload,
+      width: 260,
+      height: 260,
+      correctLevel: QRCode.CorrectLevel.L
+    });
+
+    setTimeout(function(){
+      var canvas = document.querySelector("#qrcode canvas");
+      var ctx = canvas.getContext("2d");
+      var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var code = jsQR(imgData.data, canvas.width, canvas.height, { inversionAttempts: 'attemptBoth' });
+      
+      if(code && code.data){
+        document.getElementById('result').textContent = '✓ jsQR LEU COM SUCESSO: ' + code.data;
+        document.getElementById('result').style.color = 'green';
+        
+        var val = validarPayload(code.data);
+        if(val.ok){
+          document.getElementById('validation').textContent = '✓ VALIDAÇÃO DO CONFERENTE: APROVADO! (Servidor: ' + val.nome + ' | Matrícula: ' + val.matricula + ' | Órgão: ' + val.orgao + ')';
+          document.getElementById('validation').style.color = 'green';
+        } else {
+          document.getElementById('validation').textContent = '✗ FALHA NA VALIDAÇÃO: ' + val.msg;
+          document.getElementById('validation').style.color = 'red';
+        }
+      } else {
+        document.getElementById('result').textContent = '✗ FALHA AO DECODIFICAR COM jsQR';
+        document.getElementById('result').style.color = 'red';
+      }
+    }, 200);
+  </script>
+</body>
+</html>
