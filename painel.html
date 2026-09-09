@@ -1763,8 +1763,26 @@ function sincronizarAssembleiasComServidor(){
       })
       .then(function(data){
         if(data && Array.isArray(data.assembleias) && data.assembleias.length > 0){
-          // Se o servidor tem dados salvos de assembleias
-          assembleias = data.assembleias;
+          // Mescla inteligente: atualiza ou adiciona preservando o que foi inserido localmente
+          data.assembleias.forEach(function(servAss){
+            var localIdx = assembleias.findIndex(function(a){ return a.id === servAss.id; });
+            if(localIdx === -1){
+              assembleias.push(servAss);
+            } else {
+              // Se o servidor tiver mais presentes ou dados mais recentes, une os arrays
+              var localAss = assembleias[localIdx];
+              var localMats = (localAss.presentes || []).map(function(p){ return p.matricula; });
+              (servAss.presentes || []).forEach(function(sp){
+                if(localMats.indexOf(sp.matricula) === -1){
+                  localAss.presentes.push(sp);
+                  localMats.push(sp.matricula);
+                }
+              });
+              if(!localAss.nome && servAss.nome) localAss.nome = servAss.nome;
+              if(!localAss.data && servAss.data) localAss.data = servAss.data;
+            }
+          });
+
           try { localStorage.setItem(STORAGE_KEY_ASSEMBLEIAS, JSON.stringify(assembleias)); } catch(e){}
           var idAtiva = null;
           try { idAtiva = localStorage.getItem(STORAGE_KEY_ATIVA); } catch(e){}
