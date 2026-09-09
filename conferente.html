@@ -10580,6 +10580,9 @@ function mostrarVeredito(tipo,titulo,detalhe){
 
 /* ---- Validar payload do QR ---- */
 function validarPayload(raw){
+  if(raw && typeof raw === 'string'){
+    raw = raw.replace(/^\uFEFF/, '').trim();
+  }
   var p=raw.split('|');
   if(p.length!==7)return{ok:false,tipo:'erro',msg:'CÓDIGO INVÁLIDO',det:'Formato desconhecido'};
   if(p[0]!==EVENTO)return{ok:false,tipo:'erro',msg:'CÓDIGO INVÁLIDO',det:'Evento: '+p[0]};
@@ -10614,6 +10617,9 @@ function atualizarStatusLeitor(){
 var _ultimoCod='',_ultimoTick=0;
 function processarCodigo(raw){
   if(!raw) return;
+  if(typeof raw === 'string'){
+    raw = raw.replace(/^\uFEFF/, '').trim();
+  }
   var agora=Date.now();
   if(raw===_ultimoCod && agora-_ultimoTick<2500) return;
 
