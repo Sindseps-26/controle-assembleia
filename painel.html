@@ -963,9 +963,9 @@ footer.diretoria-footer {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
       Como Funciona
     </button>
-    <button class="btn btn-ok" id="btn-exportar-final" title="Exportar planilha oficial consolidada">
+    <button class="btn btn-ok" id="btn-exportar-final" title="Exportar planilha oficial consolidada em Excel">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      Exportar CSV Final
+      Exportar Planilha Excel
     </button>
     <button class="btn btn-print" id="btn-imprimir" title="Imprimir lista oficial para ata em papel A4">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
@@ -1193,7 +1193,7 @@ footer.diretoria-footer {
     </div>
     <div class="modal-foot" style="display:flex;justify-content:space-between;align-items:center">
       <button class="btn btn-ok" onclick="baixarHistoricoCompletoCSV()" style="font-size:0.8rem;padding:7px 14px">
-        ⬇ Exportar Todas as Assembleias (.CSV)
+        ⬇ Exportar Histórico Completo em Planilha (.xls)
       </button>
       <button class="btn btn-action-secondary" id="btn-fechar-hist-rodape">Fechar</button>
     </div>
@@ -1217,8 +1217,8 @@ footer.diretoria-footer {
           <button class="btn-ass-action btn-ass-new" id="btn-nova-ass" title="Cadastrar nova assembleia">
             ➕ Nova
           </button>
-          <button class="btn-ass-action btn-ass-download" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em CSV">
-            ⬇ Baixar Histórico
+          <button class="btn-ass-action btn-ass-download" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em planilha Excel">
+            ⬇ Baixar Planilha Excel
           </button>
           <button class="btn-ass-action" id="btn-editar-ass" title="Editar dados da assembleia ativa" style="background:#334155;color:#f1f5f9;border:1px solid #475569">
             ✏️ Editar
@@ -1581,56 +1581,170 @@ function baixarHistoricoCompletoCSV(){
     return;
   }
 
-  var bom = '\uFEFF';
-  var cab = 'assembleia_id;assembleia_nome;assembleia_data;pauta;matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
-  var linhas = [];
+  var anoRef = new Date().getFullYear();
+  var hoje = new Date().toLocaleDateString('pt-BR');
 
+  // Gerar planilha Excel nativa formatada (Excel XML 2003 / .xls)
+  var xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<?mso-application progid="Excel.Sheet"?>\n' +
+    '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+    ' xmlns:o="urn:schemas-microsoft-com:office:office"\n' +
+    ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n' +
+    ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+    ' xmlns:html="http://www.w3.org/TR/REC-html40">\n' +
+    '<Styles>\n' +
+    ' <Style ss:ID="Default" ss:Name="Normal">\n' +
+    '  <Alignment ss:Vertical="Center"/>\n' +
+    '  <Borders/>\n' +
+    '  <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#1E293B"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBanner">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="16" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#07101E" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sSubBanner">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#93C5FD"/>\n' +
+    '  <Interior ss:Color="#0A182E" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sHeader">\n' +
+    '  <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#1D4ED8" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sHeaderCenter">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#1D4ED8" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowEven">\n' +
+    '  <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowEvenCenter">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowOdd">\n' +
+    '  <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowOddCenter">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBadgeQR">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Bold="1" ss:Color="#047857"/>\n' +
+    '  <Interior ss:Color="#ECFDF5" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBadgeManual">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Bold="1" ss:Color="#B45309"/>\n' +
+    '  <Interior ss:Color="#FFFBEB" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    '</Styles>\n' +
+    '<Worksheet ss:Name="Histórico Geral">\n' +
+    '<Table>\n' +
+    ' <Column ss:Width="200"/>\n' +
+    ' <Column ss:Width="90"/>\n' +
+    ' <Column ss:Width="180"/>\n' +
+    ' <Column ss:Width="80"/>\n' +
+    ' <Column ss:Width="220"/>\n' +
+    ' <Column ss:Width="160"/>\n' +
+    ' <Column ss:Width="70"/>\n' +
+    ' <Column ss:Width="120"/>\n' +
+    ' <Column ss:Width="70"/>\n' +
+    ' <Column ss:Width="80"/>\n' +
+    ' <Column ss:Width="180"/>\n' +
+    ' <Row ss:Height="36">\n' +
+    '  <Cell ss:MergeAcross="10" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — HISTÓRICO GERAL DE ASSEMBLEIAS ' + anoRef + '</Data></Cell>\n' +
+    ' </Row>\n' +
+    ' <Row ss:Height="22">\n' +
+    '  <Cell ss:MergeAcross="10" ss:StyleID="sSubBanner"><Data ss:Type="String">Sindicato dos Servidores da Prefeitura do Salvador • Gerado em ' + hoje + '</Data></Cell>\n' +
+    ' </Row>\n' +
+    ' <Row ss:Height="10"/>\n' +
+    ' <Row ss:Height="24">\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Assembleia</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Data</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Pauta</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Matrícula</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Nome do Servidor</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Secretaria / Órgão</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Fileira</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Conferente</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Validação</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Observações</Data></Cell>\n' +
+    ' </Row>\n';
+
+  var rowCount = 0;
   assembleias.forEach(function(ass){
-    var assId = ass.id || '';
-    var assNome = ass.nome || 'Assembleia';
-    var assData = ass.data || '';
-    var assPauta = ass.pauta || '';
+    var assNome = ass.nome || 'Assembleia Geral';
+    var assData = formatarDataBR(ass.data);
+    var assPauta = ass.pauta || 'Deliberações Gerais';
     var listaPres = (ass.presentes || []).slice().sort(function(a,b){
       return (a.nome || '').localeCompare(b.nome || '', 'pt-BR');
     });
 
     if(!listaPres.length){
-      // Linha registrando a assembleia mesmo que não haja presenças ainda
-      linhas.push([
-        assId, assNome, assData, assPauta,
-        '', '— SEM REGISTROS DE PRESENÇA —', '', '', '', '', '', ''
-      ].map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';'));
+      var styleText = (rowCount % 2 === 0) ? 'sRowEven' : 'sRowOdd';
+      xml += ' <Row ss:Height="20">\n' +
+        '  <Cell ss:StyleID="' + styleText + '"><Data ss:Type="String">' + esc(assNome) + '</Data></Cell>\n' +
+        '  <Cell ss:StyleID="' + styleText + 'Center"><Data ss:Type="String">' + esc(assData) + '</Data></Cell>\n' +
+        '  <Cell ss:StyleID="' + styleText + '"><Data ss:Type="String">' + esc(assPauta) + '</Data></Cell>\n' +
+        '  <Cell ss:MergeAcross="7" ss:StyleID="' + styleText + 'Center"><Data ss:Type="String">— Sem registros de presença homologados —</Data></Cell>\n' +
+        ' </Row>\n';
+      rowCount++;
     } else {
       listaPres.forEach(function(p){
-        linhas.push([
-          assId,
-          assNome,
-          assData,
-          assPauta,
-          p.matricula || '',
-          p.nome || '',
-          p.orgao || '—',
-          p.fileira || '',
-          p.conferente || '',
-          p.hora || '',
-          p.origem || 'qr',
-          p.observacao || ''
-        ].map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';'));
+        var isEven = (rowCount % 2 === 0);
+        var sBase = isEven ? 'sRowEven' : 'sRowOdd';
+        var sCenter = isEven ? 'sRowEvenCenter' : 'sRowOddCenter';
+        var sOrig = (p.origem === 'manual') ? 'sBadgeManual' : 'sBadgeQR';
+        var txtOrig = (p.origem === 'manual') ? 'Manual' : 'QR Code';
+
+        xml += ' <Row ss:Height="20">\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(assNome) + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(assData) + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(assPauta) + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.matricula || '') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.nome || '') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.orgao || '—') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.fileira || '—') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.conferente || '') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sOrig + '"><Data ss:Type="String">' + txtOrig + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.observacao || '') + '</Data></Cell>\n' +
+          ' </Row>\n';
+        rowCount++;
       });
     }
   });
 
-  var blob = new Blob([bom + cab + linhas.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  xml += '</Table>\n' +
+    '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">\n' +
+    ' <DoNotDisplayGridlines/>\n' + // Tira as linhas de grade no Excel!
+    ' <Selected/>\n' +
+    ' <ProtectObjects>False</ProtectObjects>\n' +
+    ' <ProtectScenarios>False</ProtectScenarios>\n' +
+    '</WorksheetOptions>\n' +
+    '</Worksheet>\n' +
+    '</Workbook>';
+
+  var blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  var anoRef = new Date().getFullYear();
   a.href = url;
-  a.download = 'historico_assembleias_sindseps_' + anoRef + '.csv';
+  a.download = 'historico_assembleias_sindseps_' + anoRef + '.xls';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  mostrarOk('Histórico de assembleias exportado com sucesso (' + assembleias.length + ' assembleias).');
+  mostrarOk('Planilha formatada do histórico exportada com sucesso (' + assembleias.length + ' assembleias).');
 }
 
 function criarNovaAssembleia(nome, data, pauta){
@@ -1685,20 +1799,141 @@ function excluirAssembleia(id){
 function exportarCSVAssembleia(assObj){
   var lista = (assObj.presentes || []).slice().sort(function(a,b){return a.nome.localeCompare(b.nome,'pt-BR');});
   if(!lista.length){ alert('Esta assembleia ainda não possui presenças registradas.'); return; }
-  var bom = '\uFEFF';
-  var cab = 'matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
-  var linhas = lista.map(function(p){
-    return [p.matricula, p.nome, p.orgao||'—', p.fileira, p.conferente, p.hora, p.origem, p.observacao||'']
-      .map(function(v){ return '"' + String(v||'').replace(/"/g, '""') + '"'; }).join(';');
-  }).join('\n');
-  var blob = new Blob([bom + cab + linhas], {type: 'text/csv;charset=utf-8;'});
+
+  var nomeSeguro = (assObj.nome || 'Assembleia').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+  var dataRef = formatarDataBR(assObj.data);
+  var hoje = new Date().toLocaleDateString('pt-BR');
+
+  var xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<?mso-application progid="Excel.Sheet"?>\n' +
+    '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+    ' xmlns:o="urn:schemas-microsoft-com:office:office"\n' +
+    ' xmlns:x="urn:schemas-microsoft-com:office:excel"\n' +
+    ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"\n' +
+    ' xmlns:html="http://www.w3.org/TR/REC-html40">\n' +
+    '<Styles>\n' +
+    ' <Style ss:ID="Default" ss:Name="Normal">\n' +
+    '  <Alignment ss:Vertical="Center"/>\n' +
+    '  <Borders/>\n' +
+    '  <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#1E293B"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBanner">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="15" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#07101E" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sSubBanner">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#93C5FD"/>\n' +
+    '  <Interior ss:Color="#0A182E" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sHeader">\n' +
+    '  <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#1D4ED8" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sHeaderCenter">\n' +
+    '  <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="11" ss:Bold="1" ss:Color="#FFFFFF"/>\n' +
+    '  <Interior ss:Color="#1D4ED8" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowEven">\n' +
+    '  <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowEvenCenter">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Interior ss:Color="#F8FAFC" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowOdd">\n' +
+    '  <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sRowOddCenter">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#334155"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBadgeQR">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Bold="1" ss:Color="#047857"/>\n' +
+    '  <Interior ss:Color="#ECFDF5" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    ' <Style ss:ID="sBadgeManual">\n' +
+    '  <Alignment ss:Horizontal="Center"/>\n' +
+    '  <Font ss:FontName="Calibri" ss:Size="10" ss:Bold="1" ss:Color="#B45309"/>\n' +
+    '  <Interior ss:Color="#FFFBEB" ss:Pattern="Solid"/>\n' +
+    ' </Style>\n' +
+    '</Styles>\n' +
+    '<Worksheet ss:Name="Lista de Presença">\n' +
+    '<Table>\n' +
+    ' <Column ss:Width="40"/>\n' +
+    ' <Column ss:Width="90"/>\n' +
+    ' <Column ss:Width="240"/>\n' +
+    ' <Column ss:Width="180"/>\n' +
+    ' <Column ss:Width="80"/>\n' +
+    ' <Column ss:Width="140"/>\n' +
+    ' <Column ss:Width="70"/>\n' +
+    ' <Column ss:Width="90"/>\n' +
+    ' <Column ss:Width="200"/>\n' +
+    ' <Row ss:Height="34">\n' +
+    '  <Cell ss:MergeAcross="8" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
+    ' </Row>\n' +
+    ' <Row ss:Height="22">\n' +
+    '  <Cell ss:MergeAcross="8" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
+    ' </Row>\n' +
+    ' <Row ss:Height="10"/>\n' +
+    ' <Row ss:Height="24">\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">#</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Matrícula</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Nome do Servidor</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Secretaria / Órgão</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Fileira</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Conferente</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Validação</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Observações</Data></Cell>\n' +
+    ' </Row>\n';
+
+  lista.forEach(function(p, i){
+    var isEven = (i % 2 === 0);
+    var sBase = isEven ? 'sRowEven' : 'sRowOdd';
+    var sCenter = isEven ? 'sRowEvenCenter' : 'sRowOddCenter';
+    var sOrig = (p.origem === 'manual') ? 'sBadgeManual' : 'sBadgeQR';
+    var txtOrig = (p.origem === 'manual') ? 'Manual' : 'QR Code';
+
+    xml += ' <Row ss:Height="20">\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="Number">' + (i + 1) + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.matricula || '') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.nome || '') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.orgao || '—') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.fileira || '—') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.conferente || '') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sOrig + '"><Data ss:Type="String">' + txtOrig + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.observacao || '') + '</Data></Cell>\n' +
+      ' </Row>\n';
+  });
+
+  xml += '</Table>\n' +
+    '<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">\n' +
+    ' <DoNotDisplayGridlines/>\n' + // Remove linhas de grade no Excel!
+    ' <Selected/>\n' +
+    ' <ProtectObjects>False</ProtectObjects>\n' +
+    ' <ProtectScenarios>False</ProtectScenarios>\n' +
+    '</WorksheetOptions>\n' +
+    '</Worksheet>\n' +
+    '</Workbook>';
+
+  var blob = new Blob([xml], {type: 'application/vnd.ms-excel;charset=utf-8;'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  var nomeSeguro = assObj.nome.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
   a.href = url;
-  a.download = 'presenca_' + nomeSeguro + '_' + (assObj.data || 'data') + '.csv';
+  a.download = 'presenca_' + nomeSeguro + '_' + (assObj.data || 'data') + '.xls';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  mostrarOk('Planilha Excel formatada baixada com sucesso.');
 }
 
 function renderizarModalHistorico(termoBusca){
@@ -1738,7 +1973,7 @@ function renderizarModalHistorico(termoBusca){
       '<td class="num" style="text-align:right"><span style="display:inline-block;padding:3px 10px;background:#f1f5f9;color:#0f172a;font-weight:800;border-radius:12px">' + qte + '</span></td>' +
       '<td style="text-align:center">' +
         (!isAtiva ? '<button class="btn btn-primary" style="padding:4px 10px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Ativar</button> ' : '') +
-        '<button class="btn btn-help" style="padding:4px 10px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')" title="Exportar planilha desta assembleia">⬇ CSV</button> ' +
+        '<button class="btn btn-help" style="padding:4px 10px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')" title="Exportar planilha Excel desta assembleia">⬇ Excel (.xls)</button> ' +
         (assembleias.length > 1 ? '<button class="btn btn-danger" style="padding:4px 8px;font-size:0.75rem;margin-left:4px" onclick="excluirAssembleia(\'' + a.id + '\')" title="Excluir assembleia">🗑️</button>' : '') +
       '</td>' +
     '</tr>';
