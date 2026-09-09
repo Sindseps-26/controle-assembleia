@@ -1,5 +1,43 @@
 [
   {
+    "id": "ass_1788968429344",
+    "nome": "Assembleia Geral",
+    "data": "2026-09-09",
+    "pauta": "Prestação de Contas e Deliberações Gerais",
+    "presentes": [
+      {
+        "matricula": "123456",
+        "nome": "GEOVANNA ANDRADE",
+        "orgao": "SMS",
+        "fileira": "—",
+        "conferente": "Mesa Diretora",
+        "hora": "12:47:43",
+        "origem": "manual",
+        "observacao": "Inserido manualmente pela Mesa Diretora",
+        "arquivo": "Mesa Diretora"
+      }
+    ],
+    "revisar": [
+      {
+        "matricula": "123456",
+        "nome": "GEOVANNA ANDRADE",
+        "orgao": "SMS",
+        "motivo": "Leitura repetida na portaria (Tempo Real)",
+        "arquivo": "tempo-real",
+        "conferente": "Mesa Diretora",
+        "hora": "12:47:43"
+      }
+    ],
+    "conferentes": {
+      "Mesa Diretora": {
+        "nome": "Mesa Diretora",
+        "count": 1
+      }
+    },
+    "criadoEm": "2026-09-09T15:40:29.344Z",
+    "atualizadoEm": "2026-09-09T17:12:58.007Z"
+  },
+  {
     "id": "ass_1788969016050",
     "nome": "Assembleia Geral Ordinária",
     "data": "2026-09-09",
@@ -8,6 +46,6 @@
     "revisar": [],
     "conferentes": {},
     "criadoEm": "2026-09-09T15:50:16.050Z",
-    "atualizadoEm": "2026-09-09T16:57:00.000Z"
+    "atualizadoEm": "2026-09-09T17:13:01.435Z"
   }
 ]
