@@ -2,7 +2,7 @@ const http = require('http');
 const fs   = require('fs');
 const path = require('path');
 
-const PORT     = 8080;
+const PORT     = process.env.PORT || 8080;
 const BASE_DIR = __dirname;
 const DB_FILE  = path.join(BASE_DIR, 'presencas.json'); // persistência em disco
 const ASS_FILE = path.join(BASE_DIR, 'assembleias.json'); // persistência de assembleias em disco

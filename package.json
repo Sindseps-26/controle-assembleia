@@ -1,0 +1,16 @@
+{
+  "name": "sindseps-presenca",
+  "version": "1.0.0",
+  "description": "Sistema de Controle de Presença Sindical - SINDSEPS",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "dev": "node servidor.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["sindicato", "presença", "assembleia"],
+  "author": "SINDSEPS",
+  "license": "ISC"
+}
