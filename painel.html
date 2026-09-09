@@ -1329,6 +1329,49 @@ footer.diretoria-footer {
   </div>
 </div>
 
+<!-- Modal Adicionar Presença Manual no Painel -->
+<div id="modal-presenca-manual" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-man-painel">
+  <div class="modal-card" style="max-width: 480px">
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.3rem">✍️</span>
+        <h2 id="tit-man-painel" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Registrar Presença Manual</h2>
+      </div>
+      <button class="btn-close" id="btn-fechar-man-painel" aria-label="Fechar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.84rem;color:#64748b;margin-bottom:16px">
+        Insira o servidor diretamente na lista oficial da assembleia ativa (<strong id="lbl-ass-ativa-man">Assembleia</strong>).
+      </p>
+      <div style="margin-bottom:14px">
+        <label for="inp-man-p-matricula" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Matrícula do Servidor *</label>
+        <input type="text" id="inp-man-p-matricula" placeholder="Ex: 123456" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="30">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-man-p-nome" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Nome Completo do Servidor *</label>
+        <input type="text" id="inp-man-p-nome" placeholder="Nome e Sobrenome" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="80">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-man-p-orgao" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Secretaria / Órgão de Atuação</label>
+        <input type="text" id="inp-man-p-orgao" placeholder="Ex: SMS, SECULT, SEMGE, TRANSALVADOR..." 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="80">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-man-p-obs" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Observação (opcional)</label>
+        <input type="text" id="inp-man-p-obs" placeholder="Ex: Adicionado pela coordenação da mesa" 
+          style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="100">
+      </div>
+      <div id="man-p-err" style="display:none;color:#dc2626;font-size:0.8rem;font-weight:700;margin-top:8px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-action-secondary" id="btn-cancelar-man-painel">Cancelar</button>
+      <button class="btn btn-action-primary" id="btn-salvar-man-painel">Confirmar Presença</button>
+    </div>
+  </div>
+</div>
+
 <main>
   <!-- Barra Superior: Painel da Diretoria & Gestão de Assembleias -->
   <div class="session-bar">
@@ -1360,6 +1403,10 @@ footer.diretoria-footer {
               <button type="button" class="dropdown-ass-item" id="btn-editar-ass" title="Editar dados da assembleia ativa">
                 <span class="item-icon">✏️</span>
                 <span>Editar Assembleia Ativa</span>
+              </button>
+              <button type="button" class="dropdown-ass-item" id="btn-abrir-man-menu" title="Adicionar presença manual avulsa">
+                <span class="item-icon">✍️</span>
+                <span>Inserir Presença Manual</span>
               </button>
               <div class="dropdown-ass-divider"></div>
               <button type="button" class="dropdown-ass-item" id="btn-historico-ass" title="Ver histórico completo de assembleias">
@@ -1474,10 +1521,13 @@ footer.diretoria-footer {
           <span id="tit-tabela-presentes">Planilha Geral de Servidores Presentes (Tempo Real)</span>
         </div>
       </div>
-      <div class="search-bar-wrap">
-        <input type="search" id="busca-presentes" class="search-input"
+      <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center">
+        <input type="search" id="busca-presentes" class="search-input" style="flex:1"
           placeholder="🔍 Buscar por nome, matrícula ou órgão..." autocomplete="off">
         <span class="search-count" id="search-count-presentes"></span>
+        <button type="button" class="btn btn-primary" id="btn-abrir-man-tabela" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:0.82rem;font-weight:700;white-space:nowrap" title="Adicionar presença avulsa manualmente">
+          <span>✍️ Inserir Presença Manual</span>
+        </button>
       </div>
       <div class="tbl-wrap">
         <table id="tbl-presentes">
@@ -2977,6 +3027,103 @@ if(btnFootAjuda) btnFootAjuda.addEventListener('click', function(){
   var modalAjuda = document.getElementById('modal-ajuda');
   if(modalAjuda) modalAjuda.style.display = 'flex';
 });
+
+/* Modal Inserir Presença Manual no Painel */
+var modalPresManual = document.getElementById('modal-presenca-manual');
+var btnAbrirManMenu = document.getElementById('btn-abrir-man-menu');
+var btnAbrirManTabela = document.getElementById('btn-abrir-man-tabela');
+var btnFecharManPainel = document.getElementById('btn-fechar-man-painel');
+var btnCancManPainel = document.getElementById('btn-cancelar-man-painel');
+var btnSalvarManPainel = document.getElementById('btn-salvar-man-painel');
+
+function abrirModalPresencaManual(){
+  var lblAss = document.getElementById('lbl-ass-ativa-man');
+  if(lblAss && assembleiaAtiva) lblAss.textContent = assembleiaAtiva.nome || 'Assembleia';
+
+  document.getElementById('inp-man-p-matricula').value = '';
+  document.getElementById('inp-man-p-nome').value = '';
+  document.getElementById('inp-man-p-orgao').value = '';
+  document.getElementById('inp-man-p-obs').value = '';
+  document.getElementById('man-p-err').style.display = 'none';
+
+  if(modalPresManual) modalPresManual.style.display = 'flex';
+  setTimeout(function(){ document.getElementById('inp-man-p-matricula').focus(); }, 80);
+}
+
+function fecharModalPresencaManual(){
+  if(modalPresManual) modalPresManual.style.display = 'none';
+}
+
+if(btnAbrirManMenu) btnAbrirManMenu.addEventListener('click', abrirModalPresencaManual);
+if(btnAbrirManTabela) btnAbrirManTabela.addEventListener('click', abrirModalPresencaManual);
+if(btnFecharManPainel) btnFecharManPainel.addEventListener('click', fecharModalPresencaManual);
+if(btnCancManPainel) btnCancManPainel.addEventListener('click', fecharModalPresencaManual);
+
+if(btnSalvarManPainel){
+  btnSalvarManPainel.addEventListener('click', function(){
+    var mat = document.getElementById('inp-man-p-matricula').value.trim().toUpperCase();
+    var nome = document.getElementById('inp-man-p-nome').value.trim().toUpperCase();
+    var orgao = document.getElementById('inp-man-p-orgao').value.trim().toUpperCase();
+    var obs = document.getElementById('inp-man-p-obs').value.trim();
+    var err = document.getElementById('man-p-err');
+
+    if(!mat){
+      err.textContent = 'Informe a matrícula do servidor.';
+      err.style.display = 'block';
+      document.getElementById('inp-man-p-matricula').focus();
+      return;
+    }
+    if(!nome || nome.split(' ').filter(function(x){return x.length>0;}).length < 2){
+      err.textContent = 'Informe o nome completo (nome e sobrenome).';
+      err.style.display = 'block';
+      document.getElementById('inp-man-p-nome').focus();
+      return;
+    }
+
+    var idxExiste = indicePorMatricula(mat);
+    if(idxExiste >= 0){
+      err.textContent = 'A matrícula ' + mat + ' já consta na lista de presentes desta assembleia!';
+      err.style.display = 'block';
+      return;
+    }
+
+    var novoRegistro = {
+      matricula: mat,
+      nome: nome,
+      orgao: orgao || '—',
+      fileira: '—',
+      conferente: 'Mesa Diretora',
+      hora: new Date().toLocaleTimeString('pt-BR'),
+      origem: 'manual',
+      observacao: obs || 'Inserido manualmente pela Mesa Diretora',
+      arquivo: 'Mesa Diretora'
+    };
+
+    // Adiciona à assembleia ativa
+    presentes.push(novoRegistro);
+    if(!conferentes['Mesa Diretora']){
+      conferentes['Mesa Diretora'] = { nome: 'Mesa Diretora', count: 0 };
+    }
+    conferentes['Mesa Diretora'].count++;
+
+    salvarAssembleiaAtiva();
+    atualizarUI();
+    fecharModalPresencaManual();
+    mostrarOk('Presença de ' + nome.split(' ')[0] + ' (' + mat + ') registrada com sucesso!');
+
+    // Enviar ao servidor para ficar gravado também em presencas.json
+    try {
+      var rotas = obterCandidatasAssembleias('/api/presenca');
+      rotas.forEach(function(u){
+        fetch(u, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novoRegistro)
+        }).catch(function(){});
+      });
+    } catch(e){}
+  });
+}
 
 var btnFootNova = document.getElementById('btn-footer-nova-ass');
 if(btnFootNova) btnFootNova.addEventListener('click', abrirModalNovaAss);
