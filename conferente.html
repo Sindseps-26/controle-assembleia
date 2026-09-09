@@ -10564,6 +10564,19 @@ function validarPayload(raw){
 var dicaMira = document.getElementById('dica-mira');
 if(dicaMira) dicaMira.textContent = 'Aponte a câmera para o QR Code da credencial';
 
+/* Atualiza badge visual do leitor (câmera ativa ou aguardando) */
+function atualizarStatusLeitor(){
+  var badge = document.getElementById('status-leitor-badge');
+  if(!badge) return;
+  if(_scanAtivo){
+    badge.textContent = '✔ Câmera Ativa';
+    badge.className = 'badge-habilitado';
+  } else {
+    badge.textContent = '⏸ Aguardando';
+    badge.className = 'badge-aguardando';
+  }
+}
+
 /* ---- Processar código lido 100% Automático via Câmera ---- */
 var _ultimoCod='',_ultimoTick=0;
 function processarCodigo(raw){
@@ -10669,31 +10682,38 @@ function escanearComJsQR(){
 
 function loopScan(){
   if(!_scanAtivo) return;
-  
-  if(video.readyState === video.HAVE_ENOUGH_DATA && !_isScanningFrame){
-    _isScanningFrame = true;
-    
-    if(_detector){
-      _detector.detect(video).then(function(codes){
-        if(codes && codes.length > 0){
-          processarCodigo(codes[0].rawValue);
-        } else {
-          escanearComJsQR();
-        }
+  try {
+    if(video.readyState === video.HAVE_ENOUGH_DATA && !_isScanningFrame){
+      _isScanningFrame = true;
+
+      if(_detector){
+        _detector.detect(video).then(function(codes){
+          try {
+            if(codes && codes.length > 0){
+              processarCodigo(codes[0].rawValue);
+            } else {
+              escanearComJsQR();
+            }
+          } catch(ex){ console.warn('[SINDSEPS] Erro ao processar frame BarcodeDetector:', ex); }
+          _isScanningFrame = false;
+          if(_scanAtivo) requestAnimationFrame(loopScan);
+        }).catch(function(err){
+          /* BarcodeDetector falhou — usa jsQR como fallback */
+          try { escanearComJsQR(); } catch(ex){}
+          _isScanningFrame = false;
+          _detector = null; /* desativa BarcodeDetector se não funcionar */
+          if(_scanAtivo) requestAnimationFrame(loopScan);
+        });
+        return;
+      } else {
+        try { escanearComJsQR(); } catch(ex){ console.warn('[SINDSEPS] jsQR erro:', ex); }
         _isScanningFrame = false;
-        if(_scanAtivo) requestAnimationFrame(loopScan);
-      }).catch(function(){
-        escanearComJsQR();
-        _isScanningFrame = false;
-        if(_scanAtivo) requestAnimationFrame(loopScan);
-      });
-      return;
-    } else {
-      escanearComJsQR();
-      _isScanningFrame = false;
+      }
     }
+  } catch(outerErr){
+    _isScanningFrame = false;
+    console.warn('[SINDSEPS] Erro no loopScan:', outerErr);
   }
-  
   if(_scanAtivo) requestAnimationFrame(loopScan);
 }
 
@@ -10756,23 +10776,28 @@ document.getElementById('btn-iniciar').addEventListener('click',function(){
     .then(function(stream){
       video.srcObject=stream;
       video.setAttribute('playsinline', 'true');
-      video.addEventListener('loadedmetadata',function(){
-        video.play();
-        _scanAtivo=true;
+      video.play().catch(function(){});
+      /* Iniciar scan assim que o video tiver dados suficientes */
+      function iniciarLoop(){
+        _scanAtivo = true;
         document.getElementById('inicio').style.display='none';
         atualizarContador();
         atualizarStatusLeitor();
-        if(inpMatServidor) setTimeout(function(){ inpMatServidor.focus(); }, 300);
         requestAnimationFrame(loopScan);
-      },{once:true});
+      }
+      /* loadedmetadata nem sempre dispara em todos os browsers mobile */
+      if(video.readyState >= 2){
+        iniciarLoop();
+      } else {
+        video.addEventListener('loadedmetadata', iniciarLoop, {once:true});
+        video.addEventListener('canplay', iniciarLoop, {once:true});
+      }
     })
     .catch(function(err){
       alert('Câmera não disponível: '+err.message+
-        '\n\nVerifique as permissões de câmera do navegador. A entrada manual continua funcionando.');
+        '\n\nVerifique as permissões de câmera do navegador no celular (Configurações → Privacidade → Câmera).');
       document.getElementById('inicio').style.display='none';
       atualizarContador();
-      atualizarStatusLeitor();
-      if(inpMatServidor) setTimeout(function(){ inpMatServidor.focus(); }, 300);
     });
 });
 
