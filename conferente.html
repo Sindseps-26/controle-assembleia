@@ -10334,24 +10334,25 @@ function carregarFila(){try{return JSON.parse(localStorage.getItem(CHAVE_FILA)||
 function salvarFila(f){try{localStorage.setItem(CHAVE_FILA, JSON.stringify(f));}catch(e){}}
 
 var _apiUrlConf = '';
+var RAILWAY_URL = 'https://controle-assembleia-production.up.railway.app';
 
-/* ---- Detectar se está no GitHub Pages (HTTPS) e bloquear com aviso ---- */
+/* ---- Verificar conexão ao carregar (apenas informação) ---- */
 (function(){
   var proto = window.location.protocol;
   var host  = window.location.hostname;
-  var isGitHubPages = (proto === 'https:' && host.indexOf('github') !== -1);
   var isFileProtocol = (proto === 'file:');
   var avisoBanner = document.getElementById('aviso-url-errada');
-
-  if(isGitHubPages || isFileProtocol){
-    /* Tenta montar URL local com IP salvo ou padrão */
-    var ipSalvo = '';
-    try { ipSalvo = (localStorage.getItem(CHAVE_CUSTOM_SERVER)||'').replace(/\/+$/,''); } catch(e){}
-    var urlCorreta = (ipSalvo || 'http://192.168.1.96:8080') + '/conferente.html';
+  /* Se for protocolo file:// (aberto diretamente sem servidor), alerta */
+  if(isFileProtocol){
     var el = document.getElementById('url-correta-conf');
-    if(el) el.textContent = urlCorreta;
-    if(avisoBanner) avisoBanner.style.display = 'block';
+    if(el) el.textContent = 'https://sindseps-26.github.io/controle-assembleia/conferente.html';
+    if(avisoBanner){
+      avisoBanner.style.background = '#7a1a1a';
+      avisoBanner.innerHTML = '<strong style="font-size:0.9rem">⚠️ Aberto como arquivo local</strong><br>Acesse pelo GitHub Pages ou pelo servidor local para que as presenças sejam registradas.';
+      avisoBanner.style.display = 'block';
+    }
   }
+  /* GitHub Pages + Railway HTTPS = funciona normalmente, sem aviso */
 }());
 function obterCandidatasApi(path){
   var rotas = [];
@@ -10362,11 +10363,14 @@ function obterCandidatasApi(path){
     rotas.push(base + path);
   }
 
+  // Servidor Railway na nuvem (HTTPS — funciona de qualquer rede/4G)
+  rotas.push(RAILWAY_URL + path);
+
   // Se a página estiver rodando pelo servidor local
   rotas.push(path);
 
   var host = window.location.hostname || 'localhost';
-  if(host && host !== 'localhost' && host !== '127.0.0.1'){
+  if(host && host !== 'localhost' && host !== '127.0.0.1' && host.indexOf('github') === -1){
     rotas.push('http://' + host + ':8080' + path);
   }
   rotas.push('http://localhost:8080' + path);

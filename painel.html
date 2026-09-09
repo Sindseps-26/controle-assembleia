@@ -1666,9 +1666,10 @@ function carregarDadosDaAssembleiaAtiva(){
 }
 
 function obterCandidatasAssembleias(path){
-  var rotas = [path];
+  var RAILWAY = 'https://controle-assembleia-production.up.railway.app';
+  var rotas = [RAILWAY + path, path];
   var host = window.location.hostname || 'localhost';
-  if(host && host !== 'localhost' && host !== '127.0.0.1'){
+  if(host && host !== 'localhost' && host !== '127.0.0.1' && host.indexOf('github') === -1){
     rotas.push('http://' + host + ':8080' + path);
   }
   rotas.push('http://localhost:8080' + path);
@@ -3079,17 +3080,19 @@ atualizarUI();
   }
 
   var _apiUrlPreferida = '';
+  var RAILWAY_URL_PAINEL = 'https://controle-assembleia-production.up.railway.app';
 
   function testarConexaoApi(callback){
     var candidatas = [
+      RAILWAY_URL_PAINEL + '/api/presencas',
       '/api/presencas',
       'http://localhost:8080/api/presencas',
       'http://127.0.0.1:8080/api/presencas',
       'http://192.168.1.96:8080/api/presencas'
     ];
-    // Se estiver em outra máquina ou celular
-    if(window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'){
-      candidatas.unshift('http://' + window.location.hostname + ':8080/api/presencas');
+    // Se estiver em outra máquina ou celular na rede local
+    if(window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.hostname.indexOf('github') === -1){
+      candidatas.splice(1, 0, 'http://' + window.location.hostname + ':8080/api/presencas');
     }
 
     var i = 0;
