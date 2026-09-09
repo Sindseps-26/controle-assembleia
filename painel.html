@@ -1153,32 +1153,37 @@ footer.diretoria-footer {
 
 <!-- Modal Histórico de Assembleias -->
 <div id="modal-historico-ass" class="modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="tit-hist-ass">
-  <div class="modal-card" style="max-width: 720px">
+  <div class="modal-card" style="max-width: 780px">
     <div class="modal-head">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:1.3rem">📅</span>
-        <h2 id="tit-hist-ass" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem">Histórico de Assembleias</h2>
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="logo-sindseps.png" alt="SINDSEPS" style="height:28px;background:#fff;padding:2px 6px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1)" onerror="this.style.display='none'">
+        <div>
+          <h2 id="tit-hist-ass" style="margin:0;border:none;padding:0;color:#0f172a;font-size:1.15rem;font-weight:800">Histórico Oficial de Assembleias</h2>
+          <p style="margin:2px 0 0 0;font-size:0.75rem;color:#64748b">Registro estatutário e controle de quórum por assembleia</p>
+        </div>
       </div>
       <button class="btn-close" id="btn-fechar-hist-ass" aria-label="Fechar">✕</button>
     </div>
     <div class="modal-body">
       <!-- Barra de Filtro e Métricas do Histórico -->
-      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
         <input type="text" id="busca-historico-ass" placeholder="🔍 Buscar por nome, data ou pauta..." 
-          style="flex:1;min-width:220px;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:0.85rem;outline:none">
-        <div style="font-size:0.8rem;color:#334155;font-weight:700;background:#f8fafc;padding:7px 14px;border-radius:6px;border:1px solid #cbd5e1">
-          <span id="hist-total-ass">0</span> assembleia(s) • <span id="hist-total-quorum">0</span> presenças no total
+          style="flex:1;min-width:240px;padding:9px 14px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:0.85rem;outline:none;transition:border-color 0.2s">
+        <div style="font-size:0.82rem;color:#0f172a;font-weight:700;background:#f8fafc;padding:8px 16px;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;gap:8px">
+          <span>🏛️ <span id="hist-total-ass">0</span> assembleia(s)</span>
+          <span style="color:#cbd5e1">•</span>
+          <span>👥 <span id="hist-total-quorum">0</span> presenças no total</span>
         </div>
       </div>
 
-      <div class="tbl-wrap" style="margin-bottom:0">
+      <div class="tbl-wrap" style="margin-bottom:0;border:none;box-shadow:0 2px 12px rgba(15,23,42,0.06)">
         <table>
           <thead>
             <tr>
-              <th>Assembleia</th>
-              <th style="width:100px">Data</th>
-              <th style="width:90px;text-align:right">Quórum</th>
-              <th style="width:170px;text-align:center">Ações</th>
+              <th>Assembleia / Pauta</th>
+              <th style="width:110px">Data</th>
+              <th style="width:100px;text-align:right">Quórum</th>
+              <th style="width:190px;text-align:center">Ações</th>
             </tr>
           </thead>
           <tbody id="tbody-historico-ass">
@@ -1186,7 +1191,10 @@ footer.diretoria-footer {
         </table>
       </div>
     </div>
-    <div class="modal-foot">
+    <div class="modal-foot" style="display:flex;justify-content:space-between;align-items:center">
+      <button class="btn btn-ok" onclick="baixarHistoricoCompletoCSV()" style="font-size:0.8rem;padding:7px 14px">
+        ⬇ Exportar Todas as Assembleias (.CSV)
+      </button>
       <button class="btn btn-action-secondary" id="btn-fechar-hist-rodape">Fechar</button>
     </div>
   </div>
@@ -1722,16 +1730,16 @@ function renderizarModalHistorico(termoBusca){
   tbody.innerHTML = filtradas.map(function(a){
     var isAtiva = assembleiaAtiva && a.id === assembleiaAtiva.id;
     var qte = (a.presentes ? a.presentes.length : 0);
-    var badgeAtiva = isAtiva ? ' <span class="session-badge">Ativa</span>' : '';
+    var badgeAtiva = isAtiva ? ' <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;background:#ecfdf5;color:#047857">● Em Andamento</span>' : '';
     return '<tr>' +
-      '<td><strong>' + esc(a.nome) + '</strong>' + badgeAtiva + 
-        (a.pauta ? '<br><small style="color:#64748b">' + esc(a.pauta) + '</small>' : '') + '</td>' +
-      '<td class="num">' + formatarDataBR(a.data) + '</td>' +
-      '<td class="num" style="text-align:right"><strong>' + qte + '</strong></td>' +
+      '<td><strong style="color:#0f172a;font-size:0.88rem">' + esc(a.nome) + '</strong>' + badgeAtiva + 
+        (a.pauta ? '<br><span style="color:#64748b;font-size:0.78rem">' + esc(a.pauta) + '</span>' : '') + '</td>' +
+      '<td class="num" style="color:#475569">' + formatarDataBR(a.data) + '</td>' +
+      '<td class="num" style="text-align:right"><span style="display:inline-block;padding:3px 10px;background:#f1f5f9;color:#0f172a;font-weight:800;border-radius:12px">' + qte + '</span></td>' +
       '<td style="text-align:center">' +
-        (!isAtiva ? '<button class="btn btn-action-secondary" style="padding:4px 8px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Ativar</button> ' : '') +
-        '<button class="btn btn-action-primary" style="padding:4px 8px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')">⬇ CSV</button> ' +
-        (assembleias.length > 1 ? '<button class="btn btn-danger" style="padding:4px 8px;font-size:0.75rem;color:#e11d48" onclick="excluirAssembleia(\'' + a.id + '\')">🗑️</button>' : '') +
+        (!isAtiva ? '<button class="btn btn-primary" style="padding:4px 10px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Ativar</button> ' : '') +
+        '<button class="btn btn-help" style="padding:4px 10px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')" title="Exportar planilha desta assembleia">⬇ CSV</button> ' +
+        (assembleias.length > 1 ? '<button class="btn btn-danger" style="padding:4px 8px;font-size:0.75rem;margin-left:4px" onclick="excluirAssembleia(\'' + a.id + '\')" title="Excluir assembleia">🗑️</button>' : '') +
       '</td>' +
     '</tr>';
   }).join('');
