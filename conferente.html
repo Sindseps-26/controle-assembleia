@@ -189,8 +189,7 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   </div>
 
   <span id="contador">0 lidos</span>
-  <button class="btn-sm" id="btn-exportar">⬇ CSV</button>
-  <button class="btn-sm" id="btn-limpar">✕</button>
+  <button class="btn-sm" id="btn-limpar" title="Limpar leituras">✕</button>
 </div>
 
 <!-- Veredito em tela cheia -->
@@ -10361,7 +10360,15 @@ function salvarRegistro(rec){
 
   /* Enviar automaticamente ao servidor em tempo real (sem bloquear se offline) */
   try {
-    fetch('/api/presenca', {
+    var apiUrl = '/api/presenca';
+    if(window.location.protocol.indexOf('http') === 0 && window.location.port !== '8080'){
+      var host = window.location.hostname || 'localhost';
+      apiUrl = 'http://' + host + ':8080/api/presenca';
+    } else if(window.location.protocol === 'file:'){
+      apiUrl = 'http://localhost:8080/api/presenca';
+    }
+
+    fetch(apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rec)
@@ -10689,25 +10696,27 @@ document.getElementById('inp-senha-conf').addEventListener('keydown',function(e)
   if(e.key === 'Enter') document.getElementById('btn-iniciar').click();
 });
 
-/* ---- Exportar CSV ---- */
-/* ---- Exportar CSV ---- */
-document.getElementById('btn-exportar').addEventListener('click',function(){
-  var lista=carregarRegistros();
-  if(!lista.length){alert('Nenhum registro para exportar.');return;}
-  var bom='\uFEFF';
-  var cab='matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
-  var linhas=lista.map(function(r){
-    return[r.matricula,r.nome,r.orgao||'—',r.fileira||'—',r.conferente,r.hora,r.origem,r.observacao||'']
-      .map(function(v){return'"'+String(v||'').replace(/"/g,'""')+'"';}).join(';');
-  }).join('\n');
-  var blob=new Blob([bom+cab+linhas],{type:'text/csv;charset=utf-8;'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  a.download='presenca_'+String(conferente||'conf').replace(/\s+/g,'_')+'_'+Date.now()+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
+/* ---- Exportar CSV (se disponível) ---- */
+var btnExportar = document.getElementById('btn-exportar');
+if(btnExportar){
+  btnExportar.addEventListener('click',function(){
+    var lista=carregarRegistros();
+    if(!lista.length){alert('Nenhum registro para exportar.');return;}
+    var bom='\uFEFF';
+    var cab='matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n';
+    var linhas=lista.map(function(r){
+      return[r.matricula,r.nome,r.orgao||'—',r.fileira||'—',r.conferente,r.hora,r.origem,r.observacao||'']
+        .map(function(v){return'"'+String(v||'').replace(/"/g,'""')+'"';}).join(';');
+    }).join('\n');
+    var blob=new Blob([bom+cab+linhas],{type:'text/csv;charset=utf-8;'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='presenca_'+String(conferente||'conf').replace(/\s+/g,'_')+'_'+Date.now()+'.csv';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
 
 /* ---- Limpar ---- */
 document.getElementById('btn-limpar').addEventListener('click',function(){

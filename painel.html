@@ -850,13 +850,9 @@ footer.diretoria-footer {
       <span class="pulse-dot"></span>
       <span id="txt-sync-servidor">Verificando Servidor...</span>
     </div>
-    <button class="btn btn-help" id="btn-abrir-ajuda" title="Guia Passo a Passo da Consolidação">
+    <button class="btn btn-help" id="btn-abrir-ajuda" title="Guia Passo a Passo da Assembleia">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
       Como Funciona
-    </button>
-    <button class="btn btn-upload" id="btn-abrir-upload" title="Carregar relatórios dos conferentes">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-      Carregar Arquivos CSV
     </button>
     <button class="btn btn-ok" id="btn-exportar-final" title="Exportar planilha oficial consolidada">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -1129,7 +1125,7 @@ footer.diretoria-footer {
         <span class="kpi-tag tag-total">Oficial</span>
       </div>
       <div class="kpi-metric" id="c-total">0</div>
-      <div class="kpi-footer" id="kpi-meta-total">Aguardando CSVs</div>
+      <div class="kpi-footer" id="kpi-meta-total">Aguardando leituras em tempo real</div>
     </div>
 
     <div class="kpi-card">
@@ -1231,7 +1227,7 @@ footer.diretoria-footer {
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
-            <tr><td colspan="9" class="info-vazia">Nenhum arquivo consolidado ainda.</td></tr>
+            <tr><td colspan="9" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
           </tbody>
         </table>
       </div>
@@ -1814,7 +1810,7 @@ function atualizarUI(){
 
   /* Metadados / porcentagens dinâmicas */
   var elMetaTotal = document.getElementById('kpi-meta-total');
-  if(elMetaTotal) elMetaTotal.textContent = total > 0 ? total + ' registro(s) consolidado(s)' : 'Aguardando CSVs';
+  if(elMetaTotal) elMetaTotal.textContent = total > 0 ? total + ' presença(s) em tempo real' : 'Aguardando leituras em tempo real';
 
   var pctQr = total > 0 ? Math.round((qrCount / total) * 100) : 0;
   var elMetaQr = document.getElementById('kpi-meta-qr');
@@ -2433,8 +2429,22 @@ atualizarUI();
     }
   }
 
+  function obterApiUrl(endpoint){
+    // Se a página foi aberta via servidor na mesma porta/origem
+    if(window.location.protocol.indexOf('http') === 0 && window.location.port === '8080'){
+      return endpoint;
+    }
+    // Se foi aberta com porta diferente ou file://, direciona para o servidor Node
+    var host = window.location.hostname || 'localhost';
+    if(host === 'localhost' || host === '127.0.0.1' || !host){
+      return 'http://localhost:8080' + endpoint;
+    }
+    return 'http://' + host + ':8080' + endpoint;
+  }
+
   function sincronizarTempoReal(){
-    fetch('/api/presencas', { cache: 'no-store' })
+    var url = obterApiUrl('/api/presencas');
+    fetch(url, { cache: 'no-store' })
       .then(function(res){
         if(!res.ok) throw new Error('Status ' + res.status);
         return res.json();
