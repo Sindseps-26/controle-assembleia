@@ -2213,10 +2213,11 @@ footer.diretoria-footer {
             <th style="width:130px">Conferente</th>
             <th style="width:75px">Hora</th>
             <th style="width:80px">Origem</th>
+            <th style="width:80px">Local</th>
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
-            <tr><td colspan="10" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
+            <tr><td colspan="11" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
           </tbody>
         </table>
       </div>
@@ -3597,7 +3598,7 @@ function filtrarPresentes(termoBusca){
   var tbP = document.getElementById('tbody-presentes');
   if(!tbP) return;
   if(!filtrados.length){
-    tbP.innerHTML = '<tr><td colspan="10" class="info-vazia">' +
+    tbP.innerHTML = '<tr><td colspan="11" class="info-vazia">' +
       (termo ? 'Nenhum resultado para "' + esc(termo) + '".' : 'Nenhum presente registrado.') +
       '</td></tr>';
     return;
@@ -3610,6 +3611,15 @@ function filtrarPresentes(termoBusca){
       ? '<span class="badge-manual-orig">Manual</span>'
       : '<span class="badge-qr-orig">QR</span>';
     var cpfFormatado = mascararCPF(p.cpf);
+    /* Ícone de localização: abre Google Maps se coordenadas disponíveis */
+    var geoBadge;
+    if(p.lat && p.lng){
+      var mapsUrl = 'https://www.google.com/maps?q=' + p.lat + ',' + p.lng;
+      var accStr = p.geo_acc ? ' ±' + p.geo_acc + 'm' : '';
+      geoBadge = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Ver no mapa (precisão' + accStr + ')">📍 Ver</a>';
+    } else {
+      geoBadge = '<span class="btn-geo-mapa-na" title="Localização não capturada">—</span>';
+    }
     return '<tr>' +
       '<td class="num">' + (i + 1) + '</td>' +
       '<td class="num">' + esc(p.matricula) + '</td>' +
@@ -3620,6 +3630,7 @@ function filtrarPresentes(termoBusca){
       '<td>' + esc(p.conferente) + '</td>' +
       '<td class="num">' + esc(p.hora) + '</td>' +
       '<td>' + origBadge + '</td>' +
+      '<td>' + geoBadge + '</td>' +
       '<td>' + obsCell + '</td>' +
     '</tr>';
   }).join('');
