@@ -530,26 +530,23 @@ if (window.location.protocol === 'file:') {
     document.getElementById('mobile-url').textContent = 'Informe o IP do servidor acima';
   }
 } else {
-  /* Modo servidor HTTP: buscar IP real da API */
+  /* Modo servidor HTTP: buscar URL pública via /api/config */
   fetch('/api/config', { cache: 'no-store' })
     .then(function(r) { return r.json(); })
     .then(function(cfg) {
       if (cfg && cfg.urlCadastro) {
         atualizarQReURL(cfg.urlCadastro);
       } else {
-        /* Fallback: derivar da URL atual */
-        var urlAtual = window.location.href.split('?')[0].split('#')[0];
-        var url = urlAtual.replace(/\/?(index\.html)?$/, '/cadastro.html');
-        atualizarQReURL(url);
+        /* Fallback: usar origin atual (funciona no Railway, rede local, etc.) */
+        atualizarQReURL(window.location.origin + '/cadastro.html');
       }
     })
     .catch(function() {
-      /* Fallback: derivar da URL atual */
-      var urlAtual = window.location.href.split('?')[0].split('#')[0];
-      var url = urlAtual.replace(/\/?(index\.html)?$/, '/cadastro.html');
-      atualizarQReURL(url);
+      /* Fallback: usar origin atual */
+      atualizarQReURL(window.location.origin + '/cadastro.html');
     });
 }
+
 
 function copiarLink(){
   var url = document.getElementById('mobile-url').textContent;

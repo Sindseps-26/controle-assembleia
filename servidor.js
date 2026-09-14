@@ -199,16 +199,27 @@ const server = http.createServer(async (req, res) => {
 
   /* ── GET /api/config ── retorna IP e porta para o index.html ─────────── */
   if (url === '/api/config' && method === 'GET') {
-    const ip = obterIPLocal();
+    /* Prioridade: URL pública do Railway > IP local */
+    const railwayDomain = process.env.RAILWAY_PUBLIC_DOMAIN
+                       || process.env.RAILWAY_STATIC_URL
+                       || '';
+    let urlBase;
+    if (railwayDomain) {
+      /* No Railway o protocolo é sempre HTTPS */
+      const dominio = railwayDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      urlBase = `https://${dominio}`;
+    } else {
+      const ip = obterIPLocal();
+      urlBase = `http://${ip}:${PORT}`;
+    }
     jsonOk(res, {
-      ip,
-      porta: PORT,
-      urlBase: `http://${ip}:${PORT}`,
-      urlCadastro: `http://${ip}:${PORT}/cadastro.html`,
-      urlConferente: `http://${ip}:${PORT}/conferente.html`
+      urlBase,
+      urlCadastro:   `${urlBase}/cadastro.html`,
+      urlConferente: `${urlBase}/conferente.html`
     });
     return;
   }
+
 
   /* ── GET /api/sessao ── retorna configuração da assembleia ativa ──────── */
   if (url === '/api/sessao' && method === 'GET') {
