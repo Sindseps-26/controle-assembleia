@@ -219,7 +219,7 @@ function obterRotasCadastro(path){
 }
 
 /* Buscar configuração da sessão ativa no servidor */
-(function buscarSessao(){
+function buscarSessao(){
   var rotas = obterRotasCadastro('/api/sessao');
   var i = 0;
   function tentarProxima(){
