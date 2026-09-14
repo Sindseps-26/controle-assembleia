@@ -476,7 +476,7 @@ main {
 .ass-simple-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 .assembleia-label {
@@ -485,6 +485,12 @@ main {
   color: var(--gov-slate-700);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.select-ass-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .select-assembleia {
   padding: 8px 12px;
@@ -502,6 +508,93 @@ main {
 .select-assembleia:focus {
   outline: none;
   border-color: var(--gov-blue-600);
+}
+.badge-ass-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  border: 1.5px solid transparent;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+.badge-ass-status:hover {
+  transform: translateY(-1px);
+}
+.badge-ass-status.status-ativa {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+.badge-ass-status.status-ativa:hover {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+.badge-ass-status.status-inativa {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+.badge-ass-status.status-inativa:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #334155;
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.15);
+}
+.status-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-indicator-dot.dot-ativa {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: pulseGreenDot 2s infinite ease-in-out;
+}
+.status-indicator-dot.dot-inativa {
+  background: #94a3b8;
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
+}
+@keyframes pulseGreenDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.85;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1);
+  }
+}
+.header-ass-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.70rem;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.header-ass-badge.status-ativa {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.header-ass-badge.status-inativa {
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
 .btn-ass-action {
   padding: 8px 14px;
@@ -1296,16 +1389,48 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   background: transparent !important;
 }
 
-/* Status bars */
-#status-bar {
-  background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 6px;
-  padding: 10px 14px; margin-bottom: 16px; font-size: 0.84rem; color: #065f46;
-  display: none; font-weight: 600;
+/* Status bars (suprimidos para evitar caixas que empurrem o layout) */
+#status-bar, #err-bar {
+  display: none !important;
 }
-#err-bar {
-  background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px;
-  padding: 10px 14px; margin-bottom: 16px; font-size: 0.84rem; color: #9f1239;
-  display: none; font-weight: 600;
+
+/* Container de Toasts Flutuantes Modernos */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast-msg {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2), 0 8px 10px -6px rgba(15, 23, 42, 0.12);
+  animation: toastSlideIn 0.25s ease-out;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.toast-msg.toast-ok {
+  background: #065f46;
+  color: #ecfdf5;
+  border: 1px solid #059669;
+}
+.toast-msg.toast-err {
+  background: #991b1b;
+  color: #fef2f2;
+  border: 1px solid #dc2626;
 }
 
 /* Modal de Autenticação */
@@ -1552,7 +1677,7 @@ footer.diretoria-footer {
     <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
     <div>
       <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
-      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — Assembleia Geral</p>
+      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span> <span id="badge-header-ass-status" class="header-ass-badge status-ativa">🟢 Ativa</span></p>
     </div>
   </div>
   <div class="header-btns">
@@ -1730,6 +1855,13 @@ footer.diretoria-footer {
         <input type="text" id="inp-ass-pauta" placeholder="Ex: Apreciação da proposta salarial" 
           style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="120">
       </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-ass-status" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Status da Assembleia</label>
+        <select id="inp-ass-status" style="width:100%;padding:9px 12px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:0.88rem;font-weight:600;outline:none;background:#fff">
+          <option value="ativa">🟢 Ativa (Em andamento / Aberta para credenciamento)</option>
+          <option value="inativa">⚪ Inativa (Encerrada / Apenas consulta)</option>
+        </select>
+      </div>
       <div id="nova-ass-err" style="display:none;color:#dc2626;font-size:0.8rem;font-weight:700;margin-top:8px"></div>
     </div>
     <div class="modal-foot">
@@ -1767,6 +1899,13 @@ footer.diretoria-footer {
         <label for="inp-edit-ass-pauta" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Pauta / Observações</label>
         <input type="text" id="inp-edit-ass-pauta" 
           style="width:100%;padding:9px 12px;border:1px solid #cbd5e1;border-radius:6px;font-size:0.9rem;outline:none" maxlength="120">
+      </div>
+      <div style="margin-bottom:14px">
+        <label for="inp-edit-ass-status" style="display:block;font-size:0.8rem;font-weight:700;color:#334155;margin-bottom:5px">Status da Assembleia</label>
+        <select id="inp-edit-ass-status" style="width:100%;padding:9px 12px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:0.88rem;font-weight:600;outline:none;background:#fff">
+          <option value="ativa">🟢 Ativa (Em andamento / Aberta para credenciamento)</option>
+          <option value="inativa">⚪ Inativa (Encerrada / Apenas consulta)</option>
+        </select>
       </div>
       <div id="edit-ass-err" style="display:none;color:#dc2626;font-size:0.8rem;font-weight:700;margin-top:8px"></div>
     </div>
@@ -1842,7 +1981,13 @@ footer.diretoria-footer {
       <div class="assembleia-bar-simple">
         <div class="ass-simple-row">
           <label class="assembleia-label" for="sel-assembleia">Assembleia:</label>
-          <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
+          <div class="select-ass-box">
+            <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
+            <div id="badge-ass-status" class="badge-ass-status status-ativa" role="button" tabindex="0" title="Status da Assembleia — Clique para alternar entre Ativa e Inativa">
+              <span class="status-indicator-dot dot-ativa"></span>
+              <span class="status-indicator-text">Ativa</span>
+            </div>
+          </div>
 
           <!-- Menu Suspenso de Opções da Assembleia -->
           <div class="dropdown-ass-wrapper" id="dropdown-ass-wrapper">
@@ -1851,13 +1996,18 @@ footer.diretoria-footer {
               <span class="chevron">▼</span>
             </button>
             <div class="dropdown-ass-menu" id="dropdown-ass-menu">
+              <button type="button" class="dropdown-ass-item" id="btn-toggle-status-ass" title="Alternar status entre Ativa e Inativa">
+                <span class="item-icon" id="icon-toggle-status-ass">⏸️</span>
+                <span id="txt-toggle-status-ass">Marcar como Inativa / Encerrada</span>
+              </button>
+              <div class="dropdown-ass-divider"></div>
               <button type="button" class="dropdown-ass-item item-primary" id="btn-nova-ass" title="Cadastrar nova assembleia">
                 <span class="item-icon">➕</span>
                 <span>Nova Assembleia</span>
               </button>
-              <button type="button" class="dropdown-ass-item" id="btn-editar-ass" title="Editar dados da assembleia ativa">
+              <button type="button" class="dropdown-ass-item" id="btn-editar-ass" title="Editar dados da assembleia">
                 <span class="item-icon">✏️</span>
-                <span>Editar Assembleia Ativa</span>
+                <span>Editar Assembleia</span>
               </button>
               <div class="dropdown-ass-divider"></div>
               <button type="button" class="dropdown-ass-item" id="btn-historico-ass" title="Ver histórico completo de assembleias">
@@ -1869,9 +2019,9 @@ footer.diretoria-footer {
                 <span>Baixar Planilha Excel</span>
               </button>
               <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item item-danger" id="btn-excluir-ass" title="Excluir a assembleia ativa e todos os seus registros">
+              <button type="button" class="dropdown-ass-item item-danger" id="btn-excluir-ass" title="Excluir a assembleia e todos os seus registros">
                 <span class="item-icon">🗑️</span>
-                <span>Excluir Assembleia Ativa</span>
+                <span>Excluir Assembleia</span>
               </button>
             </div>
           </div>
@@ -1880,8 +2030,9 @@ footer.diretoria-footer {
     </div>
   </div>
 
-  <div id="status-bar"></div>
-  <div id="err-bar"></div>
+  <div id="status-bar" style="display:none !important"></div>
+  <div id="err-bar" style="display:none !important"></div>
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
   <!-- Cards KPIs Estratégicos da Diretoria (Design Executivo Corporativo) -->
   <div class="kpi-grid">
@@ -2368,11 +2519,64 @@ function alternarAssembleia(id){
 
   carregarDadosDaAssembleiaAtiva();
   renderizarSelectAssembleias();
+  atualizarBadgeStatusAssembleia();
   atualizarUI();
-  mostrarOk('Assembleia ativa: ' + assembleiaAtiva.nome);
 
   /* Publicar sessão ativa no servidor para cadastro.html e conferente.html */
   publicarSessaoNoServidor(assembleiaAtiva);
+}
+
+function atualizarBadgeStatusAssembleia(){
+  if(!assembleiaAtiva) return;
+  var badge = document.getElementById('badge-ass-status');
+  var isAtiva = (assembleiaAtiva.status !== 'inativa');
+
+  if(badge){
+    if(isAtiva){
+      badge.className = 'badge-ass-status status-ativa';
+      badge.innerHTML = '<span class="status-indicator-dot dot-ativa"></span><span class="status-indicator-text">Ativa</span>';
+      badge.setAttribute('title', 'Status: Ativa (Credenciamento aberto) — Clique para alternar para Inativa');
+    } else {
+      badge.className = 'badge-ass-status status-inativa';
+      badge.innerHTML = '<span class="status-indicator-dot dot-inativa"></span><span class="status-indicator-text">Inativa</span>';
+      badge.setAttribute('title', 'Status: Inativa (Credenciamento encerrado) — Clique para alternar para Ativa');
+    }
+  }
+
+  var badgeHeader = document.getElementById('badge-header-ass-status');
+  if(badgeHeader){
+    badgeHeader.className = 'header-ass-badge ' + (isAtiva ? 'status-ativa' : 'status-inativa');
+    badgeHeader.textContent = isAtiva ? '🟢 Ativa' : '⚪ Inativa';
+  }
+
+  var txtToggle = document.getElementById('txt-toggle-status-ass');
+  var iconToggle = document.getElementById('icon-toggle-status-ass');
+  if(txtToggle){
+    txtToggle.textContent = isAtiva ? 'Marcar como Inativa / Encerrada' : 'Marcar como Ativa / Aberta';
+  }
+  if(iconToggle){
+    iconToggle.textContent = isAtiva ? '⏸️' : '▶️';
+  }
+}
+
+function alternarStatusAssembleiaAtual(){
+  if(!assembleiaAtiva) return;
+  var novoStatus = (assembleiaAtiva.status === 'inativa') ? 'ativa' : 'inativa';
+  assembleiaAtiva.status = novoStatus;
+  assembleiaAtiva.atualizadoEm = new Date().toISOString();
+
+  var idx = assembleias.findIndex(function(a){ return a.id === assembleiaAtiva.id; });
+  if(idx !== -1){
+    assembleias[idx].status = novoStatus;
+    assembleias[idx].atualizadoEm = assembleiaAtiva.atualizadoEm;
+  }
+
+  salvarTodasAssembleias();
+  renderizarSelectAssembleias();
+  atualizarBadgeStatusAssembleia();
+  publicarSessaoNoServidor(assembleiaAtiva);
+
+  mostrarToast((novoStatus === 'ativa' ? 'Assembleia marcada como ATIVA.' : 'Assembleia marcada como INATIVA / ENCERRADA.'), 'ok');
 }
 
 /* Publicar configuração da assembleia ativa via /api/sessao */
@@ -2386,7 +2590,8 @@ function publicarSessaoNoServidor(ass){
     assId:      ass.id,
     assNome:    ass.nome    || 'Assembleia',
     assData:    ass.data    || '',
-    assPauta:   ass.pauta   || ''
+    assPauta:   ass.pauta   || '',
+    assStatus:  ass.status  || 'ativa'
   });
   var rotas = obterCandidatasAssembleias('/api/sessao');
   rotas.forEach(function(url){
@@ -2413,6 +2618,8 @@ function renderizarSelectAssembleias(){
     txtHeader.textContent = assembleiaAtiva.nome || 'Assembleia';
   }
 
+  atualizarBadgeStatusAssembleia();
+
   if(!sel) return;
 
   if(!assembleias.length){
@@ -2422,8 +2629,11 @@ function renderizarSelectAssembleias(){
 
   sel.innerHTML = assembleias.map(function(a){
     var selAttr = (assembleiaAtiva && a.id === assembleiaAtiva.id) ? ' selected' : '';
+    var isAtiva = (a.status !== 'inativa');
+    var iconeStatus = isAtiva ? '🟢' : '⚪';
+    var txtStatus = isAtiva ? 'Ativa' : 'Inativa';
     var infoData = formatarDataBR(a.data);
-    var label = esc(a.nome) + (infoData && infoData !== '—' ? ' • ' + infoData : '');
+    var label = iconeStatus + ' ' + esc(a.nome) + (infoData && infoData !== '—' ? ' • ' + infoData : '') + ' (' + txtStatus + ')';
     return '<option value="' + esc(a.id) + '"' + selAttr + '>' + label + '</option>';
   }).join('');
 }
@@ -2603,7 +2813,7 @@ function baixarHistoricoCompletoCSV(){
   mostrarOk('Planilha formatada do histórico exportada com sucesso (' + assembleias.length + ' assembleias).');
 }
 
-function criarNovaAssembleia(nome, data, pauta){
+function criarNovaAssembleia(nome, data, pauta, status){
   salvarAssembleiaAtiva();
 
   var nova = {
@@ -2611,6 +2821,7 @@ function criarNovaAssembleia(nome, data, pauta){
     nome: nome,
     data: data || new Date().toISOString().slice(0, 10),
     pauta: pauta || '',
+    status: status || 'ativa',
     presentes: [],
     revisar: [],
     conferentes: {},
@@ -2823,16 +3034,20 @@ function renderizarModalHistorico(termoBusca){
   }
 
   tbody.innerHTML = filtradas.map(function(a){
-    var isAtiva = assembleiaAtiva && a.id === assembleiaAtiva.id;
+    var isAtiva = (a.status !== 'inativa');
+    var isCurrent = (assembleiaAtiva && a.id === assembleiaAtiva.id);
     var qte = (a.presentes ? a.presentes.length : 0);
-    var badgeAtiva = isAtiva ? ' <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;background:#ecfdf5;color:#047857">● Em Andamento</span>' : '';
+    var badgeStatus = isAtiva 
+      ? ' <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0">🟢 Ativa</span>'
+      : ' <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1">⚪ Inativa</span>';
+    var badgeAtual = isCurrent ? ' <span style="display:inline-flex;align-items:center;padding:2px 6px;border-radius:6px;font-size:0.68rem;font-weight:800;background:#eff6ff;color:#1d4ed8;margin-left:4px">Selecionada</span>' : '';
     return '<tr>' +
-      '<td><strong style="color:#0f172a;font-size:0.88rem">' + esc(a.nome) + '</strong>' + badgeAtiva + 
+      '<td><strong style="color:#0f172a;font-size:0.88rem">' + esc(a.nome) + '</strong>' + badgeStatus + badgeAtual + 
         (a.pauta ? '<br><span style="color:#64748b;font-size:0.78rem">' + esc(a.pauta) + '</span>' : '') + '</td>' +
       '<td class="num" style="color:#475569">' + formatarDataBR(a.data) + '</td>' +
       '<td class="num" style="text-align:right"><span style="display:inline-block;padding:3px 10px;background:#f1f5f9;color:#0f172a;font-weight:800;border-radius:12px">' + qte + '</span></td>' +
       '<td style="text-align:center">' +
-        (!isAtiva ? '<button class="btn btn-primary" style="padding:4px 10px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Ativar</button> ' : '') +
+        (!isCurrent ? '<button class="btn btn-primary" style="padding:4px 10px;font-size:0.75rem" onclick="alternarAssembleia(\'' + a.id + '\');fecharModalHistorico();">Selecionar</button> ' : '') +
         '<button class="btn btn-help" style="padding:4px 10px;font-size:0.75rem" onclick="window._exportarAss(\'' + a.id + '\')" title="Exportar planilha Excel desta assembleia">⬇ Excel (.xls)</button> ' +
         (assembleias.length > 1 ? '<button class="btn btn-danger" style="padding:4px 8px;font-size:0.75rem;margin-left:4px" onclick="excluirAssembleia(\'' + a.id + '\')" title="Excluir assembleia">&#128465;</button>' : '') +
       '</td>' +
@@ -2876,6 +3091,8 @@ function abrirModalEditarAss(){
   document.getElementById('inp-edit-ass-nome').value = assembleiaAtiva.nome || '';
   document.getElementById('inp-edit-ass-data').value = assembleiaAtiva.data || '';
   document.getElementById('inp-edit-ass-pauta').value = assembleiaAtiva.pauta || '';
+  var selStatus = document.getElementById('inp-edit-ass-status');
+  if(selStatus) selStatus.value = assembleiaAtiva.status || 'ativa';
   document.getElementById('edit-ass-err').style.display = 'none';
   if(modalEditarAss) modalEditarAss.style.display = 'flex';
   setTimeout(function(){ document.getElementById('inp-edit-ass-nome').focus(); }, 60);
@@ -3511,14 +3728,30 @@ function renderizarBarrasConferentes(total){
     '</div>';
   }).join('');
 }
+function mostrarToast(msg, tipo){
+  var container = document.getElementById('toast-container');
+  if(!container){
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  var toast = document.createElement('div');
+  toast.className = 'toast-msg ' + (tipo === 'err' ? 'toast-err' : 'toast-ok');
+  var icone = tipo === 'err' ? '⚠️' : '✓';
+  toast.innerHTML = '<span style="font-size:1.1rem">' + icone + '</span><span>' + esc(msg) + '</span>';
+  container.appendChild(toast);
+  setTimeout(function(){
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    setTimeout(function(){ if(toast.parentNode) toast.parentNode.removeChild(toast); }, 320);
+  }, 3200);
+}
 function mostrarOk(msg){
-  var el=document.getElementById('status-bar');
-  el.textContent=msg;el.style.display='block';
-  document.getElementById('err-bar').style.display='none';
+  mostrarToast(msg, 'ok');
 }
 function mostrarErro(msg){
-  var el=document.getElementById('err-bar');
-  el.textContent=msg;el.style.display='block';
+  mostrarToast(msg, 'err');
 }
 
 /* ---- Carregamento de arquivos ---- */
@@ -3765,6 +3998,23 @@ document.getElementById('sel-assembleia').addEventListener('change', function(){
   alternarAssembleia(this.value);
 });
 
+/* Listener no badge de status e no botão do menu para alternar Ativa/Inativa */
+var badgeAssStatus = document.getElementById('badge-ass-status');
+if(badgeAssStatus){
+  badgeAssStatus.addEventListener('click', alternarStatusAssembleiaAtual);
+  badgeAssStatus.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      alternarStatusAssembleiaAtual();
+    }
+  });
+}
+
+var btnToggleStatus = document.getElementById('btn-toggle-status-ass');
+if(btnToggleStatus){
+  btnToggleStatus.addEventListener('click', alternarStatusAssembleiaAtual);
+}
+
 document.getElementById('btn-nova-ass').addEventListener('click', abrirModalNovaAss);
 document.getElementById('btn-fechar-nova-ass').addEventListener('click', fecharModalNovaAss);
 document.getElementById('btn-cancelar-nova-ass').addEventListener('click', fecharModalNovaAss);
@@ -3789,6 +4039,8 @@ document.getElementById('btn-salvar-nova-ass').addEventListener('click', functio
   var nome = document.getElementById('inp-ass-nome').value.trim();
   var data = document.getElementById('inp-ass-data').value;
   var pauta = document.getElementById('inp-ass-pauta').value.trim();
+  var selStatus = document.getElementById('inp-ass-status');
+  var status = selStatus ? selStatus.value : 'ativa';
   var err = document.getElementById('nova-ass-err');
 
   if(!nome){
@@ -3802,7 +4054,7 @@ document.getElementById('btn-salvar-nova-ass').addEventListener('click', functio
     err.style.display = 'block';
     return;
   }
-  criarNovaAssembleia(nome, data, pauta);
+  criarNovaAssembleia(nome, data, pauta, status);
   fecharModalNovaAss();
 });
 
@@ -3820,6 +4072,8 @@ if(btnSalvarEdit){
     var nome = document.getElementById('inp-edit-ass-nome').value.trim();
     var data = document.getElementById('inp-edit-ass-data').value;
     var pauta = document.getElementById('inp-edit-ass-pauta').value.trim();
+    var selStatus = document.getElementById('inp-edit-ass-status');
+    var status = selStatus ? selStatus.value : (assembleiaAtiva.status || 'ativa');
     var err = document.getElementById('edit-ass-err');
 
     if(!nome){
@@ -3843,6 +4097,7 @@ if(btnSalvarEdit){
     assembleiaAtiva.nome = nome;
     assembleiaAtiva.data = data;
     assembleiaAtiva.pauta = pauta;
+    assembleiaAtiva.status = status;
     assembleiaAtiva.atualizadoEm = new Date().toISOString();
 
     // Garante sincronização no array geral de assembleias
@@ -3851,6 +4106,7 @@ if(btnSalvarEdit){
       assembleias[idx].nome = nome;
       assembleias[idx].data = data;
       assembleias[idx].pauta = pauta;
+      assembleias[idx].status = status;
       assembleias[idx].atualizadoEm = assembleiaAtiva.atualizadoEm;
     } else {
       assembleias.push(assembleiaAtiva);
@@ -3862,6 +4118,7 @@ if(btnSalvarEdit){
 
     // Atualização visual imediata
     renderizarSelectAssembleias();
+    atualizarBadgeStatusAssembleia();
     atualizarUI();
     fecharModalEditarAss();
     mostrarOk('Assembleia atualizada com sucesso: ' + nome);

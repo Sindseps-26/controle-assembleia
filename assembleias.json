@@ -1,14 +1,2623 @@
 [
   {
-    "id": "ass_1789390430489",
+    "id": "ass_1789391287079",
     "nome": "Assembleia Geral Ordinária",
     "data": "2026-09-14",
     "pauta": "Prestação de Contas e Deliberações Gerais",
-    "presentes": [],
-    "revisar": [],
-    "conferentes": {},
-    "criadoEm": "2026-09-14T12:53:50.489Z",
-    "atualizadoEm": "2026-09-14T13:50:06.987Z"
+    "presentes": [
+      {
+        "matricula": "20412",
+        "cpf": "",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "08:14",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "31980",
+        "cpf": "",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "08:18",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "15420",
+        "cpf": "",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22",
+        "origem": "manual",
+        "observacao": "Documento físico",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "44102",
+        "cpf": "",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "50123",
+        "cpf": "",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "fileira": "Fileira 3",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "33214",
+        "cpf": "",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "fileira": "Fileira 3",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "19842",
+        "cpf": "",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "08:35",
+        "origem": "manual",
+        "observacao": "Sem smartphone",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "28941",
+        "cpf": "",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "62310",
+        "cpf": "",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "fileira": "Fileira 3",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "10842",
+        "cpf": "",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "07:42",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "11204",
+        "cpf": "",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "07:55",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "71245",
+        "cpf": "",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "09:05",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "73489",
+        "cpf": "",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "78920",
+        "cpf": "",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "fileira": "Fileira 3",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "82143",
+        "cpf": "",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "88310",
+        "cpf": "",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "fileira": "Fileira 3",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "91045",
+        "cpf": "",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "fileira": "Fileira 1",
+        "conferente": "Conferente Ana",
+        "hora": "10:28",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      },
+      {
+        "matricula": "94520",
+        "cpf": "",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "fileira": "Fileira 2",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "presenca_demo.csv"
+      }
+    ],
+    "revisar": [
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Observação: Documento físico",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Observação: Sem smartphone",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      },
+      {
+        "matricula": "10842",
+        "nome": "Marcos Aurélio Lima",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:42"
+      },
+      {
+        "matricula": "11204",
+        "nome": "Tereza Cristina Neves",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "07:55"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:14"
+      },
+      {
+        "matricula": "31980",
+        "nome": "Maria das Graças Oliveira",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:18"
+      },
+      {
+        "matricula": "15420",
+        "nome": "João Paulo Fernandes",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:22"
+      },
+      {
+        "matricula": "44102",
+        "nome": "Patricia Souza Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:25"
+      },
+      {
+        "matricula": "50123",
+        "nome": "Renato Vieira Costa",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:28"
+      },
+      {
+        "matricula": "33214",
+        "nome": "Juliana Costa Lima",
+        "orgao": "SEFAD",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:31"
+      },
+      {
+        "matricula": "19842",
+        "nome": "Fabio Henrique Silva",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "08:35"
+      },
+      {
+        "matricula": "28941",
+        "nome": "Aline Moreira Dias",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:39"
+      },
+      {
+        "matricula": "62310",
+        "nome": "Luciana Nogueira",
+        "orgao": "SEDES",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "08:42"
+      },
+      {
+        "matricula": "71245",
+        "nome": "Rodrigo Santos Macedo",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "09:05"
+      },
+      {
+        "matricula": "73489",
+        "nome": "Camila Silveira Brito",
+        "orgao": "SMED - Educação",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:18"
+      },
+      {
+        "matricula": "78920",
+        "nome": "Anderson Freire Gomes",
+        "orgao": "SEGOV",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "09:35"
+      },
+      {
+        "matricula": "82143",
+        "nome": "Beatriz Rocha Mendes",
+        "orgao": "SEFAZ",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "09:50"
+      },
+      {
+        "matricula": "88310",
+        "nome": "Eduardo Peixoto Nunes",
+        "orgao": "Guarda Municipal",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Mariana",
+        "hora": "10:12"
+      },
+      {
+        "matricula": "91045",
+        "nome": "Vanessa Ribeiro Ramos",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Ana",
+        "hora": "10:28"
+      },
+      {
+        "matricula": "94520",
+        "nome": "Gustavo Barreto Paiva",
+        "orgao": "SEINFRA",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "11:05"
+      },
+      {
+        "matricula": "20412",
+        "nome": "Carlos Alberto Santana (Duplicado)",
+        "orgao": "SMS - Saúde",
+        "motivo": "Matrícula duplicada (primeiro: presenca_demo.csv)",
+        "arquivo": "presenca_demo.csv",
+        "conferente": "Conferente Roberto",
+        "hora": "08:45"
+      }
+    ],
+    "conferentes": {
+      "presenca_demo.csv": {
+        "nome": "Conferente Ana",
+        "count": 19
+      }
+    },
+    "criadoEm": "2026-09-14T13:08:07.079Z",
+    "status": "ativa",
+    "atualizadoEm": "2026-09-14T14:42:55.472Z"
   },
   {
     "id": "ass_1788968429344",
@@ -183,14 +2792,14 @@
     "atualizadoEm": "2026-09-09T22:06:17.693Z"
   },
   {
-    "id": "ass_1789391287079",
+    "id": "ass_1789390430489",
     "nome": "Assembleia Geral Ordinária",
     "data": "2026-09-14",
     "pauta": "Prestação de Contas e Deliberações Gerais",
     "presentes": [],
     "revisar": [],
     "conferentes": {},
-    "criadoEm": "2026-09-14T13:08:07.079Z",
-    "atualizadoEm": "2026-09-14T13:50:05.737Z"
+    "criadoEm": "2026-09-14T12:53:50.489Z",
+    "atualizadoEm": "2026-09-14T13:50:06.987Z"
   }
 ]
