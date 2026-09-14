@@ -4,9 +4,29 @@
     "nome": "Assembleia Geral Ordinária",
     "data": "2026-09-14",
     "pauta": "Prestação de Contas e Deliberações Gerais",
-    "presentes": [],
+    "presentes": [
+      {
+        "matricula": "120987",
+        "cpf": "86192053588",
+        "nome": "GEOVANNA TESTE",
+        "orgao": "SMS",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "13:56:37",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "tempo-real"
+      }
+    ],
     "revisar": [],
-    "conferentes": {},
-    "criadoEm": "2026-09-14T16:48:54.522Z"
+    "conferentes": {
+      "Tempo Real (Matrícula 123456)": {
+        "nome": "Matrícula 123456",
+        "count": 1
+      }
+    },
+    "criadoEm": "2026-09-14T16:48:54.522Z",
+    "chave": "ass_1789404534522_sindseps_chave",
+    "atualizadoEm": "2026-09-14T16:56:49.773Z"
   }
 ]
