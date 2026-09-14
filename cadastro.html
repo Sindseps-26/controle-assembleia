@@ -330,10 +330,66 @@ if(inpCpf) inpCpf.addEventListener('input',mascaraCPF);
 var nomeAtual='', matriculaAtual='', orgaoAtual='', cpfAtual='', timerRelogio=null, timerQR=null;
 var geoAtual = null; /* { lat, lng, acc } — capturado ao gerar credencial */
 
+/* Recuperar última localização recente do cache local (se capturada há menos de 30 minutos) */
+try {
+  var geoCache = JSON.parse(localStorage.getItem('cad_geo') || 'null');
+  if(geoCache && geoCache.lat && geoCache.lng && (Date.now() - (geoCache.ts || 0) < 1800000)){
+    geoAtual = { lat: geoCache.lat, lng: geoCache.lng, acc: geoCache.acc || 0 };
+  }
+} catch(e){}
+
+function atualizarGeoStatusUI(geo, err){
+  var elGeo = document.getElementById('geo-status');
+  if(!elGeo) return;
+  if(geo && geo.lat && geo.lng){
+    elGeo.innerHTML = '📍 Localização capturada <span style="font-size:0.75rem;opacity:0.85">(±' + (geo.acc || 0) + 'm de precisão)</span>';
+    elGeo.style.color = '#15803d';
+    elGeo.style.background = '#dcfce7';
+    elGeo.style.borderColor = '#86efac';
+  } else if(err && (err.code === 1 || err.code === 2)){
+    elGeo.textContent = '📍 Localização não autorizada no navegador';
+    elGeo.style.color = '#b91c1c';
+    elGeo.style.background = '#fee2e2';
+    elGeo.style.borderColor = '#fca5a5';
+  } else {
+    elGeo.textContent = '📍 Obtendo localização precisa via GPS...';
+    elGeo.style.color = '#b45309';
+    elGeo.style.background = '#fef3c7';
+    elGeo.style.borderColor = '#fde68a';
+  }
+  elGeo.style.display = 'block';
+}
+
+function enviarGeoServidor(mat, cpf, geo){
+  if(!mat || !cpf) return;
+  var payloadCpf = JSON.stringify({
+    matricula: mat,
+    cpf: cpf,
+    lat: geo ? geo.lat : null,
+    lng: geo ? geo.lng : null,
+    geo_acc: geo ? geo.acc : null
+  });
+  obterRotasCadastro('/api/presenca-cpf').forEach(function(urlApi){
+    fetch(urlApi, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: payloadCpf
+    }).then(function(res){ return res.json(); })
+      .then(function(d){
+        if(d && d.ok){
+          console.log('[GEO] Enviado com sucesso para ' + urlApi, geo ? (geo.lat + ',' + geo.lng) : 'sem geo');
+        }
+      })
+      .catch(function(){});
+  });
+}
+
 /* ---- Capturar geolocalização em background ao carregar a página ---- */
-/* Não bloqueia o fluxo — usa o que tiver no momento do clique            */
 function iniciarCapturaSilenciosa(){
-  if(!navigator.geolocation) return;
+  if(!navigator.geolocation){
+    console.log('[GEO] Geolocalização não suportada');
+    return;
+  }
   try{
     navigator.geolocation.getCurrentPosition(
       function(pos){
@@ -342,13 +398,25 @@ function iniciarCapturaSilenciosa(){
           lng: parseFloat(pos.coords.longitude.toFixed(6)),
           acc: Math.round(pos.coords.accuracy)
         };
+        try {
+          localStorage.setItem('cad_geo', JSON.stringify({
+            lat: geoAtual.lat,
+            lng: geoAtual.lng,
+            acc: geoAtual.acc,
+            ts: Date.now()
+          }));
+        } catch(e){}
         console.log('[GEO] Localização capturada: ' + geoAtual.lat + ',' + geoAtual.lng + ' ±' + geoAtual.acc + 'm');
+        atualizarGeoStatusUI(geoAtual);
+        if(matriculaAtual && cpfAtual){
+          enviarGeoServidor(matriculaAtual, cpfAtual, geoAtual);
+        }
       },
       function(err){
         console.log('[GEO] Localização não disponível: ' + err.message);
-        geoAtual = null;
+        if(!geoAtual) atualizarGeoStatusUI(null, err);
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
     );
   } catch(e){
     console.log('[GEO] Erro ao solicitar localização:', e);
@@ -461,34 +529,13 @@ function mostrarCredencial(nome,matricula,orgao,cpf){
   programarRenovacaoQR();
   /* persistir — CPF salvo apenas localmente, nunca entra no QR */
   try{localStorage.setItem('cad_dados',JSON.stringify({nome:nome,matricula:matricula,orgao:orgao,cpf:cpf}));}catch(e){}
-  /* Enviar CPF + geolocalização ao servidor (não entram no payload do QR) */
+  /* Enviar CPF + geolocalização ao servidor */
   if(cpf){
-    var geo = geoAtual;
-    var payloadCpf = JSON.stringify({
-      matricula: matricula,
-      cpf: cpf,
-      lat: geo ? geo.lat : null,
-      lng: geo ? geo.lng : null,
-      geo_acc: geo ? geo.acc : null
-    });
-    obterRotasCadastro('/api/presenca-cpf').forEach(function(urlApi){
-      fetch(urlApi, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: payloadCpf
-      }).catch(function(){});
-    });
-    /* Indicador visual de localização na credencial */
-    var elGeo = document.getElementById('geo-status');
-    if(elGeo){
-      if(geo){
-        elGeo.textContent = '📍 Localização registrada (~' + geo.acc + 'm de precisão)';
-        elGeo.style.color = '#15803d';
-      } else {
-        elGeo.textContent = '📍 Localização não disponível';
-        elGeo.style.color = '#92400e';
-      }
-      elGeo.style.display = 'block';
+    enviarGeoServidor(matricula, cpf, geoAtual);
+    atualizarGeoStatusUI(geoAtual);
+    /* Se a localização ainda não foi concluída, dispara captura imediatamente */
+    if(!geoAtual && navigator.geolocation){
+      iniciarCapturaSilenciosa();
     }
   }
 }

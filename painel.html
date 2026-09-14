@@ -1570,6 +1570,40 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   font-size: 0.7rem;
 }
 
+/* Botão de Localização / Google Maps na Tabela */
+.btn-geo-mapa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.btn-geo-mapa:hover {
+  background: #dcfce7;
+  color: #14532d;
+  border-color: #86efac;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(22, 101, 52, 0.18);
+}
+.btn-geo-mapa-na {
+  display: inline-block;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  user-select: none;
+}
+
 /* Barra de busca na tabela de presentes */
 .search-bar-wrap {
   display: flex; align-items: center; gap: 10px;
@@ -2941,12 +2975,13 @@ function exportarCSVAssembleia(assObj){
     ' <Column ss:Width="140"/>\n' +
     ' <Column ss:Width="70"/>\n' +
     ' <Column ss:Width="90"/>\n' +
+    ' <Column ss:Width="130"/>\n' +
     ' <Column ss:Width="200"/>\n' +
     ' <Row ss:Height="34">\n' +
-    '  <Cell ss:MergeAcross="9" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="10" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="22">\n' +
-    '  <Cell ss:MergeAcross="9" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="10" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="10"/>\n' +
     ' <Row ss:Height="24">\n' +
@@ -2959,6 +2994,7 @@ function exportarCSVAssembleia(assObj){
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Conferente</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Validação</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Localização (GPS)</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Observações</Data></Cell>\n' +
     ' </Row>\n';
 
@@ -2968,6 +3004,7 @@ function exportarCSVAssembleia(assObj){
     var sCenter = isEven ? 'sRowEvenCenter' : 'sRowOddCenter';
     var sOrig = (p.origem === 'manual') ? 'sBadgeManual' : 'sBadgeQR';
     var txtOrig = (p.origem === 'manual') ? 'Manual' : 'QR Code';
+    var txtGeo = (p.lat && p.lng) ? (p.lat + ', ' + p.lng + (p.geo_acc ? ' (±' + p.geo_acc + 'm)' : '')) : '—';
 
     xml += ' <Row ss:Height="20">\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="Number">' + (i + 1) + '</Data></Cell>\n' +
@@ -2979,6 +3016,7 @@ function exportarCSVAssembleia(assObj){
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.conferente || '') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sOrig + '"><Data ss:Type="String">' + txtOrig + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(txtGeo) + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.observacao || '') + '</Data></Cell>\n' +
       ' </Row>\n';
   });
@@ -3613,12 +3651,14 @@ function filtrarPresentes(termoBusca){
     var cpfFormatado = mascararCPF(p.cpf);
     /* Ícone de localização: abre Google Maps se coordenadas disponíveis */
     var geoBadge;
-    if(p.lat && p.lng){
-      var mapsUrl = 'https://www.google.com/maps?q=' + p.lat + ',' + p.lng;
-      var accStr = p.geo_acc ? ' ±' + p.geo_acc + 'm' : '';
-      geoBadge = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Ver no mapa (precisão' + accStr + ')">📍 Ver</a>';
+    var latVal = (p.lat != null && p.lat !== '') ? parseFloat(p.lat) : null;
+    var lngVal = (p.lng != null && p.lng !== '') ? parseFloat(p.lng) : null;
+    if(latVal !== null && lngVal !== null && !isNaN(latVal) && !isNaN(lngVal)){
+      var mapsUrl = 'https://www.google.com/maps?q=' + latVal + ',' + lngVal;
+      var accStr = p.geo_acc ? ' (precisão ±' + p.geo_acc + 'm)' : '';
+      geoBadge = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Ver</a>';
     } else {
-      geoBadge = '<span class="btn-geo-mapa-na" title="Localização não capturada">—</span>';
+      geoBadge = '<span class="btn-geo-mapa-na" title="Localização não capturada pelo participante">—</span>';
     }
     return '<tr>' +
       '<td class="num">' + (i + 1) + '</td>' +
@@ -4348,6 +4388,13 @@ atualizarUI();
               presentes[existeIdx].cpf = item.cpf;
               novosAdicionados = true;
             }
+            /* Atualizar localização se recebida do servidor e ainda não registrada no painel */
+            if(item.lat != null && (!presentes[existeIdx].lat || presentes[existeIdx].lat !== item.lat)){
+              presentes[existeIdx].lat = item.lat;
+              presentes[existeIdx].lng = item.lng;
+              presentes[existeIdx].geo_acc = item.geo_acc;
+              novosAdicionados = true;
+            }
             if(item.duplicado){
               var jaAuditado = revisar.some(function(r){
                 return String(r.matricula || '').trim().toUpperCase() === mat;
@@ -4385,6 +4432,9 @@ atualizarUI();
             hora: item.hora || new Date().toLocaleTimeString('pt-BR'),
             origem: item.origem || 'qr',
             observacao: item.observacao || '',
+            lat: (item.lat != null) ? item.lat : null,
+            lng: (item.lng != null) ? item.lng : null,
+            geo_acc: (item.geo_acc != null) ? item.geo_acc : null,
             arquivo: 'tempo-real'
           });
 
