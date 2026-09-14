@@ -179,47 +179,157 @@ header {
   bottom: -38px;
 }
 
-/* Badge de sincronização em tempo real */
+/* Badge & Botão de sincronização em tempo real (Cockpit High-Tech) */
 .badge-live-sync {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  gap: 8px;
+  height: 38px;
+  padding: 0 13px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  transition: all 0.2s ease;
+  font-family: inherit;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  outline: none;
+  background: transparent;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible;
 }
+.badge-live-sync:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 2px;
+}
+
+/* Estado Online / Ao Vivo */
 .badge-live-sync.online {
-  background: rgba(4, 120, 87, 0.2);
-  color: #34d399;
-  border: 1px solid rgba(52, 211, 153, 0.4);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.22) 100%);
+  color: #ecfdf5;
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 14px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
-.badge-live-sync.online .pulse-dot {
+.badge-live-sync.online:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.26) 0%, rgba(5, 150, 105, 0.34) 100%);
+  border-color: rgba(52, 211, 153, 0.8);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 20px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+.badge-live-sync:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Radar Pulse / Beacon */
+.live-ping-wrap {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.badge-live-sync.online .live-ping-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #10b981;
-  box-shadow: 0 0 8px #10b981;
-  animation: pulseGreen 1.5s infinite;
+  box-shadow: 0 0 8px #10b981, 0 0 2px #34d399;
+  position: relative;
+  z-index: 2;
 }
-.badge-live-sync.offline {
-  background: rgba(100, 116, 139, 0.2);
-  color: #94a3b8;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-}
-.badge-live-sync.offline .pulse-dot {
+.badge-live-sync.online .live-ping-wave {
+  position: absolute;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #64748b;
+  background: #34d399;
+  opacity: 0.8;
+  z-index: 1;
+  animation: liveRadarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
-@keyframes pulseGreen {
-  0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 12px #34d399; }
-  100% { transform: scale(0.95); opacity: 0.8; }
+
+@keyframes liveRadarPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  65%, 100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* Contador de Presenças */
+.live-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  padding: 1px 7px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  font-size: 0.70rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* Ícone de Sincronização / Atualização */
+.live-sync-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.65;
+  transition: transform 0.35s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+.badge-live-sync:hover .live-sync-icon {
+  opacity: 1;
+  transform: rotate(180deg);
+}
+.badge-live-sync.spinning .live-sync-icon {
+  animation: spinLiveSync 0.75s linear infinite;
+  opacity: 1;
+}
+@keyframes spinLiveSync {
+  100% { transform: rotate(360deg); }
+}
+
+/* Estado Offline */
+.badge-live-sync.offline {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.2) 100%);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 0 10px rgba(239, 68, 68, 0.12);
+}
+.badge-live-sync.offline:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.24) 0%, rgba(185, 28, 28, 0.3) 100%);
+  border-color: rgba(248, 113, 113, 0.75);
+  transform: translateY(-1px);
+}
+.badge-live-sync.offline .live-ping-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+  position: relative;
+  z-index: 2;
+}
+.badge-live-sync.offline .live-ping-wave {
+  display: none;
+}
+.badge-live-sync.offline:focus-visible {
+  outline: 2px solid #f87171;
+  outline-offset: 2px;
 }
 
 main {
@@ -1104,10 +1214,17 @@ footer.diretoria-footer {
     </div>
   </div>
   <div class="header-btns">
-    <div id="badge-sync-servidor" class="badge-live-sync offline" title="Status da sincronização em tempo real">
-      <span class="pulse-dot"></span>
-      <span id="txt-sync-servidor">Verificando Servidor...</span>
-    </div>
+    <button type="button" id="badge-sync-servidor" class="badge-live-sync offline" title="Status da sincronização em tempo real (Clique para atualizar)" aria-label="Status da sincronização em tempo real">
+      <span class="live-ping-wrap">
+        <span class="live-ping-wave"></span>
+        <span class="live-ping-dot"></span>
+      </span>
+      <span id="txt-sync-servidor">Conectando...</span>
+      <span id="badge-sync-count" class="live-counter" style="display:none">0</span>
+      <svg class="live-sync-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+    </button>
     <button class="btn btn-help btn-icon-only" id="btn-abrir-ajuda" data-tooltip="Como Funciona (Ajuda)" aria-label="Como Funciona">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
     </button>
@@ -3170,16 +3287,29 @@ atualizarUI();
   ======================================================== */
   var badgeSync = document.getElementById('badge-sync-servidor');
   var txtSync = document.getElementById('txt-sync-servidor');
+  var countSync = document.getElementById('badge-sync-count');
   var intervalSync = null;
 
-  function setStatusSync(online, texto){
+  function setStatusSync(online, texto, count){
     if(!badgeSync || !txtSync) return;
     if(online){
       badgeSync.className = 'badge-live-sync online';
-      txtSync.textContent = texto || '● AO VIVO';
+      txtSync.textContent = texto || 'AO VIVO';
+      if(countSync){
+        var num = (count !== undefined && count !== null) ? count : (typeof texto === 'string' && texto.indexOf('(') !== -1 ? texto.replace(/[^0-9]/g, '') : null);
+        if(num !== null && num !== ''){
+          countSync.textContent = num;
+          countSync.style.display = 'inline-flex';
+        } else {
+          countSync.style.display = 'none';
+        }
+      }
+      badgeSync.setAttribute('title', 'Sincronização em tempo real ativa' + (count !== undefined ? ' (' + count + ' presenças no servidor)' : '') + ' — Clique para atualizar');
     } else {
       badgeSync.className = 'badge-live-sync offline';
       txtSync.textContent = texto || 'OFFLINE';
+      if(countSync) countSync.style.display = 'none';
+      badgeSync.setAttribute('title', 'Servidor central desconectado — Clique para testar reconexão');
     }
   }
 
@@ -3240,11 +3370,11 @@ atualizarUI();
   function sincronizarTempoReal(){
     testarConexaoApi(function(data, err){
       if(err || !data){
-        setStatusSync(false, 'Servidor Offline');
+        setStatusSync(false, 'OFFLINE');
         return;
       }
 
-      setStatusSync(true, '● AO VIVO (' + (data.total || 0) + ')');
+      setStatusSync(true, 'AO VIVO', data.total || 0);
 
       if(data && Array.isArray(data.presencas) && data.presencas.length > 0){
         var novosAdicionados = false;
@@ -3325,6 +3455,20 @@ atualizarUI();
   // Executa checagem imediata e repete a cada 3 segundos
   sincronizarTempoReal();
   intervalSync = setInterval(sincronizarTempoReal, 3000);
+
+  // Clique no botão de status para forçar reconexão e exibir servidor ativo com feedback tátil
+  if(badgeSync){
+    badgeSync.addEventListener('click', function(){
+      badgeSync.classList.add('spinning');
+      setTimeout(function(){ badgeSync.classList.remove('spinning'); }, 800);
+      sincronizarTempoReal();
+      if(_apiUrlPreferida){
+        mostrarOk('Sincronização ativa via: ' + _apiUrlPreferida);
+      } else {
+        mostrarOk('Testando conexão com o servidor central...');
+      }
+    });
+  }
 })();
 </script>
 
