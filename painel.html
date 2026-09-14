@@ -263,15 +263,25 @@ main {
   padding: 0;
   letter-spacing: -0.01em;
 }
-.session-badge {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
-  font-size: 0.72rem;
+.btn-voltar-geral {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f1f5f9;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-voltar-geral:hover {
+  background: #0d1b3e;
+  color: #ffffff;
+  border-color: #0d1b3e;
 }
 .assembleia-bar-simple {
   display: flex;
@@ -1361,9 +1371,10 @@ footer.diretoria-footer {
     <div class="session-info">
       <div class="session-title-wrap">
         <h2>Painel da Diretoria</h2>
-        <span class="session-badge" id="badge-ass-ativa-header" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;font-weight:700;display:inline-flex;align-items:center;gap:5px" title="Assembleia selecionada atualmente">
-          🏛️ <span id="txt-ass-ativa-header">Assembleia Geral Ordinária</span>
-        </span>
+        <a href="index.html" id="btn-voltar-painel-geral" class="btn-voltar-geral" title="Retornar ao Painel Geral (Página Inicial)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+          <span>Voltar ao Painel Geral</span>
+        </a>
       </div>
 
       <!-- Controle e Ações da Assembleia: Dropdown Executivo -->
