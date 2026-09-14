@@ -79,10 +79,9 @@ Ao final das deliberações, a Mesa Diretora pode emitir três tipos de relatór
 
 ---
 
-## 🆘 6. O que fazer se a Internet Cair? (Plano de Contingência)
+## 📶 6. Funcionamento com Oscilação de Internet (Sincronização Automática)
 
-Se faltar internet ou energia na rede local, a portaria não para:
-1. Os conferentes continuam lendo os QR Codes normalmente (os celulares salvam tudo na memória interna).
-2. Ao terminar a entrada, cada conferente toca no botão **⬇ CSV** no seu próprio aparelho para gerar o arquivo da sua portaria.
-3. Os arquivos são passados para a Mesa Diretora (via WhatsApp ou pendrive).
-4. No painel, a diretoria clica em **📂 Carregar Arquivos CSV** e seleciona os arquivos: o sistema consolida tudo, remove duplicidades e gera a ata oficial normalmente.
+Se houver qualquer instabilidade momentânea na conexão de internet durante o credenciamento:
+1. Os conferentes continuam apontando a câmera e lendo os QR Codes normalmente.
+2. O leitor armazena as presenças de forma segura na memória interna do aparelho.
+3. Assim que a conexão com o servidor for restabelecida, o aplicativo sincroniza todos os registros em segundo plano automaticamente, sem intervenção manual e sem risco de perda de dados.
