@@ -1677,7 +1677,7 @@ footer.diretoria-footer {
     <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
     <div>
       <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
-      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span> <span id="badge-header-ass-status" class="header-ass-badge status-ativa">🟢 Ativa</span></p>
+      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span></p>
     </div>
   </div>
   <div class="header-btns">
@@ -1981,13 +1981,7 @@ footer.diretoria-footer {
       <div class="assembleia-bar-simple">
         <div class="ass-simple-row">
           <label class="assembleia-label" for="sel-assembleia">Assembleia:</label>
-          <div class="select-ass-box">
-            <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
-            <div id="badge-ass-status" class="badge-ass-status status-ativa" role="button" tabindex="0" title="Status da Assembleia — Clique para alternar entre Ativa e Inativa">
-              <span class="status-indicator-dot dot-ativa"></span>
-              <span class="status-indicator-text">Ativa</span>
-            </div>
-          </div>
+          <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
 
           <!-- Menu Suspenso de Opções da Assembleia -->
           <div class="dropdown-ass-wrapper" id="dropdown-ass-wrapper">
@@ -2630,10 +2624,9 @@ function renderizarSelectAssembleias(){
   sel.innerHTML = assembleias.map(function(a){
     var selAttr = (assembleiaAtiva && a.id === assembleiaAtiva.id) ? ' selected' : '';
     var isAtiva = (a.status !== 'inativa');
-    var iconeStatus = isAtiva ? '🟢' : '⚪';
-    var txtStatus = isAtiva ? 'Ativa' : 'Inativa';
+    var iconeStatus = isAtiva ? '🟢 ' : '⚪ ';
     var infoData = formatarDataBR(a.data);
-    var label = iconeStatus + ' ' + esc(a.nome) + (infoData && infoData !== '—' ? ' • ' + infoData : '') + ' (' + txtStatus + ')';
+    var label = iconeStatus + esc(a.nome) + (infoData && infoData !== '—' ? ' • ' + infoData : '');
     return '<option value="' + esc(a.id) + '"' + selAttr + '>' + label + '</option>';
   }).join('');
 }
