@@ -1,16 +1,5 @@
 [
   {
-    "id": "ass_1788975339758",
-    "nome": "Assembleia Geral Ordinária",
-    "data": "2026-09-09",
-    "pauta": "Prestação de Contas e Deliberações Gerais",
-    "presentes": [],
-    "revisar": [],
-    "conferentes": {},
-    "criadoEm": "2026-09-09T17:35:39.758Z",
-    "atualizadoEm": "2026-09-09T17:36:02.213Z"
-  },
-  {
     "id": "ass_1788968429344",
     "nome": "Assembleia Geral",
     "data": "2026-09-09",
@@ -26,6 +15,83 @@
         "origem": "manual",
         "observacao": "Inserido manualmente pela Mesa Diretora",
         "arquivo": "Mesa Diretora"
+      },
+      {
+        "matricula": "070675",
+        "nome": "MARISELIA S C SOUSA",
+        "orgao": "SST",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "14:37:59",
+        "origem": "qr",
+        "observacao": "aparelho com 3 cadastros",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "987654",
+        "nome": "TESTE 3",
+        "orgao": "SMS",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "15:05:21",
+        "origem": "qr",
+        "observacao": "aparelho com 2 cadastros",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "654321",
+        "nome": "JOÃO DAS COUVES",
+        "orgao": "SMS",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "15:56:59",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "12345",
+        "nome": "JUCILEIA OLIVEIRA SOUSA",
+        "orgao": "SST",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "16:09:48",
+        "origem": "qr",
+        "observacao": "aparelho com 4 cadastros",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "321654",
+        "nome": "PEDRO PAULO",
+        "orgao": "GUARDA",
+        "fileira": "—",
+        "conferente": "Matrícula 123456",
+        "hora": "16:25:55",
+        "origem": "qr",
+        "observacao": "aparelho com 4 cadastros",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "77777",
+        "nome": "BRITO SILVA",
+        "orgao": "SECULT",
+        "fileira": "—",
+        "conferente": "Matrícula 12345",
+        "hora": "16:44:46",
+        "origem": "qr",
+        "observacao": "aparelho com 2 cadastros",
+        "arquivo": "tempo-real"
+      },
+      {
+        "matricula": "071922",
+        "nome": "MARCELLE LUIZE SICOPIRA OLIVEIRA",
+        "orgao": "SEMGE",
+        "fileira": "—",
+        "conferente": "Matrícula 3101463",
+        "hora": "19:03:29",
+        "origem": "qr",
+        "observacao": "",
+        "arquivo": "tempo-real"
       }
     ],
     "revisar": [
@@ -37,26 +103,72 @@
         "arquivo": "tempo-real",
         "conferente": "Mesa Diretora",
         "hora": "12:47:43"
+      },
+      {
+        "matricula": "070675",
+        "nome": "MARISELIA S C SOUSA",
+        "orgao": "SST",
+        "motivo": "Observação: aparelho com 3 cadastros",
+        "arquivo": "tempo-real",
+        "conferente": "Matrícula 123456",
+        "hora": "14:37:59"
+      },
+      {
+        "matricula": "987654",
+        "nome": "TESTE 3",
+        "orgao": "SMS",
+        "motivo": "Observação: aparelho com 2 cadastros",
+        "arquivo": "tempo-real",
+        "conferente": "Matrícula 123456",
+        "hora": "15:05:21"
+      },
+      {
+        "matricula": "12345",
+        "nome": "JUCILEIA OLIVEIRA SOUSA",
+        "orgao": "SST",
+        "motivo": "Observação: aparelho com 4 cadastros",
+        "arquivo": "tempo-real",
+        "conferente": "Matrícula 123456",
+        "hora": "16:09:48"
+      },
+      {
+        "matricula": "321654",
+        "nome": "PEDRO PAULO",
+        "orgao": "GUARDA",
+        "motivo": "Observação: aparelho com 4 cadastros",
+        "arquivo": "tempo-real",
+        "conferente": "Matrícula 123456",
+        "hora": "16:25:55"
+      },
+      {
+        "matricula": "77777",
+        "nome": "BRITO SILVA",
+        "orgao": "SECULT",
+        "motivo": "Observação: aparelho com 2 cadastros",
+        "arquivo": "tempo-real",
+        "conferente": "Matrícula 12345",
+        "hora": "16:44:46"
       }
     ],
     "conferentes": {
       "Mesa Diretora": {
         "nome": "Mesa Diretora",
         "count": 1
+      },
+      "Tempo Real (Matrícula 123456)": {
+        "nome": "Matrícula 123456",
+        "count": 4
+      },
+      "Tempo Real (Matrícula 12345)": {
+        "nome": "Matrícula 12345",
+        "count": 1
+      },
+      "Tempo Real (Matrícula 3101463)": {
+        "nome": "Matrícula 3101463",
+        "count": 1
       }
     },
     "criadoEm": "2026-09-09T15:40:29.344Z",
-    "atualizadoEm": "2026-09-09T17:36:03.367Z"
-  },
-  {
-    "id": "ass_1788969016050",
-    "nome": "Assembleia Geral Ordinária",
-    "data": "2026-09-09",
-    "pauta": "Prestação de Contas e Deliberações Gerais",
-    "presentes": [],
-    "revisar": [],
-    "conferentes": {},
-    "criadoEm": "2026-09-09T15:50:16.050Z",
-    "atualizadoEm": "2026-09-09T17:36:04.545Z"
+    "atualizadoEm": "2026-09-09T22:06:17.693Z"
   }
 ]

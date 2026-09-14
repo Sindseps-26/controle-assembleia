@@ -134,7 +134,7 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
       Você está acessando pelo GitHub Pages (HTTPS).<br>
       O sistema <strong>NÃO conseguirá enviar presenças</strong> ao servidor desta forma.<br><br>
       <strong>Use este endereço no celular:</strong><br>
-      <span id="url-correta-conf" style="font-size:0.95rem;font-weight:800;color:#ffd700;word-break:break-all">http://192.168.1.96:8080/conferente.html</span>
+      <span id="url-correta-conf" style="font-size:0.95rem;font-weight:800;color:#ffd700;word-break:break-all">Aguardando detecção de rede...</span>
     </div>
 
     <input id="inp-mat-conf" class="inp-grande" type="text"
@@ -175,14 +175,45 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
 
 <script>
 /* ========================================================
-   CONFIGURE AQUI — iguais aos valores do cadastro.html
+   CONFIGURE AQUI — valores padrão caso o servidor esteja offline
+   (Serão substituídos automaticamente pelo servidor quando online)
 ======================================================== */
-var EVENTO     = 'ASSEMBLEIA-2026';
-var CHAVE      = 'mude-a-cada-assembleia';
+var EVENTO     = 'ASSEMBLEIA-2026'; /* Fallback offline */
+var CHAVE      = 'mude-a-cada-assembleia'; /* Fallback offline */
 var ROTACAO    = 10;   /* segundos por janela */
 var TOLERANCIA = 300;  /* 5 minutos de tolerância para diferenças de fuso/relógio entre aparelhos */
-var SENHA_CONFERENTE = 'Portaria@2026'; /* Senha de acesso do conferente (Portaria@2026) */
+var SENHA_CONFERENTE = 'Portaria@2026'; /* Senha de acesso do conferente */
 /* ======================================================== */
+
+/* Buscar configuração da sessão ativa no servidor */
+(function buscarSessaoConferente(){
+  fetch('/api/sessao', { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data && data.ok && data.sessao){
+        var s = data.sessao;
+        EVENTO    = s.evento;
+        CHAVE     = s.chave;
+        ROTACAO   = s.rotacao    || 10;
+        TOLERANCIA = s.tolerancia || 300;
+        console.log('[SINDSEPS] Sessão carregada:', s.assNome, '| EVENTO:', EVENTO);
+      }
+    })
+    .catch(function(){ /* Servidor indisponível — usa valores padrão hardcoded */ });
+}());
+
+/* Buscar URL correta do servidor para o aviso de URL incorreta */
+(function buscarURLServidor(){
+  fetch('/api/config', { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(cfg){
+      if(cfg && cfg.urlConferente){
+        var el = document.getElementById('url-correta-conf');
+        if(el) el.textContent = cfg.urlConferente;
+      }
+    })
+    .catch(function(){});
+}());
 
 /* ========================================================
    Biblioteca jsQR inline (Universal QR Decoder ES5)
@@ -10375,7 +10406,10 @@ function obterCandidatasApi(path){
   }
   rotas.push('http://localhost:8080' + path);
   rotas.push('http://127.0.0.1:8080' + path);
-  rotas.push('http://192.168.1.96:8080' + path);
+  /* IP dinâmico obtido do localStorage (se configurado pelo operador) */
+  var ipDinamico = '';
+  try { ipDinamico = localStorage.getItem('sindseps_ip_servidor') || ''; } catch(e){}
+  if(ipDinamico) rotas.push('http://' + ipDinamico + ':8080' + path);
   return rotas;
 }
 
@@ -10391,7 +10425,10 @@ var badgeSyncConfEl = document.getElementById('badge-sync-conf');
 if(badgeSyncConfEl){
   badgeSyncConfEl.addEventListener('click', function(){
     var atual = '';
-    try { atual = localStorage.getItem(CHAVE_CUSTOM_SERVER) || 'http://192.168.1.96:8080'; } catch(e){}
+    try {
+      var ipSalvo = localStorage.getItem('sindseps_ip_servidor') || window.location.hostname || 'localhost';
+      atual = localStorage.getItem(CHAVE_CUSTOM_SERVER) || ('http://' + ipSalvo + ':8080');
+    } catch(e){}
     var novo = prompt('Endereço do Servidor Central (Painel):', atual);
     if(novo !== null){
       novo = novo.trim().replace(/\/+$/, '');

@@ -1,15 +1,21 @@
 const http = require('http');
 const fs   = require('fs');
 const path = require('path');
+const os   = require('os');
 
-const PORT     = process.env.PORT || 8080;
-const BASE_DIR = __dirname;
-const DB_FILE  = path.join(BASE_DIR, 'presencas.json'); // persistência em disco
-const ASS_FILE = path.join(BASE_DIR, 'assembleias.json'); // persistência de assembleias em disco
+const PORT        = process.env.PORT || 8080;
+const ADMIN_TOKEN = process.env.TOKEN_ADMIN || 'sindseps-admin-2026'; // Mude via variável de ambiente
+const BASE_DIR    = __dirname;
+const DB_FILE     = path.join(BASE_DIR, 'presencas.json');
+const ASS_FILE    = path.join(BASE_DIR, 'assembleias.json');
+const SESS_FILE   = path.join(BASE_DIR, 'sessao.json');   // Sessão ativa publicada pelo painel
+const CPFS_FILE   = path.join(BASE_DIR, 'cpfs.json');     // Armazenamento protegido de CPF (não vai para o QR)
 
 /* ── Banco de dados em memória (carregado do arquivo ao iniciar) ─────────── */
 let presencasDB   = [];
 let assembleiasDB = [];
+let sessaoAtiva   = null; // { evento, chave, rotacao, tolerancia, assId, assNome, assData }
+let cpfsDB        = {};   // { [matricula]: cpf }
 
 function carregarDB() {
   try {
@@ -31,11 +37,36 @@ function carregarDB() {
     assembleiasDB = [];
     console.warn('[API] Não foi possível carregar assembleias.json, iniciando vazio.');
   }
+
+  try {
+    if (fs.existsSync(SESS_FILE)) {
+      sessaoAtiva = JSON.parse(fs.readFileSync(SESS_FILE, 'utf-8'));
+      console.log(`[API] Sessão ativa: ${sessaoAtiva.assNome || sessaoAtiva.evento}`);
+    }
+  } catch (e) {
+    sessaoAtiva = null;
+  }
+
+  try {
+    if (fs.existsSync(CPFS_FILE)) {
+      cpfsDB = JSON.parse(fs.readFileSync(CPFS_FILE, 'utf-8'));
+      console.log(`[API] ${Object.keys(cpfsDB).length} CPFs carregados de cpfs.json`);
+    }
+  } catch (e) {
+    cpfsDB = {};
+  }
+}
+
+/* ── Escrita atômica: grava em .tmp e renomeia — evita corrupção ─────────── */
+function escrevaAtomico(filePath, data) {
+  const tmp = filePath + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf-8');
+  fs.renameSync(tmp, filePath);
 }
 
 function salvarDB() {
   try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(presencasDB, null, 2), 'utf-8');
+    escrevaAtomico(DB_FILE, presencasDB);
   } catch (e) {
     console.error('[API] Erro ao salvar presencas.json:', e.message);
   }
@@ -43,9 +74,40 @@ function salvarDB() {
 
 function salvarAssembleiasDB() {
   try {
-    fs.writeFileSync(ASS_FILE, JSON.stringify(assembleiasDB, null, 2), 'utf-8');
+    escrevaAtomico(ASS_FILE, assembleiasDB);
   } catch (e) {
     console.error('[API] Erro ao salvar assembleias.json:', e.message);
+  }
+}
+
+function salvarSessao() {
+  try {
+    escrevaAtomico(SESS_FILE, sessaoAtiva);
+  } catch (e) {
+    console.error('[API] Erro ao salvar sessao.json:', e.message);
+  }
+}
+
+function salvarCPFsDB() {
+  try {
+    escrevaAtomico(CPFS_FILE, cpfsDB);
+  } catch (e) {
+    console.error('[API] Erro ao salvar cpfs.json:', e.message);
+  }
+}
+
+/* ── Backup antes de limpar ──────────────────────────────────────────────── */
+function criarBackupPresencas() {
+  try {
+    const agora = new Date();
+    const ts = agora.toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const backupPath = path.join(BASE_DIR, `presencas_backup_${ts}.json`);
+    fs.writeFileSync(backupPath, JSON.stringify(presencasDB, null, 2), 'utf-8');
+    console.log(`[API] Backup criado: presencas_backup_${ts}.json (${presencasDB.length} registros)`);
+    return backupPath;
+  } catch (e) {
+    console.error('[API] Erro ao criar backup:', e.message);
+    return null;
   }
 }
 
@@ -64,6 +126,20 @@ const MIME_TYPES = {
   '.jpg':  'image/jpeg',
   '.svg':  'image/svg+xml'
 };
+
+/* Arquivos que não devem ser servidos em produção */
+const ARQUIVOS_BLOQUEADOS = ['/test_qr.html'];
+
+/* ── Detectar IP local ───────────────────────────────────────────────────── */
+function obterIPLocal() {
+  let localIP = 'localhost';
+  Object.values(os.networkInterfaces()).forEach(list =>
+    list.forEach(iface => {
+      if (iface.family === 'IPv4' && !iface.internal) localIP = iface.address;
+    })
+  );
+  return localIP;
+}
 
 /* ── Helpers de resposta ─────────────────────────────────────────────────── */
 function jsonOk(res, data) {
@@ -102,7 +178,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type'
+      'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Token'
     });
     res.end();
     return;
@@ -121,9 +197,97 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  /* ── GET /api/config ── retorna IP e porta para o index.html ─────────── */
+  if (url === '/api/config' && method === 'GET') {
+    const ip = obterIPLocal();
+    jsonOk(res, {
+      ip,
+      porta: PORT,
+      urlBase: `http://${ip}:${PORT}`,
+      urlCadastro: `http://${ip}:${PORT}/cadastro.html`,
+      urlConferente: `http://${ip}:${PORT}/conferente.html`
+    });
+    return;
+  }
+
+  /* ── GET /api/sessao ── retorna configuração da assembleia ativa ──────── */
+  if (url === '/api/sessao' && method === 'GET') {
+    if (sessaoAtiva) {
+      jsonOk(res, { ok: true, sessao: sessaoAtiva });
+    } else {
+      jsonOk(res, { ok: false, sessao: null });
+    }
+    return;
+  }
+
+  /* ── POST /api/sessao ── painel publica assembleia ativa ─────────────── */
+  if (url === '/api/sessao' && method === 'POST') {
+    let dados;
+    try { dados = await lerBody(req); }
+    catch (e) { jsonErro(res, 400, 'Body inválido'); return; }
+
+    if (!dados.evento || !dados.chave) {
+      jsonErro(res, 422, 'Campos evento e chave são obrigatórios');
+      return;
+    }
+
+    sessaoAtiva = {
+      evento:     String(dados.evento).trim(),
+      chave:      String(dados.chave).trim(),
+      rotacao:    Number(dados.rotacao)    || 10,
+      tolerancia: Number(dados.tolerancia) || 300,
+      assId:      String(dados.assId      || '').trim(),
+      assNome:    String(dados.assNome    || '').trim(),
+      assData:    String(dados.assData    || '').trim(),
+      publicadoEm: new Date().toISOString()
+    };
+    salvarSessao();
+    console.log(`[API] Sessão ativa publicada: ${sessaoAtiva.assNome} (EVENTO=${sessaoAtiva.evento})`);
+    jsonOk(res, { ok: true, sessao: sessaoAtiva });
+    return;
+  }
+
   /* ── GET /api/presencas ── painel busca todos os registros ───────────── */
   if (url === '/api/presencas' && method === 'GET') {
-    jsonOk(res, { presencas: presencasDB, total: presencasDB.length });
+    const listaEnriquecida = presencasDB.map(p => {
+      const mat = String(p.matricula || '').trim().toUpperCase();
+      return Object.assign({}, p, {
+        cpf: p.cpf || cpfsDB[mat] || ''
+      });
+    });
+    jsonOk(res, { presencas: listaEnriquecida, total: listaEnriquecida.length });
+    return;
+  }
+
+  /* ── POST /api/presenca-cpf ── cadastro.html envia CPF separado do QR ─── */
+  if (url === '/api/presenca-cpf' && method === 'POST') {
+    let dados;
+    try { dados = await lerBody(req); }
+    catch (e) { jsonErro(res, 400, 'Body inválido'); return; }
+
+    const mat = String(dados.matricula || '').trim().toUpperCase();
+    const cpf = String(dados.cpf || '').replace(/\D/g, '').trim();
+
+    if (!mat || !cpf) {
+      jsonErro(res, 422, 'Matrícula e CPF são obrigatórios');
+      return;
+    }
+
+    cpfsDB[mat] = cpf;
+    salvarCPFsDB();
+
+    /* Se a presença já constar em presencasDB, enriquece com o CPF */
+    let atualizou = false;
+    presencasDB.forEach(p => {
+      if (String(p.matricula || '').trim().toUpperCase() === mat) {
+        p.cpf = cpf;
+        atualizou = true;
+      }
+    });
+    if (atualizou) salvarDB();
+
+    console.log(`[API] CPF associado à matrícula ${mat}`);
+    jsonOk(res, { ok: true, matricula: mat });
     return;
   }
 
@@ -141,8 +305,11 @@ const server = http.createServer(async (req, res) => {
       String(p.matricula || '').trim().toUpperCase() === mat
     );
 
+    const cpfAssociado = String(dados.cpf || cpfsDB[mat] || '').trim();
+
     const registro = {
       matricula:  mat,
+      cpf:        cpfAssociado,
       nome:       String(dados.nome       || '').trim(),
       orgao:      String(dados.orgao      || '—').trim(),
       fileira:    String(dados.fileira    || '—').trim(),
@@ -167,13 +334,21 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  /* ── POST /api/presencas/limpar ── reset da sessão ───────────────────── */
+  /* ── POST /api/presencas/limpar ── reset da sessão (PROTEGIDO) ────────── */
   if (url === '/api/presencas/limpar' && method === 'POST') {
+    const token = req.headers['x-admin-token'] || '';
+    if (token !== ADMIN_TOKEN) {
+      console.warn('[API] Tentativa de limpar sem token válido');
+      jsonErro(res, 403, 'Token de administrador inválido ou ausente');
+      return;
+    }
+
+    const backupPath = criarBackupPresencas();
     const total = presencasDB.length;
     presencasDB = [];
     salvarDB();
-    console.log(`[API] Sessão limpa — ${total} registros removidos.`);
-    jsonOk(res, { ok: true, removidos: total });
+    console.log(`[API] Sessão limpa — ${total} registros removidos. Backup: ${backupPath}`);
+    jsonOk(res, { ok: true, removidos: total, backup: backupPath ? path.basename(backupPath) : null });
     return;
   }
 
@@ -201,11 +376,18 @@ const server = http.createServer(async (req, res) => {
   }
 
   /* ════════════════════════════════════════════════════════════════════════
-     Servidor de Arquivos Estáticos (comportamento original mantido)
+     Servidor de Arquivos Estáticos
   ════════════════════════════════════════════════════════════════════════ */
 
   let reqPath = url;
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
+
+  /* Bloquear arquivos de desenvolvimento/teste */
+  if (ARQUIVOS_BLOQUEADOS.includes(reqPath)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('Acesso negado.');
+    return;
+  }
 
   if (reqPath === '/index.html' && !fs.existsSync(path.join(BASE_DIR, 'index.html'))) {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -234,14 +416,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  /* Detectar IP local automaticamente */
-  const os = require('os');
-  let localIP = 'localhost';
-  Object.values(os.networkInterfaces()).forEach(list =>
-    list.forEach(iface => {
-      if (iface.family === 'IPv4' && !iface.internal) localIP = iface.address;
-    })
-  );
+  const localIP = obterIPLocal();
 
   console.log('\n════════════════════════════════════════════════');
   console.log('  SINDSEPS — Sistema de Presença Sindical');
@@ -249,6 +424,7 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`  Local:      http://localhost:${PORT}/`);
   console.log(`  Rede local: http://${localIP}:${PORT}/`);
   console.log('  API REST:   /api/status | /api/presencas | /api/presenca');
+  console.log('  Config API: /api/config | /api/sessao');
+  console.log(`  Token Admin: ${ADMIN_TOKEN.slice(0, 6)}*** (configure TOKEN_ADMIN=suasenha)`);
   console.log('════════════════════════════════════════════════\n');
 });
-

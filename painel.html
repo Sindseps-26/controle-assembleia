@@ -1493,7 +1493,8 @@ footer.diretoria-footer {
         <table id="tbl-presentes">
           <thead><tr>
             <th style="width:40px">#</th>
-            <th style="width:110px">Matrícula</th>
+            <th style="width:100px">Matrícula</th>
+            <th style="width:115px">CPF</th>
             <th>Nome do Servidor</th>
             <th>Órgão de Atuação</th>
             <th style="width:90px">Fileira</th>
@@ -1503,7 +1504,7 @@ footer.diretoria-footer {
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
-            <tr><td colspan="9" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
+            <tr><td colspan="10" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
           </tbody>
         </table>
       </div>
@@ -1685,7 +1686,10 @@ function obterCandidatasAssembleias(path){
   }
   rotas.push('http://localhost:8080' + path);
   rotas.push('http://127.0.0.1:8080' + path);
-  rotas.push('http://192.168.1.96:8080' + path);
+  /* IP dinâmico buscado do localStorage (preenchido pelo /api/config) */
+  var ipDinamico = '';
+  try { ipDinamico = localStorage.getItem('sindseps_ip_servidor') || ''; } catch(e){}
+  if(ipDinamico) rotas.push('http://' + ipDinamico + ':8080' + path);
   return rotas;
 }
 
@@ -1798,6 +1802,32 @@ function alternarAssembleia(id){
   renderizarSelectAssembleias();
   atualizarUI();
   mostrarOk('Assembleia ativa: ' + assembleiaAtiva.nome);
+
+  /* Publicar sessão ativa no servidor para cadastro.html e conferente.html */
+  publicarSessaoNoServidor(assembleiaAtiva);
+}
+
+/* Publicar configuração da assembleia ativa via /api/sessao */
+function publicarSessaoNoServidor(ass){
+  if(!ass) return;
+  var payload = JSON.stringify({
+    evento:     ass.id,                          /* ID único como EVENTO — diferencia assembleias */
+    chave:      ass.id + '_' + (ass.criadoEm || Date.now()),  /* Chave derivada do ID + timestamp de criação */
+    rotacao:    10,
+    tolerancia: 300,
+    assId:      ass.id,
+    assNome:    ass.nome    || 'Assembleia',
+    assData:    ass.data    || '',
+    assPauta:   ass.pauta   || ''
+  });
+  var rotas = obterCandidatasAssembleias('/api/sessao');
+  rotas.forEach(function(url){
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload
+    }).catch(function(){});
+  });
 }
 
 function formatarDataBR(dataStr){
@@ -1908,6 +1938,7 @@ function baixarHistoricoCompletoCSV(){
     ' <Column ss:Width="90"/>\n' +
     ' <Column ss:Width="180"/>\n' +
     ' <Column ss:Width="80"/>\n' +
+    ' <Column ss:Width="110"/>\n' +
     ' <Column ss:Width="220"/>\n' +
     ' <Column ss:Width="160"/>\n' +
     ' <Column ss:Width="70"/>\n' +
@@ -1916,10 +1947,10 @@ function baixarHistoricoCompletoCSV(){
     ' <Column ss:Width="80"/>\n' +
     ' <Column ss:Width="180"/>\n' +
     ' <Row ss:Height="36">\n' +
-    '  <Cell ss:MergeAcross="10" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — HISTÓRICO GERAL DE ASSEMBLEIAS ' + anoRef + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="11" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — HISTÓRICO GERAL DE ASSEMBLEIAS ' + anoRef + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="22">\n' +
-    '  <Cell ss:MergeAcross="10" ss:StyleID="sSubBanner"><Data ss:Type="String">Sindicato dos Servidores da Prefeitura do Salvador • Gerado em ' + hoje + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="11" ss:StyleID="sSubBanner"><Data ss:Type="String">Sindicato dos Servidores da Prefeitura do Salvador • Gerado em ' + hoje + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="10"/>\n' +
     ' <Row ss:Height="24">\n' +
@@ -1927,6 +1958,7 @@ function baixarHistoricoCompletoCSV(){
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Data</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Pauta</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Matrícula</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">CPF</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Nome do Servidor</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Secretaria / Órgão</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Fileira</Data></Cell>\n' +
@@ -1951,7 +1983,7 @@ function baixarHistoricoCompletoCSV(){
         '  <Cell ss:StyleID="' + styleText + '"><Data ss:Type="String">' + esc(assNome) + '</Data></Cell>\n' +
         '  <Cell ss:StyleID="' + styleText + 'Center"><Data ss:Type="String">' + esc(assData) + '</Data></Cell>\n' +
         '  <Cell ss:StyleID="' + styleText + '"><Data ss:Type="String">' + esc(assPauta) + '</Data></Cell>\n' +
-        '  <Cell ss:MergeAcross="7" ss:StyleID="' + styleText + 'Center"><Data ss:Type="String">— Sem registros de presença homologados —</Data></Cell>\n' +
+        '  <Cell ss:MergeAcross="8" ss:StyleID="' + styleText + 'Center"><Data ss:Type="String">— Sem registros de presença homologados —</Data></Cell>\n' +
         ' </Row>\n';
       rowCount++;
     } else {
@@ -1967,6 +1999,7 @@ function baixarHistoricoCompletoCSV(){
           '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(assData) + '</Data></Cell>\n' +
           '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(assPauta) + '</Data></Cell>\n' +
           '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.matricula || '') + '</Data></Cell>\n' +
+          '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.cpf ? mascararCPF(p.cpf) : '—') + '</Data></Cell>\n' +
           '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.nome || '') + '</Data></Cell>\n' +
           '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.orgao || '—') + '</Data></Cell>\n' +
           '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.fileira || '—') + '</Data></Cell>\n' +
@@ -2125,6 +2158,7 @@ function exportarCSVAssembleia(assObj){
     '<Table>\n' +
     ' <Column ss:Width="40"/>\n' +
     ' <Column ss:Width="90"/>\n' +
+    ' <Column ss:Width="110"/>\n' +
     ' <Column ss:Width="240"/>\n' +
     ' <Column ss:Width="180"/>\n' +
     ' <Column ss:Width="80"/>\n' +
@@ -2133,15 +2167,16 @@ function exportarCSVAssembleia(assObj){
     ' <Column ss:Width="90"/>\n' +
     ' <Column ss:Width="200"/>\n' +
     ' <Row ss:Height="34">\n' +
-    '  <Cell ss:MergeAcross="8" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="9" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="22">\n' +
-    '  <Cell ss:MergeAcross="8" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="9" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="10"/>\n' +
     ' <Row ss:Height="24">\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">#</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Matrícula</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">CPF</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Nome do Servidor</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Secretaria / Órgão</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Fileira</Data></Cell>\n' +
@@ -2161,6 +2196,7 @@ function exportarCSVAssembleia(assObj){
     xml += ' <Row ss:Height="20">\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="Number">' + (i + 1) + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.matricula || '') + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.cpf ? mascararCPF(p.cpf) : '—') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.nome || '') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.orgao || '—') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.fileira || '—') + '</Data></Cell>\n' +
@@ -2312,7 +2348,8 @@ function processarCSV(texto,nomeArq){
   var hdr=rows[0].map(function(h){return h.trim().toLowerCase();});
   function idx(n){return hdr.indexOf(n);}
   var iMat=idx('matricula');
-  if(iMat<0) iMat=idx('cpf'); // compatibilidade
+  var iCpf=idx('cpf');
+  if(iMat<0 && iCpf>=0) iMat=iCpf; // compatibilidade se só houver cpf
   var iNome=idx('nome'),iOrg=idx('orgao'),iFil=idx('fileira');
   var iConf=idx('conferente'),iHora=idx('hora'),iOrig=idx('origem'),iObs=idx('observacao');
   if(iMat<0||iNome<0){
@@ -2323,6 +2360,7 @@ function processarCSV(texto,nomeArq){
     var r=rows[i];
     if(r.length<2)continue;
     var mat=(r[iMat]||'').trim();
+    var cpfVal=(iCpf>=0 && iCpf!==iMat)?(r[iCpf]||'').trim():'';
     var nome=(r[iNome]||'').trim();
     var orgao=iOrg>=0?(r[iOrg]||'').trim():'—';
     var fil=iFil>=0?(r[iFil]||'').trim():'—';
@@ -2342,7 +2380,7 @@ function processarCSV(texto,nomeArq){
       continue;
     }
     /* se obs não estiver vazia, vai para revisar também mas mantém em presentes */
-    presentes.push({matricula:mat,nome:nome,orgao:orgao,fileira:fil,conferente:conf,hora:hora,
+    presentes.push({matricula:mat,cpf:cpfVal,nome:nome,orgao:orgao,fileira:fil,conferente:conf,hora:hora,
       origem:orig,observacao:obs,arquivo:nomeArq});
     if(obs){
       revisar.push({matricula:mat,nome:nome,orgao:orgao,motivo:'Observação: '+obs,
@@ -2525,14 +2563,23 @@ function esc(s){
     .replace(/"/g,'&quot;');
 }
 
+function mascararCPF(cpf){
+  if(!cpf) return '—';
+  var d = String(cpf).replace(/\D/g, '');
+  if(d.length !== 11) return '—';
+  return d.slice(0, 3) + '.***.***-' + d.slice(9);
+}
+
 /* ---- Filtro de Busca na Tabela de Presentes ---- */
 function filtrarPresentes(termoBusca){
   var busca = document.getElementById('busca-presentes');
   var termo = ((termoBusca !== undefined ? termoBusca : (busca ? busca.value : '')) || '').toLowerCase().trim();
+  var termoDigitos = termo.replace(/\D/g, '');
   var presOrdenados = presentes.slice().sort(function(a,b){ return a.nome.localeCompare(b.nome,'pt-BR'); });
   var filtrados = termo ? presOrdenados.filter(function(p){
     return (p.nome||'').toLowerCase().indexOf(termo) !== -1 ||
            (p.matricula||'').toLowerCase().indexOf(termo) !== -1 ||
+           (termoDigitos && (p.cpf||'').indexOf(termoDigitos) !== -1) ||
            (p.orgao||'').toLowerCase().indexOf(termo) !== -1;
   }) : presOrdenados;
 
@@ -2550,7 +2597,7 @@ function filtrarPresentes(termoBusca){
   var tbP = document.getElementById('tbody-presentes');
   if(!tbP) return;
   if(!filtrados.length){
-    tbP.innerHTML = '<tr><td colspan="9" class="info-vazia">' +
+    tbP.innerHTML = '<tr><td colspan="10" class="info-vazia">' +
       (termo ? 'Nenhum resultado para "' + esc(termo) + '".' : 'Nenhum presente registrado.') +
       '</td></tr>';
     return;
@@ -2562,9 +2609,11 @@ function filtrarPresentes(termoBusca){
     var origBadge = isMan
       ? '<span class="badge-manual-orig">Manual</span>'
       : '<span class="badge-qr-orig">QR</span>';
+    var cpfFormatado = mascararCPF(p.cpf);
     return '<tr>' +
       '<td class="num">' + (i + 1) + '</td>' +
       '<td class="num">' + esc(p.matricula) + '</td>' +
+      '<td class="num" style="color:#64748b;font-size:0.8rem">' + esc(cpfFormatado) + '</td>' +
       '<td>' + nomeCell + '</td>' +
       '<td>' + esc(p.orgao || '—') + '</td>' +
       '<td class="num">' + esc(p.fileira) + '</td>' +
@@ -3109,9 +3158,13 @@ atualizarUI();
       RAILWAY_URL_PAINEL + '/api/presencas',
       '/api/presencas',
       'http://localhost:8080/api/presencas',
-      'http://127.0.0.1:8080/api/presencas',
-      'http://192.168.1.96:8080/api/presencas'
+      'http://127.0.0.1:8080/api/presencas'
     ];
+    /* IP dinâmico configurado ou salvo */
+    var ipDinamico = '';
+    try { ipDinamico = localStorage.getItem('sindseps_ip_servidor') || ''; } catch(e){}
+    if(ipDinamico) candidatas.push('http://' + ipDinamico + ':8080/api/presencas');
+
     // Se estiver em outra máquina ou celular na rede local
     if(window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && window.location.hostname.indexOf('github') === -1){
       candidatas.splice(1, 0, 'http://' + window.location.hostname + ':8080/api/presencas');
@@ -3169,6 +3222,10 @@ atualizarUI();
 
           var existeIdx = indicePorMatricula(mat);
           if(existeIdx >= 0){
+            if(item.cpf && !presentes[existeIdx].cpf){
+              presentes[existeIdx].cpf = item.cpf;
+              novosAdicionados = true;
+            }
             if(item.duplicado){
               var jaAuditado = revisar.some(function(r){
                 return String(r.matricula || '').trim().toUpperCase() === mat;
@@ -3198,6 +3255,7 @@ atualizarUI();
 
           presentes.push({
             matricula: mat,
+            cpf: item.cpf || '',
             nome: item.nome || '',
             orgao: item.orgao || '—',
             fileira: item.fileira || '—',

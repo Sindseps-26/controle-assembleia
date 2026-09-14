@@ -7,6 +7,17 @@ package-lock.json
 .DS_Store
 Thumbs.db
 
-# Dados de sessão (ficam apenas no servidor Railway, não no Git)
-# presencas.json — não ignorar, Railway precisa do arquivo inicial vazio
-# assembleias.json — não ignorar, Railway precisa do arquivo inicial
+# Dados de sessão em tempo real — gerados pelo servidor, não versionados
+# Os arquivos .example abaixo são os modelos iniciais para o Railway
+presencas.json
+presencas_backup_*.json
+sessao.json
+cpfs.json
+cpfs_backup_*.json
+
+# assembleias.json contém dados reais de participantes — não versionar
+# Use assembleias.example.json como modelo inicial no servidor
+assembleias.json
+
+# Arquivo de teste — não deve ir para produção
+test_qr.html
