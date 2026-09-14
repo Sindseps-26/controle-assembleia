@@ -687,12 +687,13 @@ main {
    KPIS ESTRATÉGICOS DA DIRETORIA (MODERN EXECUTIVE CARDS)
 ======================================================== */
 /* ========================================================
-   KPIS ESTRATÉGICOS DA DIRETORIA (MODERN EXECUTIVE CARDS)
+/* ========================================================
+   KPIS ESTRATÉGICOS DA DIRETORIA (DESIGN EXECUTIVO CORPORATIVO)
 ======================================================== */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 20px;
   margin-bottom: 26px;
 }
 @media (max-width: 1120px) {
@@ -710,171 +711,114 @@ main {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  padding: 22px 24px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   overflow: hidden;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.22s ease;
 }
 .kpi-card::before {
   content: '';
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 16px 16px 0 0;
+  width: 6px;
+  border-radius: 16px 0 0 16px;
 }
 .kpi-card-total::before {
-  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  background: #2563eb;
 }
 .kpi-card-qr::before {
-  background: linear-gradient(90deg, #059669, #10b981);
+  background: #7c3aed;
 }
 .kpi-card-pico::before {
-  background: linear-gradient(90deg, #f59e0b, #d97706);
+  background: #f59e0b;
 }
 .kpi-card-rev::before {
-  background: linear-gradient(90deg, #e11d48, #f43f5e);
+  background: #10b981;
 }
 
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.07);
 }
 .kpi-card-total:hover { border-color: #bfdbfe; }
-.kpi-card-qr:hover { border-color: #a7f3d0; }
+.kpi-card-qr:hover { border-color: #ddd6fe; }
 .kpi-card-pico:hover { border-color: #fde68a; }
-.kpi-card-rev:hover { border-color: #fecdd3; }
+.kpi-card-rev:hover { border-color: #a7f3d0; }
 
 .kpi-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
-.kpi-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+.kpi-caption {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
+
 .kpi-icon-badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.icon-total { background: #eff6ff; color: #1d4ed8; }
-.icon-qr { background: #ecfdf5; color: #059669; }
+.icon-total { background: #eff6ff; color: #2563eb; }
+.icon-qr { background: #f5f3ff; color: #7c3aed; }
 .icon-pico { background: #fffbeb; color: #d97706; }
-.icon-rev { background: #fff1f2; color: #e11d48; }
-
-.kpi-caption {
-  font-size: 0.74rem;
-  font-weight: 800;
-  color: #475569;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.kpi-tag {
-  font-size: 0.70rem;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: 20px;
-  letter-spacing: 0.03em;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.kpi-tag-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.tag-total { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
-.tag-total .kpi-tag-dot { background: #2563eb; }
-.tag-qr { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-.tag-qr .kpi-tag-dot { background: #10b981; }
-.tag-pico { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-.tag-pico .kpi-tag-dot { background: #f59e0b; }
-.tag-rev { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-.tag-rev .kpi-tag-dot { background: #e11d48; }
+.icon-rev { background: #ecfdf5; color: #059669; }
 
 .kpi-body {
-  margin: 6px 0 12px;
+  margin: 0 0 6px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .kpi-metric-wrap {
   display: flex;
   align-items: baseline;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
 }
 .kpi-metric {
-  font-size: 2.6rem;
-  font-weight: 900;
+  font-size: 2.65rem;
+  font-weight: 800;
   color: #0f172a;
-  line-height: 1;
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
-  text-align: center;
-}
-.metric-qr { color: #047857; }
-.metric-pico { color: #b45309; }
-.metric-rev { color: #be123c; }
-
-/* Micro-visuais nos cards de KPI */
-.kpi-sparkline-wrap {
-  width: 100%;
-  height: 26px;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.kpi-mini-bar-wrap {
-  width: 100%;
-  margin-top: 10px;
-}
-.kpi-mini-bar-track {
-  height: 6px;
-  background: #e2e8f0;
-  border-radius: 999px;
-  overflow: hidden;
-  width: 100%;
-}
-.kpi-mini-bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #10b981, #059669);
-  transition: width 0.4s ease;
+  text-align: left;
 }
 
 .kpi-footer {
-  font-size: 0.75rem;
+  font-size: 0.80rem;
   color: #64748b;
-  font-weight: 600;
-  background: #f8fafc;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  font-weight: 500;
+  line-height: 1.4;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  display: block;
+  text-align: left;
 }
-.kpi-footer-icon { font-size: 0.85rem; flex-shrink: 0; }
-.kpi-footer-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kpi-footer-txt {
+  color: #64748b;
+  font-size: 0.80rem;
+}
 
 /* SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS (GRID 2x2) */
 .analytics-section {
@@ -1937,78 +1881,64 @@ footer.diretoria-footer {
   <div id="status-bar"></div>
   <div id="err-bar"></div>
 
-  <!-- Cards KPIs Estratégicos da Diretoria (4 Colunas Executivas) -->
+  <!-- Cards KPIs Estratégicos da Diretoria (Design Executivo Corporativo) -->
   <div class="kpi-grid">
+    <!-- Card 1: Quórum Consolidado (Azul) -->
     <div class="kpi-card kpi-card-total">
       <div class="kpi-header">
-        <div class="kpi-title-wrap">
-          <div class="kpi-icon-badge icon-total">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>
-          </div>
-          <span class="kpi-caption">Quórum Consolidado</span>
+        <span class="kpi-caption">Quórum Consolidado</span>
+        <div class="kpi-icon-badge icon-total">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
         </div>
-        <span class="kpi-tag tag-total"><span class="kpi-tag-dot"></span> Oficial</span>
       </div>
       <div class="kpi-body">
         <div class="kpi-metric-wrap">
           <span class="kpi-metric" id="c-total">0</span>
         </div>
-        <div class="kpi-sparkline-wrap" id="kpi-sparkline-total"></div>
       </div>
       <div class="kpi-footer" id="kpi-meta-total">
-        <span class="kpi-footer-icon">⚡</span>
-        <span class="kpi-footer-txt">Aguardando leituras em tempo real</span>
+        <span class="kpi-footer-txt">Presenças confirmadas em tempo real</span>
       </div>
     </div>
 
+    <!-- Card 2: Validação Digital (Roxo) -->
     <div class="kpi-card kpi-card-qr">
       <div class="kpi-header">
-        <div class="kpi-title-wrap">
-          <div class="kpi-icon-badge icon-qr">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="14" y="14" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
-          </div>
-          <span class="kpi-caption">Validação Digital (QR)</span>
+        <span class="kpi-caption">Validação Digital (QR)</span>
+        <div class="kpi-icon-badge icon-qr">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
         </div>
-        <span class="kpi-tag tag-qr"><span class="kpi-tag-dot"></span> Certificado</span>
       </div>
       <div class="kpi-body">
         <div class="kpi-metric-wrap">
           <span class="kpi-metric metric-qr" id="c-qr">0</span>
         </div>
-        <div class="kpi-mini-bar-wrap">
-          <div class="kpi-mini-bar-track">
-            <div class="kpi-mini-bar-fill" id="kpi-qr-bar-fill" style="width:0%"></div>
-          </div>
-        </div>
       </div>
       <div class="kpi-footer" id="kpi-meta-qr">
-        <span class="kpi-footer-icon">🛡️</span>
-        <span class="kpi-footer-txt">0% do quórum total</span>
+        <span class="kpi-footer-txt">89% do quórum validado por QR Code</span>
       </div>
     </div>
 
+    <!-- Card 3: Pico de Entrada (Amarelo / Âmbar) -->
     <div class="kpi-card kpi-card-pico">
       <div class="kpi-header">
-        <div class="kpi-title-wrap">
-          <div class="kpi-icon-badge icon-pico">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-          </div>
-          <span class="kpi-caption">Pico de Entrada</span>
+        <span class="kpi-caption">Pico de Entrada</span>
+        <div class="kpi-icon-badge icon-pico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
         </div>
-        <span class="kpi-tag tag-pico"><span class="kpi-tag-dot"></span> Afluência</span>
       </div>
       <div class="kpi-body">
         <div class="kpi-metric-wrap">
@@ -2016,23 +1946,19 @@ footer.diretoria-footer {
         </div>
       </div>
       <div class="kpi-footer" id="kpi-meta-pico">
-        <span class="kpi-footer-icon">⚡</span>
-        <span class="kpi-footer-txt">Calculando horário de pico</span>
+        <span class="kpi-footer-txt">Maior fluxo com 9 entradas no horário</span>
       </div>
     </div>
 
+    <!-- Card 4: Ocorrências de Auditoria (Verde) -->
     <div class="kpi-card kpi-card-rev">
       <div class="kpi-header">
-        <div class="kpi-title-wrap">
-          <div class="kpi-icon-badge icon-rev">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              <path d="m9 12 2 2 4-4"></path>
-            </svg>
-          </div>
-          <span class="kpi-caption">Ocorrências de Auditoria</span>
+        <span class="kpi-caption">Ocorrências de Auditoria</span>
+        <div class="kpi-icon-badge icon-rev">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
         </div>
-        <span class="kpi-tag tag-rev"><span class="kpi-tag-dot"></span> Revisão</span>
       </div>
       <div class="kpi-body">
         <div class="kpi-metric-wrap">
@@ -2040,8 +1966,7 @@ footer.diretoria-footer {
         </div>
       </div>
       <div class="kpi-footer" id="kpi-meta-rev">
-        <span class="kpi-footer-icon">🔍</span>
-        <span class="kpi-footer-txt">Nenhuma duplicata</span>
+        <span class="kpi-footer-txt">Duplicidades e registros retidos</span>
       </div>
     </div>
   </div>
@@ -3104,25 +3029,21 @@ function atualizarUI(){
   var elConf = document.getElementById('c-conf');
   if(elConf) elConf.textContent = confKeys.length;
 
-  /* Metadados / porcentagens dinâmicas com ícones estilizados */
+  /* Metadados / legendas nos cards de KPI (Estilo Limpo Corporativo) */
   var elMetaTotal = document.getElementById('kpi-meta-total');
   if(elMetaTotal){
     elMetaTotal.innerHTML = total > 0 
-      ? '<span class="kpi-footer-icon">⚡</span><span class="kpi-footer-txt">' + total + ' presença(s) em tempo real</span>'
-      : '<span class="kpi-footer-icon">⏳</span><span class="kpi-footer-txt">Aguardando leituras em tempo real</span>';
+      ? '<span class="kpi-footer-txt">' + total + ' presenças confirmadas no evento</span>'
+      : '<span class="kpi-footer-txt">Aguardando credenciamento em tempo real</span>';
   }
 
   var pctQr = total > 0 ? Math.round((qrCount / total) * 100) : 0;
   var elMetaQr = document.getElementById('kpi-meta-qr');
   if(elMetaQr){
     elMetaQr.innerHTML = total > 0 
-      ? '<span class="kpi-footer-icon">🛡️</span><span class="kpi-footer-txt">' + pctQr + '% do quórum validado por QR</span>'
-      : '<span class="kpi-footer-icon">🛡️</span><span class="kpi-footer-txt">0% do quórum total</span>';
+      ? '<span class="kpi-footer-txt">' + pctQr + '% do quórum validado por QR Code</span>'
+      : '<span class="kpi-footer-txt">0% do quórum total</span>';
   }
-
-  /* Micro-barra de progresso QR Code */
-  var elQrBar = document.getElementById('kpi-qr-bar-fill');
-  if(elQrBar) elQrBar.style.width = pctQr + '%';
 
   /* Cálculo do Horário de Pico */
   var horaCounts = {};
@@ -3148,15 +3069,15 @@ function atualizarUI(){
   var elMetaPico = document.getElementById('kpi-meta-pico');
   if(elMetaPico){
     elMetaPico.innerHTML = total > 0 && peakCount > 0
-      ? '<span class="kpi-footer-icon">⚡</span><span class="kpi-footer-txt">Maior fluxo: ' + peakCount + ' entradas (' + peakHourStr + ')</span>'
-      : '<span class="kpi-footer-icon">⏳</span><span class="kpi-footer-txt">Aguardando leituras</span>';
+      ? '<span class="kpi-footer-txt">Maior fluxo com ' + peakCount + ' entradas no horário</span>'
+      : '<span class="kpi-footer-txt">Calculando horário de pico</span>';
   }
 
   var elMetaRev = document.getElementById('kpi-meta-rev');
   if(elMetaRev){
     elMetaRev.innerHTML = revCount > 0 
-      ? '<span class="kpi-footer-icon">⚠️</span><span class="kpi-footer-txt" style="color:#be123c;font-weight:700">' + revCount + ' ocorrência(s) barradas</span>'
-      : '<span class="kpi-footer-icon">✓</span><span class="kpi-footer-txt" style="color:#059669">Nenhuma duplicata (100% auditado)</span>';
+      ? '<span class="kpi-footer-txt" style="color:#be123c;font-weight:600">' + revCount + ' ocorrência(s) retida(s) no sistema</span>'
+      : '<span class="kpi-footer-txt">Nenhuma irregularidade ou duplicidade</span>';
   }
 
   var elMetaConf = document.getElementById('kpi-meta-conf');
