@@ -281,14 +281,17 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  /* ── POST /api/presenca-cpf ── cadastro.html envia CPF separado do QR ─── */
+  /* ── POST /api/presenca-cpf ── cadastro.html envia CPF + geo separado do QR ─── */
   if (url === '/api/presenca-cpf' && method === 'POST') {
     let dados;
     try { dados = await lerBody(req); }
     catch (e) { jsonErro(res, 400, 'Body inválido'); return; }
 
-    const mat = String(dados.matricula || '').trim().toUpperCase();
-    const cpf = String(dados.cpf || '').replace(/\D/g, '').trim();
+    const mat    = String(dados.matricula || '').trim().toUpperCase();
+    const cpf    = String(dados.cpf || '').replace(/\D/g, '').trim();
+    const lat    = (dados.lat != null && dados.lat !== '') ? parseFloat(dados.lat) : null;
+    const lng    = (dados.lng != null && dados.lng !== '') ? parseFloat(dados.lng) : null;
+    const geoAcc = (dados.geo_acc != null && dados.geo_acc !== '') ? parseInt(dados.geo_acc) : null;
 
     if (!mat || !cpf) {
       jsonErro(res, 422, 'Matrícula e CPF são obrigatórios');
@@ -298,20 +301,23 @@ const server = http.createServer(async (req, res) => {
     cpfsDB[mat] = cpf;
     salvarCPFsDB();
 
-    /* Se a presença já constar em presencasDB, enriquece com o CPF */
+    /* Se a presença já constar em presencasDB, enriquece com CPF + localização */
     let atualizou = false;
     presencasDB.forEach(p => {
       if (String(p.matricula || '').trim().toUpperCase() === mat) {
         p.cpf = cpf;
+        if (lat !== null) { p.lat = lat; p.lng = lng; p.geo_acc = geoAcc; }
         atualizou = true;
       }
     });
     if (atualizou) salvarDB();
 
-    console.log(`[API] CPF associado à matrícula ${mat}`);
+    const geoLog = lat !== null ? ` | geo: ${lat},${lng} (±${geoAcc}m)` : '';
+    console.log(`[API] CPF associado à matrícula ${mat}${geoLog}`);
     jsonOk(res, { ok: true, matricula: mat });
     return;
   }
+
 
   /* ── POST /api/presenca ── conferente envia cada leitura ─────────────── */
   if (url === '/api/presenca' && method === 'POST') {

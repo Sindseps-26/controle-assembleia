@@ -151,11 +151,11 @@ input.erro{border-color:var(--err)}
         <span>Privacidade e Proteção de Dados (LGPD)</span>
       </div>
       <p class="lgpd-text">
-        Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), informamos que os dados coletados (nome, matrícula, CPF e órgão) destinam-se única e exclusivamente ao cômputo do quórum estatutário, atualização cadastral, emissão da lista oficial de presença e homologação da ata desta Assembleia Geral. Os dados serão mantidos pelo SINDSEPS pelo prazo legal necessário e não serão compartilhados com terceiros.
+        Em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018), informamos que os dados coletados (nome, matrícula, CPF, órgão e localização aproximada do dispositivo) destinam-se única e exclusivamente ao cômputo do quórum estatutário, atualização cadastral, emissão da lista oficial de presença e homologação da ata desta Assembleia Geral. Os dados serão mantidos pelo SINDSEPS pelo prazo legal necessário e não serão compartilhados com terceiros.
       </p>
       <label class="lgpd-check-label" id="lgpd-check-label" for="lgpd-aceite">
         <input type="checkbox" id="lgpd-aceite">
-        <span>Autorizo a coleta e o tratamento dos meus dados pessoais (nome, matrícula, CPF e órgão) para registro de presença, atualização cadastral e formação da ata/lista desta assembleia, conforme a Lei nº 13.709/2018 (LGPD).</span>
+        <span>Autorizo a coleta e o tratamento dos meus dados pessoais (nome, matrícula, CPF, órgão e localização aproximada do dispositivo) para registro de presença, atualização cadastral e formação da ata/lista desta assembleia, conforme a Lei nº 13.709/2018 (LGPD).</span>
       </label>
       <span class="msg-erro" id="lgpd-err" role="alert" style="margin-top:8px"></span>
     </div>
@@ -191,6 +191,7 @@ input.erro{border-color:var(--err)}
   <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;margin:12px 16px;text-align:center">
     <strong style="color:#1d4ed8;font-size:0.86rem;display:block;margin-bottom:3px">📌 APRESENTE ESTA TELA NA ENTRADA</strong>
     <span style="font-size:0.78rem;color:#334155;line-height:1.4">O conferente irá ler o seu QR Code para validar e registrar oficialmente a sua presença.</span>
+    <div id="geo-status" style="display:none;font-size:0.73rem;margin-top:7px;font-weight:600"></div>
   </div>
   <p class="aviso">
     Um print desta tela não irá funcionar — o conferente confere se o relógio está correndo.
@@ -327,6 +328,31 @@ if(inpCpf) inpCpf.addEventListener('input',mascaraCPF);
 
 /* ---- Estado da aplicação ---- */
 var nomeAtual='', matriculaAtual='', orgaoAtual='', cpfAtual='', timerRelogio=null, timerQR=null;
+var geoAtual = null; /* { lat, lng, acc } — capturado ao gerar credencial */
+
+/* ---- Capturar geolocalização (silenciosa, sem bloquear o fluxo) ---- */
+function capturarGeolocalizacao(callback){
+  if(!navigator.geolocation){
+    callback(null);
+    return;
+  }
+  var timeout = setTimeout(function(){ callback(null); }, 6000);
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      clearTimeout(timeout);
+      callback({
+        lat: parseFloat(pos.coords.latitude.toFixed(6)),
+        lng: parseFloat(pos.coords.longitude.toFixed(6)),
+        acc: Math.round(pos.coords.accuracy)
+      });
+    },
+    function(){
+      clearTimeout(timeout);
+      callback(null);
+    },
+    { enableHighAccuracy: true, timeout: 5500, maximumAge: 0 }
+  );
+}
 
 /* ---- Contar cadastros distintos no localStorage ---- */
 function nDispositivo(){
@@ -433,9 +459,16 @@ function mostrarCredencial(nome,matricula,orgao,cpf){
   programarRenovacaoQR();
   /* persistir — CPF salvo apenas localmente, nunca entra no QR */
   try{localStorage.setItem('cad_dados',JSON.stringify({nome:nome,matricula:matricula,orgao:orgao,cpf:cpf}));}catch(e){}
-  /* Enviar CPF ao servidor separadamente (não entra no payload do QR) */
+  /* Enviar CPF + geolocalização ao servidor (não entram no payload do QR) */
   if(cpf){
-    var payloadCpf = JSON.stringify({matricula:matricula, cpf:cpf});
+    var geo = geoAtual;
+    var payloadCpf = JSON.stringify({
+      matricula: matricula,
+      cpf: cpf,
+      lat: geo ? geo.lat : null,
+      lng: geo ? geo.lng : null,
+      geo_acc: geo ? geo.acc : null
+    });
     obterRotasCadastro('/api/presenca-cpf').forEach(function(urlApi){
       fetch(urlApi, {
         method: 'POST',
@@ -443,6 +476,18 @@ function mostrarCredencial(nome,matricula,orgao,cpf){
         body: payloadCpf
       }).catch(function(){});
     });
+    /* Indicador visual de localização na credencial */
+    var elGeo = document.getElementById('geo-status');
+    if(elGeo){
+      if(geo){
+        elGeo.textContent = '📍 Localização registrada (~' + geo.acc + 'm de precisão)';
+        elGeo.style.color = '#15803d';
+      } else {
+        elGeo.textContent = '📍 Localização não disponível';
+        elGeo.style.color = '#92400e';
+      }
+      elGeo.style.display = 'block';
+    }
   }
 }
 
@@ -525,7 +570,16 @@ document.getElementById('btn-gerar').addEventListener('click',function(){
     ok=false;
   }
 
-  if(ok)mostrarCredencial(nome,mat,org,cpfRaw.replace(/\D/g,''));
+  if(ok){
+    /* Desabilitar botão enquanto aguarda geolocalização (máx 6s) */
+    var btnGerar = document.getElementById('btn-gerar');
+    if(btnGerar){ btnGerar.disabled = true; btnGerar.textContent = 'Aguardando localização...'; }
+    capturarGeolocalizacao(function(geo){
+      geoAtual = geo;
+      if(btnGerar){ btnGerar.disabled = false; btnGerar.textContent = 'Gerar credencial'; }
+      mostrarCredencial(nome, mat, org, cpfRaw.replace(/\D/g,''));
+    });
+  }
 });
 
 document.getElementById('btn-corrigir').addEventListener('click',function(e){
