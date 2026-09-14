@@ -1,5 +1,16 @@
 [
   {
+    "id": "ass_1789390430489",
+    "nome": "Assembleia Geral Ordinária",
+    "data": "2026-09-14",
+    "pauta": "Prestação de Contas e Deliberações Gerais",
+    "presentes": [],
+    "revisar": [],
+    "conferentes": {},
+    "criadoEm": "2026-09-14T12:53:50.489Z",
+    "atualizadoEm": "2026-09-14T13:50:06.987Z"
+  },
+  {
     "id": "ass_1788968429344",
     "nome": "Assembleia Geral",
     "data": "2026-09-09",
@@ -170,5 +181,16 @@
     },
     "criadoEm": "2026-09-09T15:40:29.344Z",
     "atualizadoEm": "2026-09-09T22:06:17.693Z"
+  },
+  {
+    "id": "ass_1789391287079",
+    "nome": "Assembleia Geral Ordinária",
+    "data": "2026-09-14",
+    "pauta": "Prestação de Contas e Deliberações Gerais",
+    "presentes": [],
+    "revisar": [],
+    "conferentes": {},
+    "criadoEm": "2026-09-14T13:08:07.079Z",
+    "atualizadoEm": "2026-09-14T13:50:05.737Z"
   }
 ]

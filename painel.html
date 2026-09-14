@@ -686,13 +686,21 @@ main {
 /* ========================================================
    KPIS ESTRATÉGICOS DA DIRETORIA (MODERN EXECUTIVE CARDS)
 ======================================================== */
+/* ========================================================
+   KPIS ESTRATÉGICOS DA DIRETORIA (MODERN EXECUTIVE CARDS)
+======================================================== */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
   margin-bottom: 26px;
 }
-@media (max-width: 860px) {
+@media (max-width: 1120px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
   .kpi-grid {
     grid-template-columns: 1fr;
   }
@@ -702,7 +710,7 @@ main {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
-  padding: 22px 24px;
+  padding: 20px 22px;
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
   display: flex;
   flex-direction: column;
@@ -726,6 +734,9 @@ main {
 .kpi-card-qr::before {
   background: linear-gradient(90deg, #059669, #10b981);
 }
+.kpi-card-pico::before {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
 .kpi-card-rev::before {
   background: linear-gradient(90deg, #e11d48, #f43f5e);
 }
@@ -736,13 +747,14 @@ main {
 }
 .kpi-card-total:hover { border-color: #bfdbfe; }
 .kpi-card-qr:hover { border-color: #a7f3d0; }
+.kpi-card-pico:hover { border-color: #fde68a; }
 .kpi-card-rev:hover { border-color: #fecdd3; }
 
 .kpi-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .kpi-title-wrap {
   display: flex;
@@ -760,6 +772,7 @@ main {
 }
 .icon-total { background: #eff6ff; color: #1d4ed8; }
 .icon-qr { background: #ecfdf5; color: #059669; }
+.icon-pico { background: #fffbeb; color: #d97706; }
 .icon-rev { background: #fff1f2; color: #e11d48; }
 
 .kpi-caption {
@@ -790,12 +803,15 @@ main {
 .tag-total .kpi-tag-dot { background: #2563eb; }
 .tag-qr { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
 .tag-qr .kpi-tag-dot { background: #10b981; }
+.tag-pico { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.tag-pico .kpi-tag-dot { background: #f59e0b; }
 .tag-rev { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
 .tag-rev .kpi-tag-dot { background: #e11d48; }
 
 .kpi-body {
-  margin: 10px 0 16px;
+  margin: 6px 0 12px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -806,7 +822,7 @@ main {
   width: 100%;
 }
 .kpi-metric {
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   font-weight: 900;
   color: #0f172a;
   line-height: 1;
@@ -815,10 +831,38 @@ main {
   text-align: center;
 }
 .metric-qr { color: #047857; }
+.metric-pico { color: #b45309; }
 .metric-rev { color: #be123c; }
 
+/* Micro-visuais nos cards de KPI */
+.kpi-sparkline-wrap {
+  width: 100%;
+  height: 26px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kpi-mini-bar-wrap {
+  width: 100%;
+  margin-top: 10px;
+}
+.kpi-mini-bar-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  width: 100%;
+}
+.kpi-mini-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  transition: width 0.4s ease;
+}
+
 .kpi-footer {
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   color: #64748b;
   font-weight: 600;
   background: #f8fafc;
@@ -832,7 +876,7 @@ main {
 .kpi-footer-icon { font-size: 0.85rem; flex-shrink: 0; }
 .kpi-footer-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS */
+/* SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS (GRID 2x2) */
 .analytics-section {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -904,10 +948,10 @@ main {
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
-@media (max-width: 1040px) {
+@media (max-width: 960px) {
   .charts-grid {
     grid-template-columns: 1fr;
   }
@@ -916,10 +960,11 @@ main {
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
-  padding: 18px 20px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   transition: all 0.2s ease;
+  min-height: 290px;
 }
 .chart-card:hover {
   background: #ffffff;
@@ -1115,6 +1160,53 @@ main {
 .fill-orgao {
   background: linear-gradient(90deg, #3b82f6, #1d4ed8);
   box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Gráfico de Linha do Tempo / Colunas por Horário */
+.timeline-chart-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+.timeline-svg {
+  width: 100%;
+  height: 195px;
+  overflow: visible;
+}
+.timeline-col-bar {
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.timeline-col-bar:hover {
+  filter: brightness(1.18);
+  transform: translateY(-2px);
+}
+.timeline-val-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  fill: #1e293b;
+  text-anchor: middle;
+}
+.timeline-axis-label {
+  font-size: 0.70rem;
+  font-weight: 700;
+  fill: #64748b;
+  text-anchor: middle;
+}
+.timeline-axis-label.is-peak {
+  fill: #b45309;
+  font-weight: 800;
+}
+.timeline-peak-pill {
+  font-size: 0.60rem;
+  font-weight: 800;
+  fill: #ffffff;
+  text-anchor: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Tabelas com Acabamento Premium de Alta Governança (Sem Linhas de Grade) */
@@ -1845,7 +1937,7 @@ footer.diretoria-footer {
   <div id="status-bar"></div>
   <div id="err-bar"></div>
 
-  <!-- Cards KPIs Estratégicos da Diretoria -->
+  <!-- Cards KPIs Estratégicos da Diretoria (4 Colunas Executivas) -->
   <div class="kpi-grid">
     <div class="kpi-card kpi-card-total">
       <div class="kpi-header">
@@ -1866,6 +1958,7 @@ footer.diretoria-footer {
         <div class="kpi-metric-wrap">
           <span class="kpi-metric" id="c-total">0</span>
         </div>
+        <div class="kpi-sparkline-wrap" id="kpi-sparkline-total"></div>
       </div>
       <div class="kpi-footer" id="kpi-meta-total">
         <span class="kpi-footer-icon">⚡</span>
@@ -1892,10 +1985,39 @@ footer.diretoria-footer {
         <div class="kpi-metric-wrap">
           <span class="kpi-metric metric-qr" id="c-qr">0</span>
         </div>
+        <div class="kpi-mini-bar-wrap">
+          <div class="kpi-mini-bar-track">
+            <div class="kpi-mini-bar-fill" id="kpi-qr-bar-fill" style="width:0%"></div>
+          </div>
+        </div>
       </div>
       <div class="kpi-footer" id="kpi-meta-qr">
         <span class="kpi-footer-icon">🛡️</span>
         <span class="kpi-footer-txt">0% do quórum total</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card-pico">
+      <div class="kpi-header">
+        <div class="kpi-title-wrap">
+          <div class="kpi-icon-badge icon-pico">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <span class="kpi-caption">Pico de Entrada</span>
+        </div>
+        <span class="kpi-tag tag-pico"><span class="kpi-tag-dot"></span> Afluência</span>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-metric-wrap">
+          <span class="kpi-metric metric-pico" id="c-pico">—</span>
+        </div>
+      </div>
+      <div class="kpi-footer" id="kpi-meta-pico">
+        <span class="kpi-footer-icon">⚡</span>
+        <span class="kpi-footer-txt">Calculando horário de pico</span>
       </div>
     </div>
 
@@ -1924,7 +2046,7 @@ footer.diretoria-footer {
     </div>
   </div>
 
-  <!-- SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS -->
+  <!-- SEÇÃO DE ANALYTICS & GRÁFICOS INSTITUCIONAIS (GRID 2x2) -->
   <section id="sec-graficos" class="analytics-section">
     <div class="analytics-header">
       <div class="analytics-title">
@@ -1935,7 +2057,18 @@ footer.diretoria-footer {
     </div>
 
     <div class="charts-grid">
-      <!-- Gráfico Donut: Validação Digital QR Code -->
+      <!-- Gráfico 1: Fluxo de Credenciamento por Horário (Colunas SVG) -->
+      <div class="chart-card">
+        <div class="chart-head">
+          <strong>Fluxo de Credenciamento por Horário</strong>
+          <span>Distribuição de chegadas por hora (com horário de pico)</span>
+        </div>
+        <div class="chart-container" id="chart-timeline-box">
+          <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Validação Digital QR Code (Donut) -->
       <div class="chart-card">
         <div class="chart-head">
           <strong>Validação: 100% Digital (QR Code)</strong>
@@ -1949,7 +2082,7 @@ footer.diretoria-footer {
         </div>
       </div>
 
-      <!-- Gráfico de Registros por Conferente -->
+      <!-- Gráfico 3: Registros por Conferente -->
       <div class="chart-card">
         <div class="chart-head">
           <strong>Registros por Conferente</strong>
@@ -1962,7 +2095,7 @@ footer.diretoria-footer {
         </div>
       </div>
 
-      <!-- Gráfico de Órgãos de Atuação (Barras Horizontais) -->
+      <!-- Gráfico 4: Representatividade por Secretaria / Órgão -->
       <div class="chart-card">
         <div class="chart-head">
           <strong>Representatividade por Secretaria / Órgão</strong>
@@ -2987,15 +3120,50 @@ function atualizarUI(){
       : '<span class="kpi-footer-icon">🛡️</span><span class="kpi-footer-txt">0% do quórum total</span>';
   }
 
+  /* Micro-barra de progresso QR Code */
+  var elQrBar = document.getElementById('kpi-qr-bar-fill');
+  if(elQrBar) elQrBar.style.width = pctQr + '%';
+
+  /* Cálculo do Horário de Pico */
+  var horaCounts = {};
+  var peakHourStr = '—';
+  var peakCount = 0;
+  presentes.forEach(function(p){
+    var horaStr = String(p.hora || '').trim();
+    if(!horaStr) return;
+    var h = parseInt(horaStr.split(':')[0], 10);
+    if(!isNaN(h) && h >= 0 && h <= 23){
+      var key = (h < 10 ? '0' : '') + h + 'h';
+      horaCounts[key] = (horaCounts[key] || 0) + 1;
+      if(horaCounts[key] > peakCount){
+        peakCount = horaCounts[key];
+        peakHourStr = key;
+      }
+    }
+  });
+
+  var elPico = document.getElementById('c-pico');
+  if(elPico) elPico.textContent = total > 0 && peakCount > 0 ? peakHourStr : '—';
+
+  var elMetaPico = document.getElementById('kpi-meta-pico');
+  if(elMetaPico){
+    elMetaPico.innerHTML = total > 0 && peakCount > 0
+      ? '<span class="kpi-footer-icon">⚡</span><span class="kpi-footer-txt">Maior fluxo: ' + peakCount + ' entradas (' + peakHourStr + ')</span>'
+      : '<span class="kpi-footer-icon">⏳</span><span class="kpi-footer-txt">Aguardando leituras</span>';
+  }
+
   var elMetaRev = document.getElementById('kpi-meta-rev');
   if(elMetaRev){
     elMetaRev.innerHTML = revCount > 0 
       ? '<span class="kpi-footer-icon">⚠️</span><span class="kpi-footer-txt" style="color:#be123c;font-weight:700">' + revCount + ' ocorrência(s) barradas</span>'
-      : '<span class="kpi-footer-icon">✓</span><span class="kpi-footer-txt" style="color:#059669">Nenhuma duplicata</span>';
+      : '<span class="kpi-footer-icon">✓</span><span class="kpi-footer-txt" style="color:#059669">Nenhuma duplicata (100% auditado)</span>';
   }
 
   var elMetaConf = document.getElementById('kpi-meta-conf');
   if(elMetaConf) elMetaConf.textContent = confKeys.length + ' arquivo(s) de fileiras lidos';
+
+  /* Micro-gráfico Sparkline no Card Total */
+  renderizarSparklineTotal(total);
 
   /* Status badge do painel gráfico com luz pulsante */
   var badgeGraf = document.getElementById('badge-grafico-status');
@@ -3045,17 +3213,183 @@ function atualizarUI(){
   }
 }
 
+/* ---- Micro-gráfico Sparkline Acumulado (Card Quórum Total) ---- */
+function renderizarSparklineTotal(total){
+  var el = document.getElementById('kpi-sparkline-total');
+  if(!el) return;
+  if(total === 0){
+    el.innerHTML = '';
+    return;
+  }
+
+  var sorted = presentes.slice().sort(function(a,b){
+    return (a.hora || '').localeCompare(b.hora || '');
+  });
+  var n = sorted.length;
+  var step = Math.max(1, Math.floor(n / 7));
+  var pts = [];
+  for(var i = 0; i < n; i += step){
+    pts.push(i + 1);
+  }
+  if(pts[pts.length - 1] !== n) pts.push(n);
+  if(pts.length < 2) pts = [0, n];
+
+  var w = 180, h = 26;
+  var maxVal = n || 1;
+  var coords = pts.map(function(val, idx){
+    var x = Math.round((idx / (pts.length - 1)) * (w - 14)) + 7;
+    var y = Math.round(h - 5 - (val / maxVal) * (h - 10));
+    return { x: x, y: y };
+  });
+
+  var dPath = 'M ' + coords[0].x + ' ' + coords[0].y;
+  for(var j = 1; j < coords.length; j++){
+    dPath += ' L ' + coords[j].x + ' ' + coords[j].y;
+  }
+  var dArea = dPath + ' L ' + coords[coords.length - 1].x + ' ' + h + ' L ' + coords[0].x + ' ' + h + ' Z';
+  var last = coords[coords.length - 1];
+
+  var svg = '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" style="overflow:visible">' +
+    '<defs>' +
+      '<linearGradient id="sparkGradArea" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>' +
+        '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0"/>' +
+      '</linearGradient>' +
+    '</defs>' +
+    '<path d="' + dArea + '" fill="url(#sparkGradArea)"/>' +
+    '<path d="' + dPath + '" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<circle cx="' + last.x + '" cy="' + last.y + '" r="3.5" fill="#2563eb" stroke="#ffffff" stroke-width="1.8"/>' +
+  '</svg>';
+
+  el.innerHTML = svg;
+}
+
+/* ---- Gráfico 1: Fluxo de Credenciamento por Horário (Colunas SVG) ---- */
+function renderizarTimelineHorario(total){
+  var box = document.getElementById('chart-timeline-box');
+  if(!box) return;
+  if(total === 0){
+    box.innerHTML = '<div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>';
+    return;
+  }
+
+  var horaCounts = {};
+  var minH = 24, maxH = -1;
+
+  presentes.forEach(function(p){
+    var horaStr = String(p.hora || '').trim();
+    if(!horaStr) return;
+    var h = parseInt(horaStr.split(':')[0], 10);
+    if(!isNaN(h) && h >= 0 && h <= 23){
+      horaCounts[h] = (horaCounts[h] || 0) + 1;
+      if(h < minH) minH = h;
+      if(h > maxH) maxH = h;
+    }
+  });
+
+  if(maxH === -1){
+    box.innerHTML = '<div class="chart-empty-msg">Horários ainda não registrados.</div>';
+    return;
+  }
+
+  var startHour = Math.min(minH, 8);
+  var endHour = Math.max(maxH, startHour + 4);
+  if(endHour - startHour < 4) endHour = startHour + 4;
+
+  var slots = [];
+  var maxCount = 0;
+  var peakH = -1;
+
+  for(var hr = startHour; hr <= endHour; hr++){
+    var c = horaCounts[hr] || 0;
+    var lbl = (hr < 10 ? '0' : '') + hr + 'h';
+    slots.push({ hour: hr, label: lbl, count: c });
+    if(c > maxCount){
+      maxCount = c;
+      peakH = hr;
+    }
+  }
+  if(maxCount === 0) maxCount = 1;
+
+  var svgW = 460, svgH = 200;
+  var padLeft = 24, padRight = 24, padBottom = 32, padTop = 42;
+  var chartW = svgW - padLeft - padRight;
+  var chartH = svgH - padTop - padBottom;
+  var baselineY = padTop + chartH;
+
+  var nSlots = slots.length;
+  var slotW = chartW / nSlots;
+  var barW = Math.max(14, Math.min(34, slotW * 0.56));
+
+  var gridLines = '';
+  [0.33, 0.66, 1.0].forEach(function(pct){
+    var yVal = Math.round(baselineY - pct * chartH);
+    gridLines += '<line x1="' + padLeft + '" y1="' + yVal + '" x2="' + (svgW - padRight) + '" y2="' + yVal + '" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="3,3"/>';
+  });
+  gridLines += '<line x1="' + padLeft + '" y1="' + baselineY + '" x2="' + (svgW - padRight) + '" y2="' + baselineY + '" stroke="#e2e8f0" stroke-width="1.5"/>';
+
+  var barsMarkup = '';
+  slots.forEach(function(s, idx){
+    var isPeak = (s.hour === peakH && s.count > 0);
+    var barH = s.count > 0 ? Math.max(8, Math.round((s.count / maxCount) * (chartH - 8))) : 3;
+    var barX = Math.round(padLeft + idx * slotW + (slotW - barW) / 2);
+    var barY = Math.round(baselineY - barH);
+    var fillUrl = isPeak ? 'url(#gradColPeak)' : (s.count > 0 ? 'url(#gradColNormal)' : '#e2e8f0');
+
+    barsMarkup += '<g class="timeline-col-bar">';
+    barsMarkup += '<title>' + s.label + ': ' + s.count + ' servidor(es) credenciado(s)' + (isPeak ? ' (Horário de Pico)' : '') + '</title>';
+
+    barsMarkup += '<rect x="' + barX + '" y="' + barY + '" width="' + barW + '" height="' + barH + '" rx="5" ry="5" fill="' + fillUrl + '"' +
+      (isPeak ? ' style="filter:drop-shadow(0 4px 8px rgba(245,158,11,0.35))"' : '') + '/>';
+
+    if(s.count > 0){
+      barsMarkup += '<text x="' + (barX + barW / 2) + '" y="' + (barY - 6) + '" class="timeline-val-label" fill="' + (isPeak ? '#b45309' : '#1e293b') + '">' + s.count + '</text>';
+    }
+
+    if(isPeak && barH > 18){
+      var badgeW = 36, badgeH = 15;
+      var bx = Math.round(barX + barW / 2 - badgeW / 2);
+      var by = Math.round(barY - 26);
+      barsMarkup += '<rect x="' + bx + '" y="' + by + '" width="' + badgeW + '" height="' + badgeH + '" rx="4" fill="#f59e0b"/>';
+      barsMarkup += '<text x="' + Math.round(barX + barW / 2) + '" y="' + (by + 11) + '" class="timeline-peak-pill">PICO</text>';
+    }
+
+    barsMarkup += '<text x="' + (barX + barW / 2) + '" y="' + (baselineY + 18) + '" class="timeline-axis-label ' + (isPeak ? 'is-peak' : '') + '">' + s.label + '</text>';
+    barsMarkup += '</g>';
+  });
+
+  var svg = '<svg class="timeline-svg" viewBox="0 0 ' + svgW + ' ' + svgH + '" preserveAspectRatio="xMidYMid meet">' +
+    '<defs>' +
+      '<linearGradient id="gradColNormal" x1="0%" y1="0%" x2="0%" y2="100%">' +
+        '<stop offset="0%" stop-color="#3b82f6"/>' +
+        '<stop offset="100%" stop-color="#1d4ed8"/>' +
+      '</linearGradient>' +
+      '<linearGradient id="gradColPeak" x1="0%" y1="0%" x2="0%" y2="100%">' +
+        '<stop offset="0%" stop-color="#fbbf24"/>' +
+        '<stop offset="100%" stop-color="#d97706"/>' +
+      '</linearGradient>' +
+    '</defs>' +
+    gridLines +
+    barsMarkup +
+  '</svg>';
+
+  box.innerHTML = '<div class="timeline-chart-wrap">' + svg + '</div>';
+}
+
 function renderizarGraficos(total){
   var qrCount = presentes.filter(function(p){ return p.origem === 'qr'; }).length;
   var manCount = presentes.filter(function(p){ return p.origem === 'manual'; }).length;
 
-  /* Gráfico 1: Donut QR x Manual */
+  /* Gráfico 1: Fluxo de Credenciamento por Horário */
+  renderizarTimelineHorario(total);
+
+  /* Gráfico 2: Donut QR x Manual */
   renderizarDonut(qrCount, manCount, total);
 
-  /* Gráfico 2: Barras por Conferente */
+  /* Gráfico 3: Barras por Conferente */
   renderizarBarrasConferentes(total);
 
-  /* Gráfico 3: Top 8 Órgãos / Secretarias */
+  /* Gráfico 4: Top 8 Órgãos / Secretarias */
   var barsOrgaos = document.getElementById('bars-orgaos');
   if(barsOrgaos){
     if(total === 0){
@@ -3204,19 +3538,44 @@ function renderizarDonut(qr, manual, total){
 function renderizarBarrasConferentes(total){
   var box = document.getElementById('bars-conferentes');
   if(!box) return;
-  var confKeys = Object.keys(conferentes);
-  if(total === 0 || !confKeys.length){
+  if(total === 0){
     box.innerHTML = '<div class="chart-empty-msg">Nenhum conferente com presenças ativas.</div>';
     return;
   }
-  var dados = confKeys.map(function(k){
-    return { nome: conferentes[k].nome || k, count: conferentes[k].count };
+
+  // Agrupa presenças por conferente individual
+  var confMap = {};
+  presentes.forEach(function(p){
+    var c = (p.conferente || '').trim();
+    if(c && c !== '—'){
+      confMap[c] = (confMap[c] || 0) + 1;
+    }
+  });
+
+  // Fallback caso não haja conferente preenchido nas linhas
+  if(Object.keys(confMap).length === 0){
+    var confKeys = Object.keys(conferentes);
+    confKeys.forEach(function(k){
+      var item = conferentes[k];
+      var name = item.nome || k;
+      confMap[name] = (confMap[name] || 0) + (item.count || 0);
+    });
+  }
+
+  var dados = Object.keys(confMap).map(function(nome){
+    return { nome: nome, count: confMap[nome] };
   }).sort(function(a,b){ return b.count - a.count; });
+
+  if(!dados.length){
+    box.innerHTML = '<div class="chart-empty-msg">Nenhum conferente com presenças ativas.</div>';
+    return;
+  }
+
   var maxC = dados[0].count || 1;
   box.innerHTML = dados.map(function(item){
     var pct = Math.min(100, Math.round((item.count / Math.max(total, 1)) * 100));
-    var w = Math.max(6, Math.min(100, Math.round((item.count / maxC) * 100)));
-    var initial = (item.nome || 'C').charAt(0).toUpperCase();
+    var w = Math.max(8, Math.min(100, Math.round((item.count / maxC) * 100)));
+    var initial = (item.nome || 'C').replace(/^conferente\s+/i, '').charAt(0).toUpperCase() || 'C';
     return '<div class="bar-row">' +
       '<div class="bar-meta">' +
         '<span class="bar-label-wrap">' +
@@ -3648,6 +4007,8 @@ carregarAssembleias();
 /* Modo demonstração / teste via URL: ?demo=1 */
 if(window.location.search.indexOf('demo=') !== -1){
   var demoCSV = 'matricula;nome;orgao;fileira;conferente;hora;origem;observacao\n' +
+    '10842;Marcos Aurélio Lima;SMS - Saúde;Fileira 1;Conferente Ana;07:42;qr;\n' +
+    '11204;Tereza Cristina Neves;SMED - Educação;Fileira 1;Conferente Ana;07:55;qr;\n' +
     '20412;Carlos Alberto Santana;SMS - Saúde;Fileira 1;Conferente Ana;08:14;qr;\n' +
     '31980;Maria das Graças Oliveira;SMED - Educação;Fileira 1;Conferente Ana;08:18;qr;\n' +
     '15420;João Paulo Fernandes;SEINFRA;Fileira 2;Conferente Roberto;08:22;manual;Documento físico\n' +
@@ -3657,6 +4018,13 @@ if(window.location.search.indexOf('demo=') !== -1){
     '19842;Fabio Henrique Silva;SMS - Saúde;Fileira 1;Conferente Ana;08:35;manual;Sem smartphone\n' +
     '28941;Aline Moreira Dias;SMED - Educação;Fileira 2;Conferente Roberto;08:39;qr;\n' +
     '62310;Luciana Nogueira;SEDES;Fileira 3;Conferente Mariana;08:42;qr;\n' +
+    '71245;Rodrigo Santos Macedo;SMS - Saúde;Fileira 1;Conferente Ana;09:05;qr;\n' +
+    '73489;Camila Silveira Brito;SMED - Educação;Fileira 2;Conferente Roberto;09:18;qr;\n' +
+    '78920;Anderson Freire Gomes;SEGOV;Fileira 3;Conferente Mariana;09:35;qr;\n' +
+    '82143;Beatriz Rocha Mendes;SEFAZ;Fileira 2;Conferente Roberto;09:50;qr;\n' +
+    '88310;Eduardo Peixoto Nunes;Guarda Municipal;Fileira 3;Conferente Mariana;10:12;qr;\n' +
+    '91045;Vanessa Ribeiro Ramos;SMS - Saúde;Fileira 1;Conferente Ana;10:28;qr;\n' +
+    '94520;Gustavo Barreto Paiva;SEINFRA;Fileira 2;Conferente Roberto;11:05;qr;\n' +
     '20412;Carlos Alberto Santana (Duplicado);SMS - Saúde;Fileira 2;Conferente Roberto;08:45;qr;\n';
   processarCSV(demoCSV, 'presenca_demo.csv');
 }
