@@ -1009,6 +1009,8 @@ main {
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .dot-qr { background: #10b981; box-shadow: 0 0 6px #34d399; }
 .dot-man { background: #f59e0b; }
+.dot-fluxo { background: #2563eb; }
+.dot-pico { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
 
 /* Horizontal Bar styles */
 .horizontal-bars { width: 100%; display: flex; flex-direction: column; gap: 12px; }
@@ -1986,10 +1988,14 @@ footer.diretoria-footer {
       <div class="chart-card">
         <div class="chart-head">
           <strong>Fluxo de Credenciamento por Horário</strong>
-          <span>Distribuição de chegadas por hora (com horário de pico)</span>
+          <span>Distribuição de chegadas por hora</span>
         </div>
         <div class="chart-container" id="chart-timeline-box">
           <div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>
+        </div>
+        <div class="chart-legend" id="chart-timeline-legend" style="display:none">
+          <span class="legend-item"><span class="legend-dot dot-fluxo"></span> Fluxo Regular</span>
+          <span class="legend-item"><span class="legend-dot dot-pico"></span> Horário de Pico</span>
         </div>
       </div>
 
@@ -3188,9 +3194,11 @@ function renderizarSparklineTotal(total){
 /* ---- Gráfico 1: Fluxo de Credenciamento por Horário (Colunas SVG) ---- */
 function renderizarTimelineHorario(total){
   var box = document.getElementById('chart-timeline-box');
+  var legend = document.getElementById('chart-timeline-legend');
   if(!box) return;
   if(total === 0){
     box.innerHTML = '<div class="chart-empty-msg">Nenhum dado consolidado no momento.</div>';
+    if(legend) legend.style.display = 'none';
     return;
   }
 
@@ -3210,6 +3218,7 @@ function renderizarTimelineHorario(total){
 
   if(maxH === -1){
     box.innerHTML = '<div class="chart-empty-msg">Horários ainda não registrados.</div>';
+    if(legend) legend.style.display = 'none';
     return;
   }
 
@@ -3232,19 +3241,19 @@ function renderizarTimelineHorario(total){
   }
   if(maxCount === 0) maxCount = 1;
 
-  var svgW = 460, svgH = 200;
-  var padLeft = 24, padRight = 24, padBottom = 32, padTop = 42;
+  var svgW = 460, svgH = 175;
+  var padLeft = 24, padRight = 24, padBottom = 28, padTop = 32;
   var chartW = svgW - padLeft - padRight;
   var chartH = svgH - padTop - padBottom;
   var baselineY = padTop + chartH;
 
   var nSlots = slots.length;
   var slotW = chartW / nSlots;
-  var barW = Math.max(14, Math.min(34, slotW * 0.56));
+  var barW = Math.max(16, Math.min(36, slotW * 0.54));
 
   var gridLines = '';
   [0.33, 0.66, 1.0].forEach(function(pct){
-    var yVal = Math.round(baselineY - pct * chartH);
+    var yVal = Math.round(baselineY - pct * (chartH - 12));
     gridLines += '<line x1="' + padLeft + '" y1="' + yVal + '" x2="' + (svgW - padRight) + '" y2="' + yVal + '" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="3,3"/>';
   });
   gridLines += '<line x1="' + padLeft + '" y1="' + baselineY + '" x2="' + (svgW - padRight) + '" y2="' + baselineY + '" stroke="#e2e8f0" stroke-width="1.5"/>';
@@ -3252,7 +3261,7 @@ function renderizarTimelineHorario(total){
   var barsMarkup = '';
   slots.forEach(function(s, idx){
     var isPeak = (s.hour === peakH && s.count > 0);
-    var barH = s.count > 0 ? Math.max(8, Math.round((s.count / maxCount) * (chartH - 8))) : 3;
+    var barH = s.count > 0 ? Math.max(10, Math.round((s.count / maxCount) * (chartH - 24))) : 3;
     var barX = Math.round(padLeft + idx * slotW + (slotW - barW) / 2);
     var barY = Math.round(baselineY - barH);
     var fillUrl = isPeak ? 'url(#gradColPeak)' : (s.count > 0 ? 'url(#gradColNormal)' : '#e2e8f0');
@@ -3260,19 +3269,11 @@ function renderizarTimelineHorario(total){
     barsMarkup += '<g class="timeline-col-bar">';
     barsMarkup += '<title>' + s.label + ': ' + s.count + ' servidor(es) credenciado(s)' + (isPeak ? ' (Horário de Pico)' : '') + '</title>';
 
-    barsMarkup += '<rect x="' + barX + '" y="' + barY + '" width="' + barW + '" height="' + barH + '" rx="5" ry="5" fill="' + fillUrl + '"' +
-      (isPeak ? ' style="filter:drop-shadow(0 4px 8px rgba(245,158,11,0.35))"' : '') + '/>';
+    barsMarkup += '<rect x="' + barX + '" y="' + barY + '" width="' + barW + '" height="' + barH + '" rx="6" ry="6" fill="' + fillUrl + '"' +
+      (isPeak ? ' style="filter:drop-shadow(0 4px 10px rgba(245,158,11,0.38))"' : '') + '/>';
 
     if(s.count > 0){
-      barsMarkup += '<text x="' + (barX + barW / 2) + '" y="' + (barY - 6) + '" class="timeline-val-label" fill="' + (isPeak ? '#b45309' : '#1e293b') + '">' + s.count + '</text>';
-    }
-
-    if(isPeak && barH > 18){
-      var badgeW = 36, badgeH = 15;
-      var bx = Math.round(barX + barW / 2 - badgeW / 2);
-      var by = Math.round(barY - 26);
-      barsMarkup += '<rect x="' + bx + '" y="' + by + '" width="' + badgeW + '" height="' + badgeH + '" rx="4" fill="#f59e0b"/>';
-      barsMarkup += '<text x="' + Math.round(barX + barW / 2) + '" y="' + (by + 11) + '" class="timeline-peak-pill">PICO</text>';
+      barsMarkup += '<text x="' + (barX + barW / 2) + '" y="' + (barY - 8) + '" class="timeline-val-label" fill="' + (isPeak ? '#b45309' : '#1e293b') + '" font-size="12">' + s.count + '</text>';
     }
 
     barsMarkup += '<text x="' + (barX + barW / 2) + '" y="' + (baselineY + 18) + '" class="timeline-axis-label ' + (isPeak ? 'is-peak' : '') + '">' + s.label + '</text>';
@@ -3295,6 +3296,7 @@ function renderizarTimelineHorario(total){
   '</svg>';
 
   box.innerHTML = '<div class="timeline-chart-wrap">' + svg + '</div>';
+  if(legend) legend.style.display = 'flex';
 }
 
 function renderizarGraficos(total){
