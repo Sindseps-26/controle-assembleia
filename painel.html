@@ -2576,11 +2576,13 @@ function alternarStatusAssembleiaAtual(){
 /* Publicar configuração da assembleia ativa via /api/sessao */
 function publicarSessaoNoServidor(ass){
   if(!ass) return;
+  var chaveEstavel = ass.chave || (ass.id + '_sindseps_chave');
+  if(!ass.chave) ass.chave = chaveEstavel;
   var payload = JSON.stringify({
     evento:     ass.id,                          /* ID único como EVENTO — diferencia assembleias */
-    chave:      ass.id + '_' + (ass.criadoEm || Date.now()),  /* Chave derivada do ID + timestamp de criação */
+    chave:      chaveEstavel,                    /* Chave estável e consistente */
     rotacao:    10,
-    tolerancia: 300,
+    tolerancia: 600,
     assId:      ass.id,
     assNome:    ass.nome    || 'Assembleia',
     assData:    ass.data    || '',

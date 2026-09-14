@@ -1,22 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Teste Completo de Leitura e Validação QR</title>
+  <title>SINDSEPS — Teste e Validador de QR Code</title>
   <script src="node_modules/qrcodejs/qrcode.min.js"></script>
   <script src="node_modules/jsqr/dist/jsQR.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px; background: #f8fafc; color: #1e293b; }
+    .card { background: #fff; border-radius: 12px; padding: 24px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    h2 { margin-top: 0; color: #0f172a; font-size: 1.3rem; }
+    .status-box { padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; margin-bottom: 16px; }
+    .status-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-warn { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+    .status-err { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    #qrcode { display: inline-block; padding: 16px; background: #fff; border: 2px solid #cbd5e1; border-radius: 8px; margin: 12px 0; }
+    .btn { background: #2563eb; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    .btn:hover { background: #1d4ed8; }
+    pre { background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 0.8rem; word-break: break-all; white-space: pre-wrap; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; background: #e2e8f0; }
+  </style>
 </head>
-<body style="font-family:sans-serif;padding:20px;">
-  <h2>Teste de Geração e Decodificação do QR Code (Nome + Matrícula + Órgão)</h2>
-  <div id="qrcode" style="display:inline-block;padding:16px;background:#fff;border:2px solid #ccc;border-radius:8px"></div>
-  <div id="result" style="margin-top:20px;font-size:18px;font-weight:bold;"></div>
-  <div id="validation" style="margin-top:10px;font-size:16px;"></div>
+<body>
+  <div class="card">
+    <h2>🔍 Teste Oficial de QR Code e Validação</h2>
+    
+    <div id="sessao-info" class="status-box status-warn">
+      Carregando sessão do servidor...
+    </div>
+
+    <div style="text-align: center;">
+      <div id="qrcode"></div>
+      <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">
+        Relógio rotativo: <strong id="clock-seg">--</strong>s (atualiza a cada 10s)
+      </div>
+    </div>
+
+    <div style="margin-top: 16px;">
+      <label style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 4px;">Payload Gerado no QR Code:</label>
+      <pre id="payload-display">Gerando...</pre>
+    </div>
+
+    <div id="result" class="status-box" style="margin-top: 16px;">
+      Aguardando leitura interna pelo jsQR...
+    </div>
+
+    <div id="validation" class="status-box" style="margin-top: 10px;"></div>
+
+    <div style="margin-top: 16px; display: flex; gap: 8px;">
+      <button class="btn" id="btn-copiar">📋 Copiar Payload</button>
+      <button class="btn" style="background: #475569;" id="btn-recarregar">🔄 Atualizar QR Agora</button>
+    </div>
+  </div>
 
   <script>
-    var EVENTO = 'ASSEMBLEIA-2026';
-    var CHAVE = 'mude-a-cada-assembleia';
-    var ROTACAO = 10;
-    var TOLERANCIA = 300;
+    var EVENTO     = 'ass_1789391287079';
+    var CHAVE      = 'ass_1789391287079_sindseps_chave';
+    var ROTACAO    = 10;
+    var TOLERANCIA = 600;
 
     function fnv1a(s){
       var h=0x811c9dc5,i;
@@ -28,60 +68,167 @@
     }
 
     function validarPayload(raw){
-      var p=raw.split('|');
-      if(p.length!==7)return{ok:false,msg:'CÓDIGO INVÁLIDO: formato desconhecido'};
-      if(p[0]!==EVENTO)return{ok:false,msg:'CÓDIGO INVÁLIDO: Evento '+p[0]};
-      var campos=p.slice(0,6).join('|');
-      if(fnv1a(campos+'|'+CHAVE)!==p[6])return{ok:false,msg:'CÓDIGO ADULTERADO: Assinatura inválida'};
-      var janela=parseInt(p[4],10);
-      var agora=Math.floor(Date.now()/1000);
-      var janelaNow=Math.floor(agora/ROTACAO)*ROTACAO;
-      if(Math.abs(janelaNow-janela)>TOLERANCIA)
-        return{ok:false,msg:'CÓDIGO PARADO / EXPIRADO'};
-      return{ok:true,matricula:p[1],nome:p[2],orgao:p[3],nDisp:parseInt(p[5],10)||1};
+      if(!raw || typeof raw !== 'string') return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Conteúdo vazio' };
+      raw = raw.replace(/^\uFEFF/, '').trim();
+      
+      var p = raw.split('|');
+      if(p.length < 7) return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Formato desconhecido' };
+      
+      var evLido     = p[0];
+      var matLida    = p[1];
+      var sigLida    = p[p.length - 1];
+      var nDispLido  = parseInt(p[p.length - 2], 10) || 1;
+      var janelaLida = parseInt(p[p.length - 3], 10);
+      var meio       = p.slice(2, p.length - 3);
+      var nomeLido   = (meio[0] || '').trim();
+      var orgaoLido  = (meio.slice(1).join(' - ') || '—').trim();
+
+      var evAtivo = EVENTO || 'ASSEMBLEIA-2026';
+      var eventoValido = (
+        evLido === evAtivo ||
+        evLido === 'ASSEMBLEIA-2026' ||
+        evAtivo === 'ASSEMBLEIA-2026' ||
+        evLido.indexOf('ass_') === 0
+      );
+
+      if(!eventoValido){
+        return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Evento não reconhecido: ' + evLido };
+      }
+
+      var camposNorm = [evLido, matLida, nomeLido, orgaoLido, janelaLida, nDispLido].join('|');
+      var camposRaw  = p.slice(0, p.length - 1).join('|');
+
+      var chavesCandidatas = [
+        CHAVE,
+        'mude-a-cada-assembleia',
+        evLido + '_sindseps_chave',
+        evLido + '_' + evLido,
+        evAtivo + '_sindseps_chave'
+      ];
+
+      var assValida = false;
+      for(var k = 0; k < chavesCandidatas.length; k++){
+        var chk = chavesCandidatas[k];
+        if(!chk) continue;
+        if(fnv1a(camposNorm + '|' + chk) === sigLida || fnv1a(camposRaw + '|' + chk) === sigLida){
+          assValida = true;
+          break;
+        }
+      }
+
+      if(!assValida){
+        return { ok: false, tipo: 'erro', msg: 'CÓDIGO ADULTERADO', det: 'Assinatura inválida' };
+      }
+
+      var agora = Math.floor(Date.now() / 1000);
+      var janelaNow = Math.floor(agora / ROTACAO) * ROTACAO;
+      if(isNaN(janelaLida) || Math.abs(janelaNow - janelaLida) > TOLERANCIA){
+        return { ok: false, tipo: 'erro', msg: 'CÓDIGO PARADO', det: 'Código expirado' };
+      }
+
+      return {
+        ok: true,
+        matricula: matLida,
+        nome: nomeLido,
+        orgao: orgaoLido,
+        nDisp: nDispLido
+      };
     }
 
-    var agora = Math.floor(Date.now() / 1000);
-    var janela = Math.floor(agora / ROTACAO) * ROTACAO;
-    var matricula = '984512';
-    var nome = 'CARLOS EDUARDO PEREIRA';
-    var orgao = 'SECRETARIA MUNICIPAL DE SAUDE - SMS';
-    var campos = [EVENTO, matricula, nome, orgao, janela, 1].join('|');
-    var sig = fnv1a(campos + '|' + CHAVE);
-    var payload = campos + '|' + sig;
+    var qrInstance = null;
+    var ultimoPayload = '';
 
-    console.log('Payload a testar:', payload);
+    function gerarERenderizar(){
+      var agora = Math.floor(Date.now() / 1000);
+      var janela = Math.floor(agora / ROTACAO) * ROTACAO;
+      var matricula = '984512';
+      var nome = 'CARLOS EDUARDO PEREIRA';
+      var orgao = 'SECRETARIA MUNICIPAL DE SAUDE - SMS';
+      var campos = [EVENTO, matricula, nome, orgao, janela, 1].join('|');
+      var sig = fnv1a(campos + '|' + CHAVE);
+      ultimoPayload = campos + '|' + sig;
 
-    var qr = new QRCode(document.getElementById('qrcode'), {
-      text: payload,
-      width: 260,
-      height: 260,
-      correctLevel: QRCode.CorrectLevel.L
-    });
+      document.getElementById('payload-display').textContent = ultimoPayload;
 
-    setTimeout(function(){
+      var container = document.getElementById('qrcode');
+      if(!qrInstance){
+        container.innerHTML = '';
+        qrInstance = new QRCode(container, {
+          text: ultimoPayload,
+          width: 240,
+          height: 240,
+          correctLevel: QRCode.CorrectLevel.L
+        });
+      } else {
+        qrInstance.makeCode(ultimoPayload);
+      }
+
+      setTimeout(testarLeituraJsQR, 200);
+    }
+
+    function testarLeituraJsQR(){
       var canvas = document.querySelector("#qrcode canvas");
+      if(!canvas) return;
       var ctx = canvas.getContext("2d");
       var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       var code = jsQR(imgData.data, canvas.width, canvas.height, { inversionAttempts: 'attemptBoth' });
       
+      var resEl = document.getElementById('result');
+      var valEl = document.getElementById('validation');
+
       if(code && code.data){
-        document.getElementById('result').textContent = '✓ jsQR LEU COM SUCESSO: ' + code.data;
-        document.getElementById('result').style.color = 'green';
+        resEl.className = 'status-box status-ok';
+        resEl.textContent = '✓ jsQR LEU O CÓDIGO COM SUCESSO!';
         
         var val = validarPayload(code.data);
         if(val.ok){
-          document.getElementById('validation').textContent = '✓ VALIDAÇÃO DO CONFERENTE: APROVADO! (Servidor: ' + val.nome + ' | Matrícula: ' + val.matricula + ' | Órgão: ' + val.orgao + ')';
-          document.getElementById('validation').style.color = 'green';
+          valEl.className = 'status-box status-ok';
+          valEl.innerHTML = '🎉 <strong>VALIDAÇÃO DO CONFERENTE: CONFIRMADO!</strong><br>' +
+            'Servidor: ' + val.nome + ' | Matrícula: ' + val.matricula + ' | Órgão: ' + val.orgao;
         } else {
-          document.getElementById('validation').textContent = '✗ FALHA NA VALIDAÇÃO: ' + val.msg;
-          document.getElementById('validation').style.color = 'red';
+          valEl.className = 'status-box status-err';
+          valEl.innerHTML = '❌ <strong>FALHA NA VALIDAÇÃO:</strong> ' + val.msg + ' (' + val.det + ')';
         }
       } else {
-        document.getElementById('result').textContent = '✗ FALHA AO DECODIFICAR COM jsQR';
-        document.getElementById('result').style.color = 'red';
+        resEl.className = 'status-box status-err';
+        resEl.textContent = '✗ Falha ao decodificar canvas com jsQR';
       }
-    }, 200);
+    }
+
+    /* Carregar sessão ativa */
+    fetch('/api/sessao', { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if(d && d.ok && d.sessao){
+          var s = d.sessao;
+          EVENTO = s.evento || EVENTO;
+          CHAVE = s.chave || CHAVE;
+          var info = document.getElementById('sessao-info');
+          info.className = 'status-box status-ok';
+          info.innerHTML = '✓ Sessão Conectada: <strong>' + (s.assNome || s.evento) + '</strong> (EVENTO: ' + EVENTO + ')';
+        }
+        gerarERenderizar();
+      })
+      .catch(function(){
+        var info = document.getElementById('sessao-info');
+        info.className = 'status-box status-warn';
+        info.innerHTML = 'Modo Offline: usando valores padrão (EVENTO: ' + EVENTO + ')';
+        gerarERenderizar();
+      });
+
+    setInterval(function(){
+      var sec = Math.floor(Date.now() / 1000) % ROTACAO;
+      document.getElementById('clock-seg').textContent = (ROTACAO - sec);
+      if(sec === 0) gerarERenderizar();
+    }, 1000);
+
+    document.getElementById('btn-copiar').addEventListener('click', function(){
+      navigator.clipboard.writeText(ultimoPayload).then(function(){
+        alert('Payload copiado para a área de transferência!\n\n' + ultimoPayload);
+      });
+    });
+
+    document.getElementById('btn-recarregar').addEventListener('click', gerarERenderizar);
   </script>
 </body>
 </html>

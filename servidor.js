@@ -215,7 +215,18 @@ const server = http.createServer(async (req, res) => {
     if (sessaoAtiva) {
       jsonOk(res, { ok: true, sessao: sessaoAtiva });
     } else {
-      jsonOk(res, { ok: false, sessao: null });
+      jsonOk(res, {
+        ok: true,
+        sessao: {
+          evento: 'ASSEMBLEIA-2026',
+          chave: 'mude-a-cada-assembleia',
+          rotacao: 10,
+          tolerancia: 600,
+          assId: 'ass_padrao',
+          assNome: 'Assembleia Geral',
+          assData: ''
+        }
+      });
     }
     return;
   }
@@ -235,7 +246,7 @@ const server = http.createServer(async (req, res) => {
       evento:     String(dados.evento).trim(),
       chave:      String(dados.chave).trim(),
       rotacao:    Number(dados.rotacao)    || 10,
-      tolerancia: Number(dados.tolerancia) || 300,
+      tolerancia: Number(dados.tolerancia) || 600,
       assId:      String(dados.assId      || '').trim(),
       assNome:    String(dados.assNome    || '').trim(),
       assData:    String(dados.assData    || '').trim(),

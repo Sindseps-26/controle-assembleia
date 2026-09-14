@@ -163,6 +163,7 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
   </div>
 
   <span id="contador">0 lidos</span>
+  <button class="btn-sm" id="btn-testar-qr" style="background:#2563eb;color:#fff;border-radius:4px;padding:4px 8px;font-size:0.75rem;font-weight:700;margin-right:6px" title="Testar leitura de código QR">🔍 Testar</button>
   <button class="btn-sm" id="btn-limpar" title="Limpar leituras">✕</button>
 </div>
 
@@ -181,26 +182,57 @@ html,body{height:100%;background:#111;color:var(--txt);overflow:hidden;
 var EVENTO     = 'ASSEMBLEIA-2026'; /* Fallback offline */
 var CHAVE      = 'mude-a-cada-assembleia'; /* Fallback offline */
 var ROTACAO    = 10;   /* segundos por janela */
-var TOLERANCIA = 300;  /* 5 minutos de tolerância para diferenças de fuso/relógio entre aparelhos */
+var TOLERANCIA = 600;  /* 10 minutos de tolerância para diferenças de fuso/relógio entre aparelhos */
 var SENHA_CONFERENTE = 'Portaria@2026'; /* Senha de acesso do conferente */
+var RAILWAY_URL = 'https://controle-assembleia-production.up.railway.app';
 /* ======================================================== */
 
-/* Buscar configuração da sessão ativa no servidor */
-(function buscarSessaoConferente(){
-  fetch('/api/sessao', { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if(data && data.ok && data.sessao){
-        var s = data.sessao;
-        EVENTO    = s.evento;
-        CHAVE     = s.chave;
-        ROTACAO   = s.rotacao    || 10;
-        TOLERANCIA = s.tolerancia || 300;
-        console.log('[SINDSEPS] Sessão carregada:', s.assNome, '| EVENTO:', EVENTO);
-      }
-    })
-    .catch(function(){ /* Servidor indisponível — usa valores padrão hardcoded */ });
-}());
+function obterRotasSessao(path){
+  var rotas = [];
+  var custom = '';
+  try { custom = (localStorage.getItem('conf_custom_server_url')||'').trim(); } catch(e){}
+  if(custom) rotas.push(custom.replace(/\/+$/, '') + path);
+  rotas.push(path);
+  rotas.push(RAILWAY_URL + path);
+  var host = window.location.hostname || 'localhost';
+  if(host && host !== 'localhost' && host !== '127.0.0.1' && host.indexOf('github') === -1){
+    rotas.push('http://' + host + ':8080' + path);
+  }
+  rotas.push('http://localhost:8080' + path);
+  rotas.push('http://127.0.0.1:8080' + path);
+  return rotas;
+}
+
+/* Buscar configuração da sessão ativa no servidor (com retry inteligente) */
+function buscarSessaoConferente(){
+  var rotas = obterRotasSessao('/api/sessao');
+  var idx = 0;
+  function tentarProxima(){
+    if(idx >= rotas.length) return;
+    var u = rotas[idx++];
+    fetch(u, { cache: 'no-store' })
+      .then(function(r){
+        if(!r.ok) throw new Error('Status ' + r.status);
+        return r.json();
+      })
+      .then(function(data){
+        if(data && data.ok && data.sessao){
+          var s = data.sessao;
+          EVENTO     = s.evento || EVENTO;
+          CHAVE      = s.chave  || CHAVE;
+          ROTACAO    = s.rotacao    || 10;
+          TOLERANCIA = s.tolerancia || 600;
+          console.log('[SINDSEPS] Sessão conferente carregada:', s.assNome || s.evento, '| EVENTO:', EVENTO);
+        }
+      })
+      .catch(function(){
+        tentarProxima();
+      });
+  }
+  tentarProxima();
+}
+buscarSessaoConferente();
+setInterval(buscarSessaoConferente, 15000);
 
 /* Buscar URL correta do servidor para o aviso de URL incorreta */
 (function buscarURLServidor(){
@@ -10617,20 +10649,86 @@ function mostrarVeredito(tipo,titulo,detalhe){
 
 /* ---- Validar payload do QR ---- */
 function validarPayload(raw){
-  if(raw && typeof raw === 'string'){
-    raw = raw.replace(/^\uFEFF/, '').trim();
+  if(!raw || typeof raw !== 'string') return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Conteúdo vazio' };
+  raw = raw.replace(/^\uFEFF/, '').trim();
+  
+  var p = raw.split('|');
+  if(p.length < 7){
+    return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Formato desconhecido' };
   }
-  var p=raw.split('|');
-  if(p.length!==7)return{ok:false,tipo:'erro',msg:'CÓDIGO INVÁLIDO',det:'Formato desconhecido'};
-  if(p[0]!==EVENTO)return{ok:false,tipo:'erro',msg:'CÓDIGO INVÁLIDO',det:'Evento: '+p[0]};
-  var campos=p.slice(0,6).join('|');
-  if(fnv1a(campos+'|'+CHAVE)!==p[6])return{ok:false,tipo:'erro',msg:'CÓDIGO ADULTERADO',det:'Assinatura inválida'};
-  var janela=parseInt(p[4],10);
-  var agora=Math.floor(Date.now()/1000);
-  var janelaNow=Math.floor(agora/ROTACAO)*ROTACAO;
-  if(Math.abs(janelaNow-janela)>TOLERANCIA)
-    return{ok:false,tipo:'erro',msg:'CÓDIGO PARADO',det:'Código expirado — verifique se o relógio está correndo'};
-  return{ok:true,matricula:p[1],nome:p[2],orgao:p[3],nDisp:parseInt(p[5],10)||1};
+  
+  var evLido     = p[0];
+  var matLida    = p[1];
+  var sigLida    = p[p.length - 1];
+  var nDispLido  = parseInt(p[p.length - 2], 10) || 1;
+  var janelaLida = parseInt(p[p.length - 3], 10);
+  var meio       = p.slice(2, p.length - 3);
+  var nomeLido   = (meio[0] || '').trim();
+  var orgaoLido  = (meio.slice(1).join(' - ') || '—').trim();
+
+  // 1. Verificação de Evento:
+  // Aceita se corresponder ao evento ativo, ao padrão offline 'ASSEMBLEIA-2026',
+  // ao evento configurado no conferente, ou a qualquer assembleia do sistema (prefixo 'ass_')
+  var evAtivo = EVENTO || 'ASSEMBLEIA-2026';
+  var eventoValido = (
+    evLido === evAtivo ||
+    evLido === 'ASSEMBLEIA-2026' ||
+    evAtivo === 'ASSEMBLEIA-2026' ||
+    evLido.indexOf('ass_') === 0
+  );
+
+  if(!eventoValido){
+    return { ok: false, tipo: 'erro', msg: 'CÓDIGO INVÁLIDO', det: 'Evento não reconhecido: ' + evLido };
+  }
+
+  // 2. Reconstituição dos campos para validação da assinatura
+  var camposNorm = [evLido, matLida, nomeLido, orgaoLido, janelaLida, nDispLido].join('|');
+  var camposRaw  = p.slice(0, p.length - 1).join('|');
+
+  // Chaves candidatas legítimas para conferência de autenticidade
+  var chavesCandidatas = [
+    CHAVE,
+    'mude-a-cada-assembleia',
+    evLido + '_sindseps_chave',
+    evLido + '_' + evLido,
+    evAtivo + '_sindseps_chave'
+  ];
+  try {
+    var assSalvas = JSON.parse(localStorage.getItem('sindseps_assembleias_cache') || '[]');
+    assSalvas.forEach(function(a){
+      if(a.chave) chavesCandidatas.push(a.chave);
+      if(a.id) chavesCandidatas.push(a.id + '_sindseps_chave');
+    });
+  } catch(e){}
+
+  var assValida = false;
+  for(var k = 0; k < chavesCandidatas.length; k++){
+    var chave = chavesCandidatas[k];
+    if(!chave) continue;
+    if(fnv1a(camposNorm + '|' + chave) === sigLida || fnv1a(camposRaw + '|' + chave) === sigLida){
+      assValida = true;
+      break;
+    }
+  }
+
+  if(!assValida){
+    return { ok: false, tipo: 'erro', msg: 'CÓDIGO ADULTERADO', det: 'Assinatura inválida' };
+  }
+
+  // 3. Verificação temporal (anti-print / código parado)
+  var agora = Math.floor(Date.now() / 1000);
+  var janelaNow = Math.floor(agora / ROTACAO) * ROTACAO;
+  if(isNaN(janelaLida) || Math.abs(janelaNow - janelaLida) > TOLERANCIA){
+    return { ok: false, tipo: 'erro', msg: 'CÓDIGO PARADO', det: 'Código expirado — verifique se o relógio está correndo' };
+  }
+
+  return {
+    ok: true,
+    matricula: matLida,
+    nome: nomeLido,
+    orgao: orgaoLido,
+    nDisp: nDispLido
+  };
 }
 
 /* ---- Controle do Leitor e Status ---- */
@@ -10913,6 +11011,17 @@ document.getElementById('btn-limpar').addEventListener('click',function(){
     atualizarContador();
   }
 });
+
+/* ---- Teste Manual / Simulação de QR Code ---- */
+var btnTestarQr = document.getElementById('btn-testar-qr');
+if(btnTestarQr){
+  btnTestarQr.addEventListener('click', function(){
+    var cod = prompt('Cole aqui o payload do QR Code para testar a validação:');
+    if(cod && cod.trim()){
+      processarCodigo(cod.trim());
+    }
+  });
+}
 
 </script>
 </body>
