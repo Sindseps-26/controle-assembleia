@@ -1162,50 +1162,70 @@ footer.diretoria-footer {
       </div>
       <button class="btn-close" id="btn-fechar-ajuda" aria-label="Fechar">✕</button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto;padding-right:10px">
       <p style="font-size:0.88rem;color:#64748b;margin-bottom:16px">
-        Siga este roteiro simples para consolidar as presenças de todas as fileiras e gerar a ata final da assembleia sem erros nem duplicidades.
+        Guia oficial da Mesa Diretora para condução, apuração de quórum e encerramento estatutário de assembleias sindicais do SINDSEPS.
       </p>
 
       <div class="passo-card">
-        <div class="passo-num">1</div>
+        <div class="passo-num" style="background:#1d4ed8">1</div>
         <div class="passo-txt">
-          <h4>Coleta dos Arquivos nos Celulares dos Conferentes</h4>
-          <p>Ao finalizar a conferência na entrada ou durante a assembleia, cada conferente clica no botão <strong>⬇ CSV</strong> no topo da tela do Leitor. Um arquivo no padrão <code>presenca_Fileira_X_...csv</code> será baixado automaticamente no smartphone dele.</p>
+          <h4>Abertura ou Seleção da Assembleia</h4>
+          <p>No topo da tela, clique no seletor <strong>Assembleia</strong> para escolher o evento do dia. Para um novo evento, clique em <strong>⚙️ Opções ➔ ➕ Nova Assembleia</strong>, informe nome, data e pauta. O sistema ativa a sessão imediatamente e distribui as credenciais automáticas para os celulares dos servidores e conferentes.</p>
         </div>
       </div>
 
       <div class="passo-card">
-        <div class="passo-num">2</div>
+        <div class="passo-num" style="background:#0284c7">2</div>
         <div class="passo-txt">
-          <h4>Envio para o Computador da Mesa Diretora</h4>
-          <p>Cada conferente encaminha seu respectivo arquivo CSV para a coordenação (pode ser via <strong>WhatsApp Web</strong>, <strong>Pendrive</strong>, <strong>E-mail</strong> ou rede local).</p>
+          <h4>Recepção e Auto-Credenciamento dos Servidores</h4>
+          <p>No telão da entrada (<code>index.html</code>), os servidores apontam o celular para o QR Code Wi-Fi e abrem o <code>cadastro.html</code>. O trabalhador preenche nome, matrícula, órgão e CPF (para atualização cadastral sob a LGPD). O sistema gera a credencial digital dinâmica com QR Code rotativo e relógio ao vivo.</p>
         </div>
       </div>
 
       <div class="passo-card">
-        <div class="passo-num">3</div>
+        <div class="passo-num" style="background:#059669">3</div>
         <div class="passo-txt">
-          <h4>Importação em Lote e Eliminação de Duplicidades</h4>
-          <p>Clique no botão azul <strong>📂 Carregar Arquivos CSV</strong> no topo da tela e selecione todos os arquivos CSV recebidos. O sistema:</p>
+          <h4>Validação Rápida na Portaria (Conferentes)</h4>
+          <p>Os conferentes acessam <code>conferente.html</code> pelo smartphone, informam sua matrícula e senha de portaria, e apontam a câmera para o QR Code de cada servidor. A leitura leva menos de 1 segundo e envia a presença <strong>automaticamente em tempo real</strong> para este painel, sem necessidade de troca de arquivos.</p>
+        </div>
+      </div>
+
+      <div class="passo-card">
+        <div class="passo-num" style="background:#d97706">4</div>
+        <div class="passo-txt">
+          <h4>Auditoria e Barramento Antifraude</h4>
+          <p>O sistema protege o quórum de duas formas automáticas:</p>
           <ul style="margin:6px 0 0 18px;font-size:0.83rem;color:#475569;line-height:1.5">
-            <li>Unifica todos os servidores em uma lista única em ordem alfabética.</li>
-            <li>Detecta e bloqueia matrículas repetidas (enviando para a aba de revisão com aviso).</li>
-            <li>Calcula os KPIs em tempo real e atualiza os gráficos instantaneamente.</li>
+            <li><strong>Deduplicação de Matrícula:</strong> Se alguém tentar passar duas vezes (no mesmo portão ou em portões diferentes), a segunda leitura é bloqueada e enviada para a tabela de <em>Ocorrências de Auditoria</em>.</li>
+            <li><strong>Múltiplos Cadastros no Mesmo Celular:</strong> Se um aparelho gerar QR Code para 2 ou mais matrículas, o painel recebe o alerta em vermelho indicando o número de cadastros daquele dispositivo.</li>
           </ul>
         </div>
       </div>
 
       <div class="passo-card">
-        <div class="passo-num">4</div>
+        <div class="passo-num" style="background:#475569">5</div>
         <div class="passo-txt">
-          <h4>Fechamento e Ata Oficial</h4>
-          <p>Clique em <strong>⬇ Exportar CSV Final</strong> para guardar a planilha consolidada oficial ou clique em <strong>🖨️ Imprimir Lista</strong> para imprimir a ata em papel A4 formatada para assinatura.</p>
+          <h4>Homologação, Ata Oficial e Exportação Excel</h4>
+          <p>Ao atingir o quórum e concluir as votações:</p>
+          <ul style="margin:6px 0 0 18px;font-size:0.83rem;color:#475569;line-height:1.5">
+            <li>Clique em <strong>🖨️ Imprimir Lista Oficial</strong> para emitir a Ata Estatutária em PDF/papel A4 com cabeçalho do SINDSEPS e campos de assinatura da coordenação.</li>
+            <li>Clique em <strong>⬇ Exportar Excel (.xls)</strong> para baixar a planilha formatada contendo todas as presenças homologadas e os CPFs mascarados para auditoria.</li>
+            <li>O histórico permanece gravado no sistema para consulta a qualquer tempo no menu <strong>📅 Histórico de Assembleias</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="passo-card" style="background:#fefce8;border-color:#fef08a">
+        <div class="passo-num" style="background:#ca8a04">💡</div>
+        <div class="passo-txt">
+          <h4 style="color:#854d0e">Plano de Contingência Offline (Sem Internet)</h4>
+          <p style="color:#713f12">Se a rede Wi-Fi/4G falhar durante a assembleia, os conferentes continuam lendo normalmente (os dados ficam salvos na memória do celular). Ao final, cada conferente clica em <strong>⬇ CSV</strong> no leitor e a coordenação importa esses arquivos no botão <strong>📂 Carregar Arquivos CSV</strong> deste painel.</p>
         </div>
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-primary" id="btn-entendido-ajuda" style="padding:10px 24px">Entendi, fechar guia</button>
+      <button class="btn btn-primary" id="btn-entendido-ajuda" style="padding:10px 24px">Entendi, fechar manual</button>
     </div>
   </div>
 </div>
@@ -1668,6 +1688,7 @@ function carregarAssembleias(){
   carregarDadosDaAssembleiaAtiva();
   renderizarSelectAssembleias();
   sincronizarAssembleiasComServidor();
+  publicarSessaoNoServidor(assembleiaAtiva);
 }
 
 function carregarDadosDaAssembleiaAtiva(){
@@ -2058,6 +2079,7 @@ function criarNovaAssembleia(nome, data, pauta){
   renderizarSelectAssembleias();
   atualizarUI();
   mostrarOk('Nova assembleia criada: ' + nova.nome);
+  publicarSessaoNoServidor(nova);
 }
 
 function excluirAssembleia(id){

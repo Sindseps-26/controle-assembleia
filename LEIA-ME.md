@@ -1,100 +1,88 @@
-# SINDSEPS — Sistema de Controle de Presença e Quórum Sindical
+# SINDSEPS — Manual Operacional do Sistema de Presença e Quórum
 
-Sistema institucional do **SINDSEPS** (Sindicato dos Servidores da Prefeitura do Salvador) para controle de acesso, validação dinâmica de credenciais por QR Code rotativo, deduplicação em tempo real e consolidação de quórum em assembleias deliberativas.
-
----
-
-## 📁 Estrutura dos Arquivos
-
-| Arquivo | Função | Ambiente / Acesso |
-|---|---|---|
-| `servidor.js` | Backend HTTP e API REST (tempo real, sessões, persistência atômica) | Node.js (Servidor Local ou Railway) |
-| `iniciar-servidor.bat` | Inicializador automatizado com detecção de rede | Executável Windows (Coordenação) |
-| `index.html` | Portal de Acesso e QR Code para conexão Wi-Fi | Telão / Computador da Recepção |
-| `cadastro.html` | Formulário e Credencial Digital com QR Rotativo Dinâmico | Smartphone do Servidor Participante |
-| `conferente.html` | Leitor Óptico dos Conferentes (Portaria / Fileiras) | Smartphones dos 6 Conferentes (HTTPS) |
-| `painel.html` | Mesa Diretora: Consolidação, Auditoria, Histórico e Relatórios | Computador / Notebook da Coordenação |
+Guia prático para a Mesa Diretora, Coordenação e Conferentes de Portaria.
 
 ---
 
-## ⚙️ Gestão Centralizada de Assembleias (Sem Edição Manual)
+## 💡 1. Como o Sistema Funciona
 
-O sistema conta com **gestão automática de sessão**. Não é necessário editar arquivos de código antes de cada assembleia:
+O sistema foi criado para substituir as listas de papel por um processo digital rápido, seguro e sem filas:
 
-1. **Abertura da Assembleia:** A Mesa Diretora acessa o `painel.html`, cria ou seleciona a assembleia do dia e clica em **Ativar**.
-2. **Sincronização Automática:** O painel publica a sessão ativa no servidor (`POST /api/sessao`), definindo o identificador exclusivo do evento (`EVENTO`) e a chave criptográfica correspondente.
-3. **Detecção nos Dispositivos:**
-   - **`conferente.html`** busca a assembleia ativa via `/api/sessao` e sincroniza as regras de validação instantaneamente.
-   - **`cadastro.html`** identifica automaticamente a assembleia atual. Se o trabalhador possuir cadastro salvo de uma assembleia anterior, o sistema detecta a mudança de evento, descarta o cache antigo e solicita o preenchimento para a assembleia de hoje.
-
-> **Fallback Offline:** Caso o servidor central esteja temporariamente inacessível, os arquivos mantêm parâmetros padrão embutidos para operação autônoma emergencial via arquivos CSV.
+1. **O Servidor Público:** Chega ao evento, abre o link no celular, preenche seus dados (incluindo CPF para atualização cadastral) e gera sua **Credencial Digital**.
+2. **O Conferente na Portaria:** Com a câmera do celular, faz a leitura do QR Code da credencial do servidor em menos de 1 segundo.
+3. **A Mesa Diretora:** Acompanha em tempo real em um computador o quórum oficial subindo na tela, com gráficos por secretaria e bloqueio automático de tentativas repetidas.
 
 ---
 
-## 🔒 Segurança e Gestão de Acessos
+## 🔄 2. Como Trocar ou Criar uma Nova Assembleia
 
-Para proteção institucional, o sistema adota barreiras de acesso por perfil:
+Você não precisa mexer em arquivos nem reiniciar o sistema para mudar de assembleia. Tudo é feito visualmente na tela do **Painel da Diretoria**:
 
-- **Módulo Conferente (`conferente.html`):** Protegido por senha operacional de portaria para liberação da câmera e das leituras.
-- **Mesa Diretora (`painel.html`):** Protegido por senha de coordenação para homologação de dados, gestão de assembleias e exportações.
-- **API de Administração do Servidor:** Operações sensíveis (como `POST /api/presencas/limpar`) exigem o token `X-Admin-Token` configurado via variável de ambiente `TOKEN_ADMIN` no servidor.
+### Para usar uma assembleia que já existe:
+1. No topo da tela do Painel, clique no campo **Assembleia**.
+2. Escolha a assembleia desejada na lista.
+3. O painel carrega na hora o quórum e a lista daquele evento, e avisa todos os celulares das portarias sobre a troca.
 
-> [!TIP]
-> Altere as senhas padrão nos cabeçalhos de script dos arquivos `conferente.html` e `painel.html` antes de publicar o sistema em eventos oficiais.
-
----
-
-## 🛡️ Coleta de CPF e Conformidade com a LGPD
-
-O sistema foi estruturado em conformidade com a **Lei Geral de Proteção de Dados (Lei nº 13.709/2018)**:
-
-### 1. Base Legal e Finalidade
-- **Bases Legais:** Art. 7º, incisos VI (exercício regular de direitos em processos estatutários) e IX (legítimo interesse da organização sindical).
-- **Finalidade Declarada:** Atualização cadastral dos filiados, validação estatutária da condição de servidor público municipal e higienização da base de dados do sindicato.
-- **Termo de Consentimento:** O formulário do `cadastro.html` exige aceite expresso do servidor para a coleta e tratamento das informações antes da geração da credencial.
-
-### 2. Segurança Técnica por Design (*Privacy by Design*)
-- **Payload do QR Seguro:** O CPF **NUNCA** é inserido na carga de dados do QR Code. O QR contém apenas Nome, Matrícula, Órgão, Carimbo Temporal e Assinatura Criptográfica. Isso impede que terceiros na fila ou pessoas próximas leiam o CPF alheio.
-- **Canal Separado:** O CPF preenchido é transmitido de forma isolada ao servidor pela rota segura `/api/presenca-cpf` e armazenado em arquivo protegido (`cpfs.json`), não exposto publicamente.
-- **Máscara de Privacidade no Painel:** Na interface do `painel.html`, o CPF é exibido no formato mascarado `XXX.***.***-XX`, preservando a privacidade individual e permitindo conferência apenas aos auditores autorizados.
-- **Não Versionamento:** Os arquivos de dados sensíveis (`presencas.json`, `assembleias.json`, `cpfs.json`) estão blindados no `.gitignore` contra envio acidental a repositórios públicos.
+### Para criar a assembleia da próxima semana:
+1. No topo da tela do Painel, clique no botão **⚙️ Opções** e depois em **➕ Nova Assembleia**.
+2. Digite o **Nome da Assembleia** (ex: *Campanha Salarial 2026*), a **Data** e a **Pauta**.
+3. Clique em **Criar Assembleia**.
+4. **O que acontece automaticamente:**
+   - O sistema zera o quórum para começar a nova contagem.
+   - Quando o servidor que foi à assembleia passada abrir o celular hoje, o sistema avisa que é uma nova assembleia, apaga a credencial antiga e pede um novo preenchimento para a assembleia de hoje.
+   - Os dados da assembleia anterior não são perdidos — ficam arquivados com segurança no histórico.
 
 ---
 
-## 🚀 Fluxo Operacional no Dia da Assembleia
+## 📲 3. Como Funciona a Coleta de Presença
 
-1. **Inicialização:**
-   - Dê dois cliques em `iniciar-servidor.bat` (ou execute `npm start`).
-   - O terminal exibirá o endereço IP local detectado (ex: `http://192.168.1.96:8080`).
+### A. Servidor com Celular (Fluxo Padrão — 95% dos casos):
+1. O servidor se conecta ao Wi-Fi ou acessa o link divulgado pelo Sindicato.
+2. Preenche Nome, Matrícula, Secretaria/Órgão e CPF.
+3. Aceita o termo de consentimento da LGPD e clica em **Gerar Credencial**.
+4. A tela exibe o QR Code dinâmico com um relógio de segundos correndo ao vivo.
+5. Na portaria, o conferente aponta a câmera para a tela do servidor:
+   - A tela pisca verde com o aviso **"CONFIRMADO!"** e toca um sinal sonoro.
+   - A presença é somada ao quórum da diretoria no mesmo segundo.
 
-2. **Recepção e Conexão:**
-   - Projete ou abra `index.html` na recepção do evento.
-   - O telão exibirá o QR Code de acesso direto para os servidores conectarem seus celulares ao formulário de credenciamento.
-
-3. **Portaria e Conferentes:**
-   - Os 6 conferentes acessam `conferente.html` via HTTPS em seus aparelhos.
-   - Informam a matrícula e a senha de portaria para liberar o leitor de QR Code.
-
-4. **Credenciamento do Servidor:**
-   - O servidor abre `cadastro.html`, preenche nome, matrícula, CPF (para recadastramento) e órgão.
-   - Ao aceitar os termos da LGPD, é gerada a credencial com QR Code rotativo que se atualiza automaticamente.
-
-5. **Entrada e Validação:**
-   - O conferente aponta a câmera para a credencial do servidor.
-   - O sistema valida a assinatura FNV-1a, o limite de tolerância temporal e envia a presença ao servidor central em tempo real.
-   - Caso o participante não possua celular, o conferente utiliza a função **Digitar Matrícula** para registro manual assistido.
-
-6. **Consolidação pela Mesa Diretora:**
-   - O `painel.html` recebe os dados ao vivo sem necessidade de transferência física de arquivos.
-   - Exibe quórum consolidado, percentual de validação digital, ocorrências auditadas e gráficos por secretaria.
-   - Ao término, emite a Ata Oficial de Quórum para impressão ou exporta a planilha homologada em formato Excel (`.xls`).
+### B. Servidor Sem Celular ou com Bateria Descarregada:
+1. O servidor se dirige a qualquer um dos conferentes na portaria.
+2. O conferente clica no botão **"Digitar Matrícula"** na tela do seu leitor.
+3. Digita a matrícula e o nome do servidor e confirma.
+4. A presença é computada normalmente e recebe a identificação de registro manual para auditoria.
 
 ---
 
-## 📱 Requisito de Câmera (HTTPS)
+## 📊 4. Tipos de Relatórios Gerados pelo Sistema
 
-Os navegadores modernos (Chrome, Safari, Firefox, Edge) **exigem HTTPS** para liberar o acesso à câmera via `getUserMedia` em dispositivos móveis (exceto no endereço `localhost`).
+Ao final das deliberações, a Mesa Diretora pode emitir três tipos de relatórios oficiais:
 
-Para os aparelhos dos conferentes, sirva a aplicação através de:
-- Servidor local com proxy SSL / Túnel Seguro (Cloudflare Tunnel, ngrok);
-- Deploy em nuvem (Railway, Netlify, Vercel ou servidor institucional com certificado Let's Encrypt).
+### 1. Ata Oficial para Assinatura (Impressão em Papel ou PDF A4)
+- **Onde clicar:** Botão **🖨️ Imprimir Lista Oficial**.
+- **O que contém:** Cabeçalho institucional do SINDSEPS, nome da assembleia, data, pauta discutida, quórum final homologado, relação nominal dos presentes e campos oficiais para assinatura da **Mesa Diretora** e da **Comissão de Credenciamento**.
+
+### 2. Planilha Excel Completa (.xls) da Assembleia
+- **Onde clicar:** Botão **⬇ Exportar Excel (.xls)**.
+- **O que contém:** Arquivo formatado para abrir no Excel com todas as colunas: Matrícula, CPF, Nome, Órgão, Horário exato de entrada, Portão de acesso e método de validação (QR Code ou Manual).
+
+### 3. Histórico Anual Consolidado
+- **Onde clicar:** Menu **⚙️ Opções ➔ 📅 Histórico de Assembleias ➔ Baixar Planilha**.
+- **O que contém:** Uma planilha única contendo todas as assembleias realizadas no ano, permitindo cruzar dados de frequência e engajamento dos servidores por secretaria.
+
+---
+
+## 🛡️ 5. Segurança e Regras Antifraude
+
+* **Tentativa de passar duas vezes:** Se o mesmo servidor (mesma matrícula) for lido uma segunda vez em qualquer portaria, o sistema não soma a presença e lança um alerta vermelho na tabela de **Ocorrências de Auditoria** como *"Leitura repetida na portaria"*.
+* **Proteção contra prints de WhatsApp:** O QR Code muda a cada 10 segundos e possui um relógio na tela. O conferente confere os segundos rodando na hora, barrando fotos estáticas enviadas por colegas ausentes.
+* **Privacidade do CPF (LGPD):** O CPF coletado não aparece no QR Code (ninguém na fila consegue ver o documento do colega). No painel da diretoria ele aparece mascarado (`XXX.***.***-XX`), sendo exibido completo apenas no relatório oficial emitido pela coordenação.
+
+---
+
+## 🆘 6. O que fazer se a Internet Cair? (Plano de Contingência)
+
+Se faltar internet ou energia na rede local, a portaria não para:
+1. Os conferentes continuam lendo os QR Codes normalmente (os celulares salvam tudo na memória interna).
+2. Ao terminar a entrada, cada conferente toca no botão **⬇ CSV** no seu próprio aparelho para gerar o arquivo da sua portaria.
+3. Os arquivos são passados para a Mesa Diretora (via WhatsApp ou pendrive).
+4. No painel, a diretoria clica em **📂 Carregar Arquivos CSV** e seleciona os arquivos: o sistema consolida tudo, remove duplicidades e gera a ata oficial normalmente.
