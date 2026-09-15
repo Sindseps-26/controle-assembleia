@@ -3,8 +3,9 @@ const fs   = require('fs');
 const path = require('path');
 const os   = require('os');
 
-const PORT        = process.env.PORT || 8080;
-const ADMIN_TOKEN = process.env.TOKEN_ADMIN || 'sindseps-admin-2026'; // Mude via variável de ambiente
+const PORT          = process.env.PORT || 8080;
+const DEFAULT_TOKEN = 'sindseps-admin-2026';
+const ADMIN_TOKEN   = process.env.TOKEN_ADMIN || DEFAULT_TOKEN;
 const BASE_DIR    = __dirname;
 const DB_FILE     = path.join(BASE_DIR, 'presencas.json');
 const ASS_FILE    = path.join(BASE_DIR, 'assembleias.json');
@@ -500,4 +501,18 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('  Config API: /api/config | /api/sessao');
   console.log(`  Token Admin: ${ADMIN_TOKEN.slice(0, 6)}*** (configure TOKEN_ADMIN=suasenha)`);
   console.log('════════════════════════════════════════════════\n');
+
+  /* ── Aviso de segurança: token padrão em uso ───────────────────────── */
+  if (ADMIN_TOKEN === DEFAULT_TOKEN) {
+    console.warn('╔══════════════════════════════════════════════════╗');
+    console.warn('║  ⚠  ATENÇÃO — TOKEN PADRÃO EM USO               ║');
+    console.warn('║                                                  ║');
+    console.warn('║  O TOKEN_ADMIN não foi personalizado.            ║');
+    console.warn('║  Qualquer pessoa que conheça o padrão do sistema ║');
+    console.warn('║  pode executar operações administrativas.        ║');
+    console.warn('║                                                  ║');
+    console.warn('║  → Defina: set TOKEN_ADMIN=sua_senha_forte       ║');
+    console.warn('║    (no .bat antes de iniciar o servidor)         ║');
+    console.warn('╚══════════════════════════════════════════════════╝\n');
+  }
 });

@@ -41,6 +41,22 @@ input.erro{border-color:var(--err)}
 .btn:active{background:var(--ink2)}
 .btn:disabled{background:#94a3b8;cursor:not-allowed;opacity:.7}
 
+/* ---- Indicador de geolocalização ---- */
+#geo-status{
+  border-radius:6px;padding:6px 10px;margin-top:7px;
+  border:1px solid transparent;font-size:0.73rem;
+  font-weight:600;transition:background .3s,color .3s,border-color .3s;
+}
+#geo-status.geo-loading{
+  color:#b45309;background:#fef3c7;border-color:#fde68a;
+}
+#geo-status.geo-ok{
+  color:#15803d;background:#dcfce7;border-color:#86efac;
+}
+#geo-status.geo-erro{
+  color:#b91c1c;background:#fee2e2;border-color:#fca5a5;
+}
+
 /* ---- Box LGPD e Termo de Consentimento ---- */
 .lgpd-box{
   background:#ffffff;border:1px solid #cbd5e1;border-radius:6px;
@@ -329,12 +345,15 @@ if(inpCpf) inpCpf.addEventListener('input',mascaraCPF);
 /* ---- Estado da aplicação ---- */
 var nomeAtual='', matriculaAtual='', orgaoAtual='', cpfAtual='', timerRelogio=null, timerQR=null;
 var geoAtual = null; /* { lat, lng, acc } — capturado ao gerar credencial */
+var _watchId  = null; /* ID do watchPosition para cancelamento */
+var _melhorAcc = Infinity; /* Melhor precisão já obtida nesta sessão */
 
-/* Recuperar última localização recente do cache local (se capturada há menos de 30 minutos) */
+/* Recuperar última localização recente do cache local (se capturada há menos de 15 minutos) */
 try {
   var geoCache = JSON.parse(localStorage.getItem('cad_geo') || 'null');
-  if(geoCache && geoCache.lat && geoCache.lng && (Date.now() - (geoCache.ts || 0) < 1800000)){
+  if(geoCache && geoCache.lat && geoCache.lng && (Date.now() - (geoCache.ts || 0) < 900000)){
     geoAtual = { lat: geoCache.lat, lng: geoCache.lng, acc: geoCache.acc || 0 };
+    _melhorAcc = geoAtual.acc;
   }
 } catch(e){}
 
@@ -342,20 +361,25 @@ function atualizarGeoStatusUI(geo, err){
   var elGeo = document.getElementById('geo-status');
   if(!elGeo) return;
   if(geo && geo.lat && geo.lng){
-    elGeo.innerHTML = '📍 Localização capturada <span style="font-size:0.75rem;opacity:0.85">(±' + (geo.acc || 0) + 'm de precisão)</span>';
-    elGeo.style.color = '#15803d';
-    elGeo.style.background = '#dcfce7';
-    elGeo.style.borderColor = '#86efac';
-  } else if(err && (err.code === 1 || err.code === 2)){
-    elGeo.textContent = '📍 Localização não autorizada no navegador';
-    elGeo.style.color = '#b91c1c';
-    elGeo.style.background = '#fee2e2';
-    elGeo.style.borderColor = '#fca5a5';
+    var acc = geo.acc || 0;
+    /* Cor da precisão: verde <50m, amarelo <150m, laranja >150m */
+    var corAcc = acc < 50 ? '#15803d' : (acc < 150 ? '#b45309' : '#b91c1c');
+    elGeo.innerHTML =
+      '📍 Localização capturada '
+      + '<span style="font-size:0.75rem;font-weight:700;color:' + corAcc + '">±' + acc + 'm</span>';
+    elGeo.className = 'geo-ok';
+  } else if(err && err.code === 1){
+    elGeo.textContent = '📍 Localização bloqueada — autorize nas configurações do navegador';
+    elGeo.className = 'geo-erro';
+  } else if(err && err.code === 2){
+    elGeo.textContent = '📍 GPS indisponível — tente em local aberto';
+    elGeo.className = 'geo-erro';
+  } else if(err && err.code === 3){
+    elGeo.textContent = '📍 Aguardando sinal de GPS...';
+    elGeo.className = 'geo-loading';
   } else {
-    elGeo.textContent = '📍 Obtendo localização precisa via GPS...';
-    elGeo.style.color = '#b45309';
-    elGeo.style.background = '#fef3c7';
-    elGeo.style.borderColor = '#fde68a';
+    elGeo.textContent = '📍 Obtendo localização via GPS...';
+    elGeo.className = 'geo-loading';
   }
   elGeo.style.display = 'block';
 }
@@ -377,7 +401,7 @@ function enviarGeoServidor(mat, cpf, geo){
     }).then(function(res){ return res.json(); })
       .then(function(d){
         if(d && d.ok){
-          console.log('[GEO] Enviado com sucesso para ' + urlApi, geo ? (geo.lat + ',' + geo.lng) : 'sem geo');
+          console.log('[GEO] Enviado com sucesso para ' + urlApi, geo ? ('±' + geo.acc + 'm') : 'sem geo');
         }
       })
       .catch(function(){});
@@ -385,41 +409,98 @@ function enviarGeoServidor(mat, cpf, geo){
 }
 
 /* ---- Capturar geolocalização em background ao carregar a página ---- */
+/*
+ * Estratégia dupla:
+ * 1. getCurrentPosition — resposta rápida (usa cache do SO até 10s)
+ * 2. watchPosition     — continua monitorando para melhorar a precisão
+ *    O watch é encerrado quando atingir ≤30m ou após 60s (para poupar bateria)
+ */
+var _watchTimer = null;
+
+function _processarPosicao(pos, fonte){
+  var novaAcc = Math.round(pos.coords.accuracy);
+
+  /* Só atualiza se melhorou a precisão significativamente (>20%) */
+  if(geoAtual && novaAcc > _melhorAcc * 0.80) return;
+
+  _melhorAcc = novaAcc;
+  geoAtual = {
+    lat: parseFloat(pos.coords.latitude.toFixed(6)),
+    lng: parseFloat(pos.coords.longitude.toFixed(6)),
+    acc: novaAcc
+  };
+
+  try {
+    localStorage.setItem('cad_geo', JSON.stringify({
+      lat: geoAtual.lat,
+      lng: geoAtual.lng,
+      acc: geoAtual.acc,
+      ts: Date.now()
+    }));
+  } catch(e){}
+
+  console.log('[GEO] ' + fonte + ': ' + geoAtual.lat + ',' + geoAtual.lng + ' ±' + geoAtual.acc + 'm');
+  atualizarGeoStatusUI(geoAtual);
+
+  /* Reenviar ao servidor sempre que melhorar (ex: GPS convergindo) */
+  if(matriculaAtual && cpfAtual){
+    enviarGeoServidor(matriculaAtual, cpfAtual, geoAtual);
+  }
+
+  /* Encerrar watch se precisão boa o suficiente (≤30m) */
+  if(novaAcc <= 30 && _watchId !== null){
+    navigator.geolocation.clearWatch(_watchId);
+    _watchId = null;
+    if(_watchTimer){ clearTimeout(_watchTimer); _watchTimer = null; }
+    console.log('[GEO] Precisão ótima atingida (≤30m). Watch encerrado.');
+  }
+}
+
+function _erroPosicao(err, fonte){
+  console.log('[GEO] ' + fonte + ' — erro ' + err.code + ': ' + err.message);
+  if(!geoAtual) atualizarGeoStatusUI(null, err);
+}
+
 function iniciarCapturaSilenciosa(){
   if(!navigator.geolocation){
-    console.log('[GEO] Geolocalização não suportada');
+    console.log('[GEO] Geolocalização não suportada neste navegador.');
     return;
   }
-  try{
+
+  /* Cancelar watch anterior se existir */
+  if(_watchId !== null){
+    navigator.geolocation.clearWatch(_watchId);
+    _watchId = null;
+  }
+  if(_watchTimer){ clearTimeout(_watchTimer); _watchTimer = null; }
+  _melhorAcc = geoAtual ? geoAtual.acc : Infinity;
+
+  try {
+    /* 1. Resposta rápida com getCurrentPosition (aceita cache de até 10s) */
     navigator.geolocation.getCurrentPosition(
-      function(pos){
-        geoAtual = {
-          lat: parseFloat(pos.coords.latitude.toFixed(6)),
-          lng: parseFloat(pos.coords.longitude.toFixed(6)),
-          acc: Math.round(pos.coords.accuracy)
-        };
-        try {
-          localStorage.setItem('cad_geo', JSON.stringify({
-            lat: geoAtual.lat,
-            lng: geoAtual.lng,
-            acc: geoAtual.acc,
-            ts: Date.now()
-          }));
-        } catch(e){}
-        console.log('[GEO] Localização capturada: ' + geoAtual.lat + ',' + geoAtual.lng + ' ±' + geoAtual.acc + 'm');
-        atualizarGeoStatusUI(geoAtual);
-        if(matriculaAtual && cpfAtual){
-          enviarGeoServidor(matriculaAtual, cpfAtual, geoAtual);
-        }
-      },
-      function(err){
-        console.log('[GEO] Localização não disponível: ' + err.message);
-        if(!geoAtual) atualizarGeoStatusUI(null, err);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 }
+      function(pos){ _processarPosicao(pos, 'getCurrentPosition'); },
+      function(err){ _erroPosicao(err, 'getCurrentPosition'); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
+
+    /* 2. watchPosition para ambientes fechados onde o GPS leva mais de 15s */
+    _watchId = navigator.geolocation.watchPosition(
+      function(pos){ _processarPosicao(pos, 'watchPosition'); },
+      function(err){ _erroPosicao(err, 'watchPosition'); },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+    );
+
+    /* Encerrar o watch após 60s para poupar bateria */
+    _watchTimer = setTimeout(function(){
+      if(_watchId !== null){
+        navigator.geolocation.clearWatch(_watchId);
+        _watchId = null;
+        console.log('[GEO] Watch encerrado por timeout (60s).');
+      }
+    }, 60000);
+
   } catch(e){
-    console.log('[GEO] Erro ao solicitar localização:', e);
+    console.log('[GEO] Erro ao iniciar captura:', e);
   }
 }
 iniciarCapturaSilenciosa();
@@ -626,7 +707,14 @@ document.getElementById('btn-corrigir').addEventListener('click',function(e){
   e.preventDefault();
   if(timerRelogio)clearInterval(timerRelogio);
   if(timerQR)clearInterval(timerQR);
+  /* Encerrar captura de geo do usuário anterior */
+  if(_watchId !== null){
+    navigator.geolocation.clearWatch(_watchId);
+    _watchId = null;
+  }
+  if(_watchTimer){ clearTimeout(_watchTimer); _watchTimer = null; }
   nomeAtual='';matriculaAtual='';orgaoAtual='';cpfAtual='';qrInstance=null;
+  geoAtual=null;_melhorAcc=Infinity;
   var qc=document.getElementById('qr-container');if(qc)qc.innerHTML='';
   try{localStorage.removeItem('cad_dados');}catch(x){}
   document.getElementById('cred-view').style.display='none';
@@ -639,7 +727,6 @@ document.getElementById('btn-corrigir').addEventListener('click',function(e){
   errLgpd.textContent='';
   lblLgpd.classList.remove('erro');
   /* Reiniciar captura de geo para novo usuário */
-  geoAtual = null;
   iniciarCapturaSilenciosa();
 });
 

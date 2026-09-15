@@ -21,3 +21,7 @@ assembleias.json
 
 # Arquivo de teste — não deve ir para produção
 test_qr.html
+
+# Variáveis de ambiente locais (TOKEN_ADMIN, etc.) — NUNCA versionar
+.env
+.env.local

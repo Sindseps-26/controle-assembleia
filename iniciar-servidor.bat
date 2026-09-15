@@ -7,14 +7,33 @@ echo ========================================================
 echo   SINDSEPS — Sistema de Presenca Sindical em Tempo Real
 echo ========================================================
 echo.
-echo Iniciando servidor Node.js...
-echo.
-echo  TOKEN_ADMIN atual: sindseps-admin-2026
-echo  Para alterar, edite esta linha:
-echo    set TOKEN_ADMIN=suasenha
-echo.
+
+REM ── SEGURANÇA: altere o TOKEN_ADMIN antes de usar em producao ────────────
+REM    O valor abaixo e o padrao do sistema. Qualquer pessoa que conheca
+REM    este arquivo pode executar operacoes administrativas com ele.
+REM    Troque por uma senha forte e exclusiva para cada evento.
+REM ─────────────────────────────────────────────────────────────────────────
 
 set TOKEN_ADMIN=sindseps-admin-2026
+
+REM ── Aviso visual se o token nao foi alterado ─────────────────────────────
+if "%TOKEN_ADMIN%"=="sindseps-admin-2026" (
+  echo  ┌──────────────────────────────────────────────────┐
+  echo  │  ⚠  AVISO DE SEGURANCA                          │
+  echo  │                                                  │
+  echo  │  Voce esta usando o TOKEN_ADMIN padrao.          │
+  echo  │  Recomenda-se trocar antes de usar em producao. │
+  echo  │                                                  │
+  echo  │  Edite este .bat e defina:                       │
+  echo  │    set TOKEN_ADMIN=sua_senha_exclusiva           │
+  echo  └──────────────────────────────────────────────────┘
+  echo.
+)
+
+echo  Token em uso: %TOKEN_ADMIN:~0,6%***
+echo  Iniciando servidor na porta 8080...
+echo.
+
 node servidor.js
 
 pause
