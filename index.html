@@ -530,20 +530,27 @@ if (window.location.protocol === 'file:') {
     document.getElementById('mobile-url').textContent = 'Informe o IP do servidor acima';
   }
 } else {
-  /* Modo servidor HTTP: buscar URL pública via /api/config */
+  /* URL de produção Railway — fallback garantido quando a API não responde
+     (ex: acesso via GitHub Pages, que não possui /api/config)            */
+  var RAILWAY_URL_INDEX = 'https://controle-assembleia-production.up.railway.app';
+
   fetch('/api/config', { cache: 'no-store' })
-    .then(function(r) { return r.json(); })
+    .then(function(r) {
+      if (!r.ok) throw new Error('API indisponível');
+      return r.json();
+    })
     .then(function(cfg) {
       if (cfg && cfg.urlCadastro) {
+        /* Resposta válida: Railway (domínio público) ou rede local */
         atualizarQReURL(cfg.urlCadastro);
       } else {
-        /* Fallback: usar origin atual (funciona no Railway, rede local, etc.) */
-        atualizarQReURL(window.location.origin + '/cadastro.html');
+        atualizarQReURL(RAILWAY_URL_INDEX + '/cadastro.html');
       }
     })
     .catch(function() {
-      /* Fallback: usar origin atual */
-      atualizarQReURL(window.location.origin + '/cadastro.html');
+      /* API não respondeu (GitHub Pages, rede sem servidor, etc.)
+         → usa sempre o Railway como destino correto */
+      atualizarQReURL(RAILWAY_URL_INDEX + '/cadastro.html');
     });
 }
 
