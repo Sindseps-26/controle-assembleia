@@ -365,72 +365,118 @@ try {
 /* Geocodificação reversa no cliente com cache */
 var _cacheEnderecoLocal = {};
 
+function formatarEnderecoNominatim(data){
+  if(!data || !data.address) return '';
+  var a = data.address;
+
+  var logr = a.road || a.pedestrian || a.street || a.avenue || a.square || a.highway || '';
+  var num = a.house_number ? ', ' + a.house_number : '';
+  var localOuPredio = a.building || a.amenity || a.commercial || '';
+
+  var bairro = a.suburb || a.neighbourhood || a.quarter || a.city_district || '';
+  var cidade = a.city || a.town || a.municipality || 'Salvador';
+  var uf = a['ISO3166-2-lvl4'] ? a['ISO3166-2-lvl4'].replace('BR-', '') : (a.state === 'Bahia' ? 'BA' : (a.state || ''));
+
+  var partes = [];
+  if(logr){
+    var ruaCompleta = logr + num;
+    if(localOuPredio && localOuPredio !== logr){
+      ruaCompleta += ' (' + localOuPredio + ')';
+    }
+    partes.push(ruaCompleta);
+  } else if(localOuPredio){
+    partes.push(localOuPredio);
+  }
+
+  if(bairro && bairro !== logr){
+    partes.push(bairro);
+  }
+
+  if(cidade){
+    partes.push(cidade + (uf ? ' - ' + uf : ''));
+  }
+
+  return partes.join(', ') || data.display_name || '';
+}
+
 function buscarEnderecoReverso(lat, lng, callback){
   var key = parseFloat(lat).toFixed(4) + '_' + parseFloat(lng).toFixed(4);
   if(_cacheEnderecoLocal[key]){
     return callback(_cacheEnderecoLocal[key]);
   }
 
-  /* 1. Tentar BigDataCloud (rápido, sem bloqueio de CORS no cliente) */
-  var urlBDC = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=pt';
-  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  var timeoutId = setTimeout(function(){ if(controller) controller.abort(); }, 3500);
+  /* 1. Tentar primeiro o OpenStreetMap Nominatim (traz rua, número e bairro) */
+  var urlNom = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
+  var cNom = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var tNom = setTimeout(function(){ if(cNom) cNom.abort(); }, 4000);
 
-  fetch(urlBDC, { signal: controller ? controller.signal : undefined })
-    .then(function(res){ return res.json(); })
-    .then(function(data){
-      clearTimeout(timeoutId);
-      if(data){
-        var partes = [];
-        var bairro = data.locality || '';
-        var cidade = data.city || 'Salvador';
-        var uf = data.principalSubdivisionCode ? data.principalSubdivisionCode.replace('BR-', '') : 'BA';
-        if(bairro) partes.push(bairro);
-        if(cidade) partes.push(cidade + (uf ? ' - ' + uf : ''));
-        var endFormatado = partes.join(', ');
-        if(endFormatado){
-          _cacheEnderecoLocal[key] = endFormatado;
-          return callback(endFormatado);
-        }
+  fetch(urlNom, {
+    signal: cNom ? cNom.signal : undefined,
+    headers: { 'Accept-Language': 'pt-BR,pt;q=0.9' }
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      clearTimeout(tNom);
+      var formatado = formatarEnderecoNominatim(d);
+      if(formatado && formatado.indexOf(',') !== -1){
+        _cacheEnderecoLocal[key] = formatado;
+        return callback(formatado);
       }
-      tentarNominatim();
+      tentarServidorProxy();
     })
     .catch(function(){
-      clearTimeout(timeoutId);
-      tentarNominatim();
+      clearTimeout(tNom);
+      tentarServidorProxy();
     });
 
-  function tentarNominatim(){
-    var urlNom = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
-    var c2 = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var t2 = setTimeout(function(){ if(c2) c2.abort(); }, 3500);
+  function tentarServidorProxy(){
+    /* 2. Tentar endpoint do servidor /api/geocodificar */
+    var rotas = obterRotasCadastro('/api/geocodificar?lat=' + lat + '&lng=' + lng);
+    var i = 0;
+    function prox(){
+      if(i >= rotas.length) return tentarBDC();
+      var u = rotas[i++];
+      fetch(u, { cache: 'no-store' })
+        .then(function(res){ return res.json(); })
+        .then(function(dados){
+          if(dados && dados.ok && dados.endereco){
+            _cacheEnderecoLocal[key] = dados.endereco;
+            return callback(dados.endereco);
+          }
+          prox();
+        })
+        .catch(function(){ prox(); });
+    }
+    prox();
+  }
 
-    fetch(urlNom, {
-      signal: c2 ? c2.signal : undefined,
-      headers: { 'Accept-Language': 'pt-BR,pt;q=0.9' }
-    })
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        clearTimeout(t2);
-        if(d && d.address){
-          var a = d.address;
-          var logr = a.road || a.pedestrian || a.street || '';
-          var bai = a.neighbourhood || a.suburb || a.city_district || '';
-          var cid = a.city || a.town || a.municipality || 'Salvador';
-          var p = [];
-          if(logr) p.push(logr);
-          if(bai && bai !== logr) p.push(bai);
-          if(cid) p.push(cid);
-          var formatado = p.join(', ') || d.display_name || '';
-          if(formatado){
-            _cacheEnderecoLocal[key] = formatado;
-            return callback(formatado);
+  function tentarBDC(){
+    /* 3. Fallback BigDataCloud caso Nominatim esteja inacessível */
+    var urlBDC = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=pt';
+    var cBdc = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var tBdc = setTimeout(function(){ if(cBdc) cBdc.abort(); }, 3000);
+
+    fetch(urlBDC, { signal: cBdc ? cBdc.signal : undefined })
+      .then(function(res){ return res.json(); })
+      .then(function(data){
+        clearTimeout(tBdc);
+        if(data){
+          var partes = [];
+          var bairro = data.locality || '';
+          var cidade = data.city || 'Salvador';
+          var uf = data.principalSubdivisionCode ? data.principalSubdivisionCode.replace('BR-', '') : 'BA';
+          if(bairro && bairro !== cidade) partes.push(bairro);
+          if(cidade) partes.push(cidade + (uf ? ' - ' + uf : ''));
+          var endFormatado = partes.join(', ');
+          if(endFormatado){
+            _cacheEnderecoLocal[key] = endFormatado;
+            return callback(endFormatado);
           }
         }
         callback('');
       })
       .catch(function(){
-        clearTimeout(t2);
+        clearTimeout(tBdc);
         callback('');
       });
   }

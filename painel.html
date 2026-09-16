@@ -1606,14 +1606,20 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
 .geo-cell {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  max-width: 220px;
+  gap: 2px;
+  max-width: 260px;
   line-height: 1.25;
 }
-.geo-endereco-txt {
-  font-size: 0.74rem;
-  color: #1e293b;
-  font-weight: 600;
+.geo-rua-txt {
+  font-size: 0.77rem;
+  color: #0f172a;
+  font-weight: 700;
+  white-space: normal;
+  word-break: break-word;
+}
+.geo-bairro-txt {
+  font-size: 0.71rem;
+  color: #475569;
   white-space: normal;
   word-break: break-word;
 }
@@ -2266,7 +2272,7 @@ footer.diretoria-footer {
             <th style="width:130px">Conferente</th>
             <th style="width:75px">Hora</th>
             <th style="width:80px">Origem</th>
-            <th style="min-width:150px">Local / Endereço</th>
+            <th style="min-width:180px">Local / Endereço</th>
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
@@ -3631,6 +3637,71 @@ function mascararCPF(cpf){
   return d.slice(0, 3) + '.***.***-' + d.slice(9);
 }
 
+/* Geocodificação reversa de contingência no painel com cache */
+var _cacheGeoPainel = {};
+
+function formatarEnderecoNominatim(data){
+  if(!data || !data.address) return '';
+  var a = data.address;
+
+  var logr = a.road || a.pedestrian || a.street || a.avenue || a.square || a.highway || '';
+  var num = a.house_number ? ', ' + a.house_number : '';
+  var localOuPredio = a.building || a.amenity || a.commercial || '';
+
+  var bairro = a.suburb || a.neighbourhood || a.quarter || a.city_district || '';
+  var cidade = a.city || a.town || a.municipality || 'Salvador';
+  var uf = a['ISO3166-2-lvl4'] ? a['ISO3166-2-lvl4'].replace('BR-', '') : (a.state === 'Bahia' ? 'BA' : (a.state || ''));
+
+  var partes = [];
+  if(logr){
+    var ruaCompleta = logr + num;
+    if(localOuPredio && localOuPredio !== logr){
+      ruaCompleta += ' (' + localOuPredio + ')';
+    }
+    partes.push(ruaCompleta);
+  } else if(localOuPredio){
+    partes.push(localOuPredio);
+  }
+
+  if(bairro && bairro !== logr){
+    partes.push(bairro);
+  }
+
+  if(cidade){
+    partes.push(cidade + (uf ? ' - ' + uf : ''));
+  }
+
+  return partes.join(', ') || data.display_name || '';
+}
+
+function resolverEnderecoNoPainel(p, lat, lng){
+  var key = parseFloat(lat).toFixed(4) + '_' + parseFloat(lng).toFixed(4);
+  if(_cacheGeoPainel[key] && _cacheGeoPainel[key] !== 'pendente'){
+    if(p.endereco !== _cacheGeoPainel[key]){
+      p.endereco = _cacheGeoPainel[key];
+    }
+    return;
+  }
+  if(_cacheGeoPainel[key] === 'pendente') return;
+  _cacheGeoPainel[key] = 'pendente';
+
+  var urlNom = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
+  fetch(urlNom, { headers: { 'Accept-Language': 'pt-BR,pt;q=0.9' } })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var fmt = formatarEnderecoNominatim(d);
+      if(fmt){
+        _cacheGeoPainel[key] = fmt;
+        p.endereco = fmt;
+        salvarTodasAssembleias();
+        filtrarPresentes();
+      }
+    })
+    .catch(function(){
+      _cacheGeoPainel[key] = null;
+    });
+}
+
 /* ---- Filtro de Busca na Tabela de Presentes ---- */
 function filtrarPresentes(termoBusca){
   var busca = document.getElementById('busca-presentes');
@@ -3673,19 +3744,31 @@ function filtrarPresentes(termoBusca){
       : '<span class="badge-qr-orig">QR</span>';
     var cpfFormatado = mascararCPF(p.cpf);
 
-    /* Localização e Endereço: exibe endereço + link do Google Maps */
+    /* Localização e Endereço: exibe endereço detalhado + link do Google Maps */
     var geoCellHtml;
     var latVal = (p.lat != null && p.lat !== '') ? parseFloat(p.lat) : null;
     var lngVal = (p.lng != null && p.lng !== '') ? parseFloat(p.lng) : null;
     var temCoord = (latVal !== null && lngVal !== null && !isNaN(latVal) && !isNaN(lngVal));
     var endTxt = (p.endereco || '').trim();
+
+    // Se o endereço ainda for apenas "Salvador, Salvador - BA" ou se tiver coordenadas sem endereço detalhado
+    var ehGenerico = !endTxt || endTxt === 'Salvador, Salvador - BA' || endTxt.toLowerCase() === 'salvador';
+    if(temCoord && ehGenerico){
+      resolverEnderecoNoPainel(p, latVal, lngVal);
+    }
+
     if(temCoord){
       var mapsUrl = 'https://www.google.com/maps?q=' + latVal + ',' + lngVal;
       var accStr = p.geo_acc ? ' (precisão ±' + p.geo_acc + 'm)' : '';
       var btnMap = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Mapa</a>';
-      if(endTxt){
+      if(endTxt && !ehGenerico){
+        // Dividir em logradouro e complemento (bairro/cidade) para melhor legibilidade
+        var partesEnd = endTxt.split(',');
+        var linha1 = (partesEnd[0] || endTxt).trim();
+        var linha2 = partesEnd.slice(1).join(',').trim();
         geoCellHtml = '<div class="geo-cell">' +
-          '<span class="geo-endereco-txt" title="' + esc(endTxt) + accStr + '">' + esc(endTxt) + '</span>' +
+          '<span class="geo-rua-txt" title="' + esc(endTxt) + accStr + '">' + esc(linha1) + '</span>' +
+          (linha2 ? '<span class="geo-bairro-txt">' + esc(linha2) + '</span>' : '') +
           '<div>' + btnMap + '</div>' +
           '</div>';
       } else {
@@ -3695,7 +3778,7 @@ function filtrarPresentes(termoBusca){
           '</div>';
       }
     } else if(endTxt) {
-      geoCellHtml = '<span class="geo-endereco-txt">' + esc(endTxt) + '</span>';
+      geoCellHtml = '<span class="geo-rua-txt">' + esc(endTxt) + '</span>';
     } else {
       geoCellHtml = '<span class="btn-geo-mapa-na" title="Localização não capturada pelo participante">—</span>';
     }

@@ -17,6 +17,44 @@ const GEO_FILE    = path.join(BASE_DIR, 'geo.json');      // Armazenamento de ge
 /* ── Cache de Geocodificação Reversa em Memória ─────────────────────────── */
 const enderecoCache = {};
 
+function formatarEnderecoNominatim(data) {
+  if (!data || !data.address) return '';
+  const a = data.address;
+
+  // 1. Logradouro (Rua, Avenida, Travessa, Praça, Largo, etc.)
+  const logr = a.road || a.pedestrian || a.street || a.avenue || a.square || a.highway || '';
+  const num = a.house_number ? ', ' + a.house_number : '';
+  const localOuPredio = a.building || a.amenity || a.commercial || '';
+
+  // 2. Bairro / Região
+  const bairro = a.suburb || a.neighbourhood || a.quarter || a.city_district || '';
+
+  // 3. Cidade e UF
+  const cidade = a.city || a.town || a.municipality || 'Salvador';
+  let uf = a['ISO3166-2-lvl4'] ? a['ISO3166-2-lvl4'].replace('BR-', '') : (a.state === 'Bahia' ? 'BA' : (a.state || ''));
+
+  const partes = [];
+  if (logr) {
+    let ruaCompleta = logr + num;
+    if (localOuPredio && localOuPredio !== logr) {
+      ruaCompleta += ' (' + localOuPredio + ')';
+    }
+    partes.push(ruaCompleta);
+  } else if (localOuPredio) {
+    partes.push(localOuPredio);
+  }
+
+  if (bairro && bairro !== logr) {
+    partes.push(bairro);
+  }
+
+  if (cidade) {
+    partes.push(cidade + (uf ? ' - ' + uf : ''));
+  }
+
+  return partes.join(', ') || data.display_name || '';
+}
+
 function resolverEnderecoReverso(lat, lng) {
   if (lat == null || lng == null) return Promise.resolve('');
   const key = `${parseFloat(lat).toFixed(4)}_${parseFloat(lng).toFixed(4)}`;
@@ -26,30 +64,20 @@ function resolverEnderecoReverso(lat, lng) {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
     const req = https.get(url, {
       headers: {
-        'User-Agent': 'SINDSEPS-Presenca/1.1 (contato@sindseps.org.br)',
+        'User-Agent': 'SINDSEPS-Presenca/1.2 (contato@sindseps.org.br)',
         'Accept-Language': 'pt-BR,pt;q=0.9'
       },
-      timeout: 3500
+      timeout: 4000
     }, (res) => {
       let body = '';
       res.on('data', chunk => { body += chunk; });
       res.on('end', () => {
         try {
           const json = JSON.parse(body);
-          if (json && json.address) {
-            const a = json.address;
-            const logradouro = a.road || a.pedestrian || a.street || '';
-            const bairro = a.suburb || a.neighbourhood || a.city_district || '';
-            const cidade = a.city || a.town || a.municipality || 'Salvador';
-            const partes = [];
-            if (logradouro) partes.push(logradouro);
-            if (bairro && bairro !== logradouro) partes.push(bairro);
-            if (cidade) partes.push(cidade);
-            const fmt = partes.join(', ') || json.display_name || '';
-            if (fmt) {
-              enderecoCache[key] = fmt;
-              return resolve(fmt);
-            }
+          const fmt = formatarEnderecoNominatim(json);
+          if (fmt) {
+            enderecoCache[key] = fmt;
+            return resolve(fmt);
           }
         } catch(e){}
         resolve('');
@@ -264,6 +292,20 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  /* ── GET /api/geocodificar?lat=...&lng=... ── proxy geocodificação reversa com cache */
+  if (url === '/api/geocodificar' && method === 'GET') {
+    const rawUrl = new URL(req.url, 'http://localhost');
+    const lat = parseFloat(rawUrl.searchParams.get('lat'));
+    const lng = parseFloat(rawUrl.searchParams.get('lng'));
+    if (isNaN(lat) || isNaN(lng)) {
+      jsonErro(res, 400, 'Parâmetros lat e lng são obrigatórios');
+      return;
+    }
+    const end = await resolverEnderecoReverso(lat, lng);
+    jsonOk(res, { ok: true, endereco: end, lat, lng });
+    return;
+  }
+
   /* ── GET /api/config ── retorna IP e porta para o index.html ─────────── */
   if (url === '/api/config' && method === 'GET') {
     /* Prioridade: URL pública do Railway > IP local */
@@ -377,30 +419,31 @@ const server = http.createServer(async (req, res) => {
     /* Salva localização e endereço no banco geoDB */
     if (lat !== null && lng !== null) {
       const endExistente = (geoDB[mat] && geoDB[mat].endereco) ? geoDB[mat].endereco : '';
+      const ehGenerico = !endereco || endereco === 'Salvador, Salvador - BA' || endereco.toLowerCase() === 'salvador';
       geoDB[mat] = {
         lat: lat,
         lng: lng,
         geo_acc: geoAcc,
-        endereco: endereco || endExistente,
+        endereco: (!ehGenerico ? endereco : endExistente) || '',
         atualizadoEm: new Date().toISOString()
       };
       salvarGeoDB();
 
-      /* Se o cliente não enviou endereço legível, resolve no servidor em background */
-      if (!geoDB[mat].endereco) {
+      /* Se o cliente não enviou endereço completo (com rua/bairro), resolve com Nominatim em background */
+      if (!geoDB[mat].endereco || geoDB[mat].endereco === 'Salvador, Salvador - BA' || geoDB[mat].endereco.toLowerCase() === 'salvador') {
         resolverEnderecoReverso(lat, lng).then(endResolvido => {
           if (endResolvido && geoDB[mat]) {
             geoDB[mat].endereco = endResolvido;
             salvarGeoDB();
             let atualizouEnd = false;
             presencasDB.forEach(p => {
-              if (String(p.matricula || '').trim().toUpperCase() === mat && !p.endereco) {
+              if (String(p.matricula || '').trim().toUpperCase() === mat) {
                 p.endereco = endResolvido;
                 atualizouEnd = true;
               }
             });
             if (atualizouEnd) salvarDB();
-            console.log(`[API] Endereço resolvido no servidor para ${mat}: ${endResolvido}`);
+            console.log(`[API] Endereço completo resolvido para ${mat}: ${endResolvido}`);
           }
         }).catch(() => {});
       }
