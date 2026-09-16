@@ -1629,6 +1629,136 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   font-family: monospace;
 }
 
+/* Botão de Hora com Olhinho (Oculta por Padrão) */
+.hora-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 3px 7px;
+  font-size: 0.76rem;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  line-height: 1.2;
+}
+.hora-toggle-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+}
+.hora-toggle-btn.revelado {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+.hora-toggle-btn.revelado:hover {
+  background: #dbeafe;
+  border-color: #60a5fa;
+  color: #1e40af;
+}
+.hora-eye-ico {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+.btn-th-eye {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.76rem;
+  padding: 1px 5px;
+  margin-left: 4px;
+  color: #fff;
+  vertical-align: middle;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-th-eye:hover {
+  background: rgba(255,255,255,0.35);
+  transform: scale(1.08);
+}
+
+/* Dropdowns de Exportação nos botões do Header */
+.dropdown-export-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.dropdown-export-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  min-width: 230px;
+  z-index: 1300;
+  overflow: hidden;
+  padding: 6px 0;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+.dropdown-export-wrap.open .dropdown-export-menu {
+  display: block;
+}
+.dropdown-export-header {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  padding: 8px 14px 4px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 4px;
+}
+
+/* Botões Rápidos de Exportação na Barra da Tabela */
+.btn-quick-exp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #334155;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.btn-quick-exp:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+.btn-quick-exp.primary {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+.btn-quick-exp.primary:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
 /* Barra de busca na tabela de presentes */
 .search-bar-wrap {
   display: flex; align-items: center; gap: 10px;
@@ -1756,12 +1886,53 @@ footer.diretoria-footer {
     <button class="btn btn-help btn-icon-only" id="btn-abrir-ajuda" data-tooltip="Como Funciona (Ajuda)" aria-label="Como Funciona">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
     </button>
-    <button class="btn btn-ok btn-icon-only" id="btn-exportar-final" data-tooltip="Exportar Planilha Excel" aria-label="Exportar Planilha Excel">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-    </button>
-    <button class="btn btn-print btn-icon-only" id="btn-imprimir" data-tooltip="Imprimir Lista de Presença" aria-label="Imprimir Lista">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-    </button>
+    <!-- Dropdown Excel (Com Hora e Sem Hora) -->
+    <div class="dropdown-export-wrap" id="wrap-dropdown-excel">
+      <button class="btn btn-ok btn-icon-only" id="btn-exportar-final" data-tooltip="Exportar Planilha Excel (.xls)" aria-label="Exportar Planilha Excel" type="button" aria-haspopup="true" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      </button>
+      <div class="dropdown-export-menu" id="menu-dropdown-excel">
+        <div class="dropdown-export-header">Exportar Planilha (.xls)</div>
+        <button type="button" class="dropdown-ass-item" id="btn-exp-excel-com-hora">
+          <span class="item-icon">⏰</span>
+          <div>
+            <div style="font-weight:700">Com Horário</div>
+            <div style="font-size:0.7rem;color:#64748b">Planilha completa com hora de registro</div>
+          </div>
+        </button>
+        <button type="button" class="dropdown-ass-item" id="btn-exp-excel-sem-hora">
+          <span class="item-icon">📄</span>
+          <div>
+            <div style="font-weight:700">Sem Horário</div>
+            <div style="font-size:0.7rem;color:#64748b">Planilha simplificada sem coluna de hora</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dropdown Print / PDF (Com Hora e Sem Hora) -->
+    <div class="dropdown-export-wrap" id="wrap-dropdown-print">
+      <button class="btn btn-print btn-icon-only" id="btn-imprimir" data-tooltip="Imprimir Lista de Presença / PDF" aria-label="Imprimir Lista" type="button" aria-haspopup="true" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      </button>
+      <div class="dropdown-export-menu" id="menu-dropdown-print">
+        <div class="dropdown-export-header">Ata Oficial / PDF</div>
+        <button type="button" class="dropdown-ass-item" id="btn-exp-pdf-com-hora">
+          <span class="item-icon">⏰</span>
+          <div>
+            <div style="font-weight:700">Com Horário</div>
+            <div style="font-size:0.7rem;color:#64748b">Ata impressa com coluna de hora</div>
+          </div>
+        </button>
+        <button type="button" class="dropdown-ass-item" id="btn-exp-pdf-sem-hora">
+          <span class="item-icon">📄</span>
+          <div>
+            <div style="font-weight:700">Sem Horário</div>
+            <div style="font-size:0.7rem;color:#64748b">Ata oficial sem coluna de hora</div>
+          </div>
+        </button>
+      </div>
+    </div>
     <button class="btn btn-help btn-icon-only" id="btn-bloquear-sessao" data-tooltip="Bloquear Painel" aria-label="Bloquear">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
     </button>
@@ -2067,9 +2238,27 @@ footer.diretoria-footer {
                 <span class="item-icon">📅</span>
                 <span>Histórico de Assembleias</span>
               </button>
+              <div class="dropdown-ass-divider"></div>
+              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-com-hora" title="Exportar planilha Excel com horários">
+                <span class="item-icon">⏰</span>
+                <span>Baixar Excel (Com Horário)</span>
+              </button>
+              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-sem-hora" title="Exportar planilha Excel sem horários">
+                <span class="item-icon">📄</span>
+                <span>Baixar Excel (Sem Horário)</span>
+              </button>
+              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-com-hora" title="Imprimir / Salvar PDF com horários">
+                <span class="item-icon">🖨️</span>
+                <span>Imprimir Ata (Com Horário)</span>
+              </button>
+              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-sem-hora" title="Imprimir / Salvar PDF sem horários">
+                <span class="item-icon">🖨️</span>
+                <span>Imprimir Ata (Sem Horário)</span>
+              </button>
+              <div class="dropdown-ass-divider"></div>
               <button type="button" class="dropdown-ass-item" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em planilha Excel">
                 <span class="item-icon">⬇</span>
-                <span>Baixar Planilha Excel</span>
+                <span>Baixar Histórico Geral (Excel)</span>
               </button>
               <div class="dropdown-ass-divider"></div>
               <button type="button" class="dropdown-ass-item item-danger" id="btn-excluir-ass" title="Excluir a assembleia e todos os seus registros">
@@ -2255,10 +2444,24 @@ footer.diretoria-footer {
           <span id="tit-tabela-presentes">Planilha Geral de Servidores Presentes (Tempo Real)</span>
         </div>
       </div>
-      <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center">
-        <input type="search" id="busca-presentes" class="search-input" style="flex:1"
+      <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <input type="search" id="busca-presentes" class="search-input" style="flex:1;min-width:200px"
           placeholder="🔍 Buscar por nome, matrícula ou órgão..." autocomplete="off">
         <span class="search-count" id="search-count-presentes"></span>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+          <button type="button" class="btn-quick-exp primary" onclick="exportarCSVAssembleia(assembleiaAtiva, true)" title="Baixar planilha Excel completa COM horário">
+            <span>⬇ Excel com Hora</span>
+          </button>
+          <button type="button" class="btn-quick-exp" onclick="exportarCSVAssembleia(assembleiaAtiva, false)" title="Baixar planilha Excel simplificada SEM horário">
+            <span>⬇ Excel sem Hora</span>
+          </button>
+          <button type="button" class="btn-quick-exp primary" onclick="imprimirAtaAssembleia(true)" title="Imprimir / Salvar PDF da Ata oficial COM horário">
+            <span>🖨️ PDF com Hora</span>
+          </button>
+          <button type="button" class="btn-quick-exp" onclick="imprimirAtaAssembleia(false)" title="Imprimir / Salvar PDF da Ata oficial SEM horário">
+            <span>🖨️ PDF sem Hora</span>
+          </button>
+        </div>
       </div>
       <div class="tbl-wrap">
         <table id="tbl-presentes">
@@ -2270,7 +2473,10 @@ footer.diretoria-footer {
             <th>Órgão de Atuação</th>
             <th style="width:90px">Fileira</th>
             <th style="width:130px">Conferente</th>
-            <th style="width:75px">Hora</th>
+            <th style="width:105px;text-align:center">
+              <span style="vertical-align:middle">Hora</span>
+              <button type="button" id="btn-toggle-all-horas" class="btn-th-eye" title="Clique para mostrar/ocultar todos os horários da lista" onclick="window.toggleAllHoras(event)">👁️</button>
+            </th>
             <th style="width:80px">Origem</th>
             <th style="min-width:180px">Local / Endereço</th>
             <th style="width:75px;text-align:center">Mapa</th>
@@ -2297,7 +2503,7 @@ footer.diretoria-footer {
             <th>Motivo da Retenção</th>
             <th>Arquivo de Origem</th>
             <th>Conferente</th>
-            <th style="width:75px">Hora</th>
+            <th style="width:105px;text-align:center">Hora</th>
           </tr></thead>
           <tbody id="tbody-revisar">
             <tr><td colspan="7" class="info-vazia">Nenhuma ocorrência ou irregularidade detectada.</td></tr>
@@ -2920,13 +3126,17 @@ function excluirAssembleia(id){
   mostrarOk('Assembleia excluída.');
 }
 
-function exportarCSVAssembleia(assObj){
+function exportarCSVAssembleia(assObj, comHora){
+  if(comHora === undefined) comHora = true;
   var lista = (assObj.presentes || []).slice().sort(function(a,b){return a.nome.localeCompare(b.nome,'pt-BR');});
   if(!lista.length){ alert('Esta assembleia ainda não possui presenças registradas.'); return; }
 
   var nomeSeguro = (assObj.nome || 'Assembleia').replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
   var dataRef = formatarDataBR(assObj.data);
   var hoje = new Date().toLocaleDateString('pt-BR');
+  var sufHora = comHora ? '_com_hora' : '_sem_hora';
+  var titComplemento = comHora ? '' : ' (SEM HORÁRIO)';
+  var mergeAcrossVal = comHora ? '11' : '10';
 
   var xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<?mso-application progid="Excel.Sheet"?>\n' +
@@ -2999,15 +3209,16 @@ function exportarCSVAssembleia(assObj){
     ' <Column ss:Width="180"/>\n' +
     ' <Column ss:Width="80"/>\n' +
     ' <Column ss:Width="140"/>\n' +
-    ' <Column ss:Width="70"/>\n' +
+    (comHora ? ' <Column ss:Width="70"/>\n' : '') +
     ' <Column ss:Width="90"/>\n' +
-    ' <Column ss:Width="130"/>\n' +
+    ' <Column ss:Width="220"/>\n' +
+    ' <Column ss:Width="140"/>\n' +
     ' <Column ss:Width="200"/>\n' +
     ' <Row ss:Height="34">\n' +
-    '  <Cell ss:MergeAcross="11" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="' + mergeAcrossVal + '" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + titComplemento + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="22">\n' +
-    '  <Cell ss:MergeAcross="11" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="' + mergeAcrossVal + '" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes' + (comHora ? '' : ' • Relatório sem Horário') + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="10"/>\n' +
     ' <Row ss:Height="24">\n' +
@@ -3018,7 +3229,7 @@ function exportarCSVAssembleia(assObj){
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Secretaria / Órgão</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Fileira</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Conferente</Data></Cell>\n' +
-    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' +
+    (comHora ? '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' : '') +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Validação</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Endereço de Coleta</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Coordenadas (GPS)</Data></Cell>\n' +
@@ -3042,7 +3253,7 @@ function exportarCSVAssembleia(assObj){
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.orgao || '—') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.fileira || '—') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.conferente || '') + '</Data></Cell>\n' +
-      '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' +
+      (comHora ? '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' : '') +
       '  <Cell ss:StyleID="' + sOrig + '"><Data ss:Type="String">' + txtOrig + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(txtEnd) + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(txtGeo) + '</Data></Cell>\n' +
@@ -3064,10 +3275,10 @@ function exportarCSVAssembleia(assObj){
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'presenca_' + nomeSeguro + '_' + (assObj.data || 'data') + '.xls';
+  a.download = 'presenca_' + nomeSeguro + '_' + (assObj.data || 'data') + sufHora + '.xls';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  mostrarOk('Planilha Excel formatada baixada com sucesso.');
+  mostrarOk('Planilha Excel (' + (comHora ? 'com horários' : 'sem horários') + ') baixada com sucesso.');
 }
 
 function renderizarModalHistorico(termoBusca){
@@ -3401,11 +3612,17 @@ function atualizarUI(){
   if(!revisar.length){
     tbR.innerHTML='<tr><td colspan="7" class="info-vazia">Nenhum registro a revisar. ✓</td></tr>';
   } else {
-    tbR.innerHTML=revisar.map(function(r){
+    tbR.innerHTML=revisar.map(function(r, idx){
+      var chaveRev = 'rev_' + (r.matricula || idx);
+      var horaRev = esc(r.hora || '—');
+      var estaRevRevelado = !!(window._horasReveladasGlobal || (window._horasReveladasSet && window._horasReveladasSet.has(chaveRev)));
+      var horaRevExibida = estaRevRevelado ? horaRev : '••••••';
+      var classeRev = estaRevRevelado ? ' revelado' : '';
+      var horaBtnRev = '<button type="button" class="hora-toggle-btn' + classeRev + '" onclick="window.toggleHoraRow(this, \'' + esc(chaveRev) + '\')" data-hora="' + horaRev + '" title="Clique para ver/ocultar o horário"><span class="hora-masked-txt">' + horaRevExibida + '</span><span class="hora-eye-ico">👁️</span></button>';
       return'<tr><td class="num">'+esc(r.matricula)+'</td><td>'+esc(r.nome)+'</td>'+
         '<td>'+esc(r.orgao||'—')+'</td>'+
         '<td><span class="rev-motivo">'+esc(r.motivo)+'</span></td>'+
-        '<td>'+esc(r.arquivo)+'</td><td>'+esc(r.conferente)+'</td><td class="num">'+esc(r.hora)+'</td></tr>';
+        '<td>'+esc(r.arquivo)+'</td><td>'+esc(r.conferente)+'</td><td class="num" style="text-align:center">'+horaBtnRev+'</td></tr>';
     }).join('');
   }
   /* tabela conferentes */
@@ -3703,6 +3920,47 @@ function resolverEnderecoNoPainel(p, lat, lng){
     });
 }
 
+/* ---- Controle de Visualização do Horário (Olhinho) ---- */
+window._horasReveladasGlobal = false;
+window._horasReveladasSet = new Set();
+
+window.toggleHoraRow = function(btn, chave){
+  var txtSpan = btn.querySelector('.hora-masked-txt');
+  var horaReal = btn.getAttribute('data-hora') || '—';
+  var isRev = btn.classList.contains('revelado');
+  if(isRev){
+    btn.classList.remove('revelado');
+    if(txtSpan) txtSpan.textContent = '••••••';
+    if(chave) window._horasReveladasSet.delete(chave);
+    btn.title = 'Clique no olhinho para ver o horário';
+  } else {
+    btn.classList.add('revelado');
+    if(txtSpan) txtSpan.textContent = horaReal;
+    if(chave) window._horasReveladasSet.add(chave);
+    btn.title = 'Clique no olhinho para ocultar o horário';
+  }
+};
+
+window.toggleAllHoras = function(e){
+  if(e) e.stopPropagation();
+  window._horasReveladasGlobal = !window._horasReveladasGlobal;
+  window._horasReveladasSet.clear();
+  var btns = document.querySelectorAll('.hora-toggle-btn');
+  btns.forEach(function(b){
+    var txtSpan = b.querySelector('.hora-masked-txt');
+    var horaReal = b.getAttribute('data-hora') || '—';
+    if(window._horasReveladasGlobal){
+      b.classList.add('revelado');
+      if(txtSpan) txtSpan.textContent = horaReal;
+      b.title = 'Clique no olhinho para ocultar o horário';
+    } else {
+      b.classList.remove('revelado');
+      if(txtSpan) txtSpan.textContent = '••••••';
+      b.title = 'Clique no olhinho para ver o horário';
+    }
+  });
+};
+
 /* ---- Filtro de Busca na Tabela de Presentes ---- */
 function filtrarPresentes(termoBusca){
   var busca = document.getElementById('busca-presentes');
@@ -3744,6 +4002,17 @@ function filtrarPresentes(termoBusca){
       ? '<span class="badge-manual-orig">Manual</span>'
       : '<span class="badge-qr-orig">QR</span>';
     var cpfFormatado = mascararCPF(p.cpf);
+
+    /* Coluna Hora com "olhinho" (oculta por padrão, clique para ver) */
+    var chavePres = (p.matricula || '') + '_' + (p.cpf || '') + '_' + i;
+    var horaOriginal = (p.hora != null && p.hora !== '') ? String(p.hora).trim() : '—';
+    var estaRevelado = !!(window._horasReveladasGlobal || (window._horasReveladasSet && window._horasReveladasSet.has(chavePres)));
+    var horaExibida = estaRevelado ? esc(horaOriginal) : '••••••';
+    var classeRev = estaRevelado ? ' revelado' : '';
+    var horaCellHtml = '<button type="button" class="hora-toggle-btn' + classeRev + '" onclick="window.toggleHoraRow(this, \'' + esc(chavePres) + '\')" data-hora="' + esc(horaOriginal) + '" title="Clique no olhinho para ' + (estaRevelado ? 'ocultar' : 'ver') + ' o horário">' +
+      '<span class="hora-masked-txt">' + horaExibida + '</span>' +
+      '<span class="hora-eye-ico">👁️</span>' +
+    '</button>';
 
     /* Localização e Endereço: exibe endereço detalhado */
     var endCellHtml;
@@ -3792,7 +4061,7 @@ function filtrarPresentes(termoBusca){
       '<td>' + esc(p.orgao || '—') + '</td>' +
       '<td class="num">' + esc(p.fileira) + '</td>' +
       '<td>' + esc(p.conferente) + '</td>' +
-      '<td class="num">' + esc(p.hora) + '</td>' +
+      '<td class="num" style="text-align:center">' + horaCellHtml + '</td>' +
       '<td>' + origBadge + '</td>' +
       '<td>' + endCellHtml + '</td>' +
       '<td style="text-align:center">' + mapaCellHtml + '</td>' +
@@ -3960,14 +4229,9 @@ dropZone.addEventListener('drop',function(e){
   var files=e.dataTransfer.files;for(var i=0;i<files.length;i++)carregarArquivo(files[i]);
 });
 
-/* ---- Exportar CSV Final da Assembleia Ativa ---- */
-document.getElementById('btn-exportar-final').addEventListener('click',function(){
-  if(!presentes.length){alert('Nenhum dado para exportar na assembleia atual.');return;}
-  exportarCSVAssembleia(assembleiaAtiva);
-});
-
-/* ---- Imprimir Lista Oficial da Assembleia Ativa (PDF Moderno com Logo e Cabeçalho) ---- */
-document.getElementById('btn-imprimir').addEventListener('click', function(){
+/* ---- Relatório de Impressão / PDF Oficial (Com Hora e Sem Hora) ---- */
+function imprimirAtaAssembleia(comHora){
+  if(comHora === undefined) comHora = true;
   var presOrdenados = presentes.slice().sort(function(a,b){ return a.nome.localeCompare(b.nome, 'pt-BR'); });
   var nomeAss = assembleiaAtiva ? assembleiaAtiva.nome : 'Assembleia Geral Ordinária';
   var dataAss = assembleiaAtiva ? formatarDataBR(assembleiaAtiva.data) : formatarDataBR(new Date().toISOString().slice(0,10));
@@ -3976,11 +4240,17 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
   var totalQr = presentes.filter(function(p){ return p.origem === 'qr'; }).length;
   var totalMan = presentes.filter(function(p){ return p.origem === 'manual'; }).length;
   var dataEmissao = new Date().toLocaleString('pt-BR');
+  var titDoc = comHora ? ('Ata de Presença — ' + esc(nomeAss)) : ('Ata de Presença (Sem Horário) — ' + esc(nomeAss));
+  var subtitDoc = comHora ? 'Documento de Validação Estatutária' : 'Documento de Validação Estatutária (Sem Horário)';
 
   var janela = window.open('', '_blank', 'width=960,height=750');
+  if(!janela){
+    alert('Por favor, permita pop-ups no seu navegador para visualizar a impressão / PDF.');
+    return;
+  }
   
   var html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">' +
-    '<title>Ata de Presença — ' + esc(nomeAss) + '</title>' +
+    '<title>' + titDoc + '</title>' +
     '<style>' +
     '@page { size: A4 portrait; margin: 14mm 12mm 16mm 12mm; }' +
     '* { box-sizing: border-box; margin: 0; padding: 0; }' +
@@ -4031,7 +4301,7 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
       '</div>' +
       '<div class="doc-badge-auth">' +
         '<strong>LISTA OFICIAL DE QUÓRUM</strong>' +
-        '<span>Documento de Validação Estatutária</span>' +
+        '<span>' + subtitDoc + '</span>' +
       '</div>' +
     '</div>' +
 
@@ -4060,14 +4330,14 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
           '<th>Órgão / Lotação</th>' +
           '<th style="width:160px">Local da Coleta</th>' +
           '<th class="center" style="width:55px">Fileira</th>' +
-          '<th class="center" style="width:55px">Hora</th>' +
+          (comHora ? '<th class="center" style="width:55px">Hora</th>' : '') +
           '<th class="center" style="width:65px">Validação</th>' +
         '</tr>' +
       '</thead>' +
       '<tbody>';
 
   if (!presOrdenados.length) {
-    html += '<tr><td colspan="8" style="text-align:center;padding:18px;color:#64748b;font-style:italic">Nenhum registro de presença cadastrado para esta assembleia.</td></tr>';
+    html += '<tr><td colspan="' + (comHora ? 8 : 7) + '" style="text-align:center;padding:18px;color:#64748b;font-style:italic">Nenhum registro de presença cadastrado para esta assembleia.</td></tr>';
   } else {
     html += presOrdenados.map(function(p, i){
       var isQr = (p.origem === 'qr');
@@ -4080,7 +4350,7 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
         '<td>' + esc(p.orgao || '—') + '</td>' +
         '<td style="font-size:7.5pt;line-height:1.2">' + localColeta + '</td>' +
         '<td class="num center">' + esc(p.fileira || '—') + '</td>' +
-        '<td class="num center">' + esc(p.hora || '—') + '</td>' +
+        (comHora ? ('<td class="num center">' + esc(p.hora || '—') + '</td>') : '') +
         '<td class="center">' + tagHtml + '</td>' +
       '</tr>';
     }).join('');
@@ -4113,7 +4383,7 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
     /* Rodapé com Direitos e Hora de Emissão */
     '<div class="doc-footer">' +
       '<span>SINDSEPS — Sindicato dos Servidores da Prefeitura do Salvador • CNPJ Oficial</span>' +
-      '<span>Relatório emitido em ' + esc(dataEmissao) + ' • Sistema de Quórum Sindseps</span>' +
+      '<span>Relatório emitido em ' + esc(dataEmissao) + (comHora ? ' (com horários)' : ' (sem horários)') + ' • Sistema de Quórum Sindseps</span>' +
     '</div>' +
 
     '</body></html>';
@@ -4122,7 +4392,109 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
   janela.document.close();
   janela.focus();
   setTimeout(function(){ janela.print(); }, 400);
+}
+window.imprimirAtaAssembleia = imprimirAtaAssembleia;
+
+/* ---- Dropdowns de Exportação e Eventos dos Relatórios ---- */
+var wrapExcel = document.getElementById('wrap-dropdown-excel');
+var btnExcelToggle = document.getElementById('btn-exportar-final');
+var wrapPrint = document.getElementById('wrap-dropdown-print');
+var btnPrintToggle = document.getElementById('btn-imprimir');
+
+if(btnExcelToggle && wrapExcel){
+  btnExcelToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(wrapPrint) wrapPrint.classList.remove('open');
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    wrapExcel.classList.toggle('open');
+  });
+}
+
+if(btnPrintToggle && wrapPrint){
+  btnPrintToggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    if(wrapExcel) wrapExcel.classList.remove('open');
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    wrapPrint.classList.toggle('open');
+  });
+}
+
+document.addEventListener('click', function(e){
+  if(wrapExcel && !wrapExcel.contains(e.target)) wrapExcel.classList.remove('open');
+  if(wrapPrint && !wrapPrint.contains(e.target)) wrapPrint.classList.remove('open');
 });
+
+// Botões Dropdown Excel
+var btnExpComHora = document.getElementById('btn-exp-excel-com-hora');
+if(btnExpComHora){
+  btnExpComHora.addEventListener('click', function(){
+    if(wrapExcel) wrapExcel.classList.remove('open');
+    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
+    exportarCSVAssembleia(assembleiaAtiva, true);
+  });
+}
+var btnExpSemHora = document.getElementById('btn-exp-excel-sem-hora');
+if(btnExpSemHora){
+  btnExpSemHora.addEventListener('click', function(){
+    if(wrapExcel) wrapExcel.classList.remove('open');
+    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
+    exportarCSVAssembleia(assembleiaAtiva, false);
+  });
+}
+
+// Botões Dropdown Print / PDF
+var btnPrintComHora = document.getElementById('btn-exp-pdf-com-hora');
+if(btnPrintComHora){
+  btnPrintComHora.addEventListener('click', function(){
+    if(wrapPrint) wrapPrint.classList.remove('open');
+    imprimirAtaAssembleia(true);
+  });
+}
+var btnPrintSemHora = document.getElementById('btn-exp-pdf-sem-hora');
+if(btnPrintSemHora){
+  btnPrintSemHora.addEventListener('click', function(){
+    if(wrapPrint) wrapPrint.classList.remove('open');
+    imprimirAtaAssembleia(false);
+  });
+}
+
+// Botões Menu Assembleia (se presentes)
+var btnAssExpComHora = document.getElementById('btn-ass-menu-excel-com-hora');
+if(btnAssExpComHora){
+  btnAssExpComHora.addEventListener('click', function(){
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
+    exportarCSVAssembleia(assembleiaAtiva, true);
+  });
+}
+var btnAssExpSemHora = document.getElementById('btn-ass-menu-excel-sem-hora');
+if(btnAssExpSemHora){
+  btnAssExpSemHora.addEventListener('click', function(){
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
+    exportarCSVAssembleia(assembleiaAtiva, false);
+  });
+}
+var btnAssPdfComHora = document.getElementById('btn-ass-menu-pdf-com-hora');
+if(btnAssPdfComHora){
+  btnAssPdfComHora.addEventListener('click', function(){
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    imprimirAtaAssembleia(true);
+  });
+}
+var btnAssPdfSemHora = document.getElementById('btn-ass-menu-pdf-sem-hora');
+if(btnAssPdfSemHora){
+  btnAssPdfSemHora.addEventListener('click', function(){
+    var wAss = document.getElementById('dropdown-ass-wrapper');
+    if(wAss) wAss.classList.remove('open');
+    imprimirAtaAssembleia(false);
+  });
+}
 
 /* ---- Limpar registros da assembleia ativa (se botão existir) ---- */
 var btnLimpar = document.getElementById('btn-limpar');
