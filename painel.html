@@ -2273,10 +2273,11 @@ footer.diretoria-footer {
             <th style="width:75px">Hora</th>
             <th style="width:80px">Origem</th>
             <th style="min-width:180px">Local / Endereço</th>
+            <th style="width:75px;text-align:center">Mapa</th>
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
-            <tr><td colspan="11" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
+            <tr><td colspan="12" class="info-vazia">Aguardando leituras dos conferentes em tempo real.</td></tr>
           </tbody>
         </table>
       </div>
@@ -3730,7 +3731,7 @@ function filtrarPresentes(termoBusca){
   var tbP = document.getElementById('tbody-presentes');
   if(!tbP) return;
   if(!filtrados.length){
-    tbP.innerHTML = '<tr><td colspan="11" class="info-vazia">' +
+    tbP.innerHTML = '<tr><td colspan="12" class="info-vazia">' +
       (termo ? 'Nenhum resultado para "' + esc(termo) + '".' : 'Nenhum presente registrado.') +
       '</td></tr>';
     return;
@@ -3744,8 +3745,8 @@ function filtrarPresentes(termoBusca){
       : '<span class="badge-qr-orig">QR</span>';
     var cpfFormatado = mascararCPF(p.cpf);
 
-    /* Localização e Endereço: exibe endereço detalhado + link do Google Maps */
-    var geoCellHtml;
+    /* Localização e Endereço: exibe endereço detalhado */
+    var endCellHtml;
     var latVal = (p.lat != null && p.lat !== '') ? parseFloat(p.lat) : null;
     var lngVal = (p.lng != null && p.lng !== '') ? parseFloat(p.lng) : null;
     var temCoord = (latVal !== null && lngVal !== null && !isNaN(latVal) && !isNaN(lngVal));
@@ -3757,30 +3758,30 @@ function filtrarPresentes(termoBusca){
       resolverEnderecoNoPainel(p, latVal, lngVal);
     }
 
+    if(endTxt && !ehGenerico){
+      var partesEnd = endTxt.split(',');
+      var linha1 = (partesEnd[0] || endTxt).trim();
+      var linha2 = partesEnd.slice(1).join(',').trim();
+      endCellHtml = '<div class="geo-cell">' +
+        '<span class="geo-rua-txt" title="' + esc(endTxt) + '">' + esc(linha1) + '</span>' +
+        (linha2 ? '<span class="geo-bairro-txt">' + esc(linha2) + '</span>' : '') +
+        '</div>';
+    } else if(endTxt) {
+      endCellHtml = '<span class="geo-rua-txt">' + esc(endTxt) + '</span>';
+    } else if(temCoord) {
+      endCellHtml = '<span class="geo-coord-txt">' + latVal.toFixed(4) + ', ' + lngVal.toFixed(4) + '</span>';
+    } else {
+      endCellHtml = '<span class="btn-geo-mapa-na" title="Localização não informada">—</span>';
+    }
+
+    /* Coluna Mapa (dedicada) */
+    var mapaCellHtml;
     if(temCoord){
       var mapsUrl = 'https://www.google.com/maps?q=' + latVal + ',' + lngVal;
       var accStr = p.geo_acc ? ' (precisão ±' + p.geo_acc + 'm)' : '';
-      var btnMap = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Mapa</a>';
-      if(endTxt && !ehGenerico){
-        // Dividir em logradouro e complemento (bairro/cidade) para melhor legibilidade
-        var partesEnd = endTxt.split(',');
-        var linha1 = (partesEnd[0] || endTxt).trim();
-        var linha2 = partesEnd.slice(1).join(',').trim();
-        geoCellHtml = '<div class="geo-cell">' +
-          '<span class="geo-rua-txt" title="' + esc(endTxt) + accStr + '">' + esc(linha1) + '</span>' +
-          (linha2 ? '<span class="geo-bairro-txt">' + esc(linha2) + '</span>' : '') +
-          '<div>' + btnMap + '</div>' +
-          '</div>';
-      } else {
-        geoCellHtml = '<div class="geo-cell">' +
-          '<span class="geo-coord-txt">' + latVal.toFixed(4) + ', ' + lngVal.toFixed(4) + '</span>' +
-          '<div>' + btnMap + '</div>' +
-          '</div>';
-      }
-    } else if(endTxt) {
-      geoCellHtml = '<span class="geo-rua-txt">' + esc(endTxt) + '</span>';
+      mapaCellHtml = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Mapa</a>';
     } else {
-      geoCellHtml = '<span class="btn-geo-mapa-na" title="Localização não capturada pelo participante">—</span>';
+      mapaCellHtml = '<span class="btn-geo-mapa-na" title="Sem coordenadas de GPS">—</span>';
     }
 
     return '<tr>' +
@@ -3793,7 +3794,8 @@ function filtrarPresentes(termoBusca){
       '<td>' + esc(p.conferente) + '</td>' +
       '<td class="num">' + esc(p.hora) + '</td>' +
       '<td>' + origBadge + '</td>' +
-      '<td>' + geoCellHtml + '</td>' +
+      '<td>' + endCellHtml + '</td>' +
+      '<td style="text-align:center">' + mapaCellHtml + '</td>' +
       '<td>' + obsCell + '</td>' +
     '</tr>';
   }).join('');
