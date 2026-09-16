@@ -1285,20 +1285,10 @@ main {
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
   margin-bottom: 28px;
 }
-/* Marca d'água da logo no fundo da planilha */
+/* Fundo da planilha limpo sem marca d'água */
 .tbl-wrap::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 240px;
-  height: 120px;
-  background: url('logo-sindseps.png') no-repeat center center;
-  background-size: contain;
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 1;
+  content: none;
+  display: none;
 }
 
 table {
@@ -1724,42 +1714,9 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   margin-bottom: 4px;
 }
 
-/* Botões Rápidos de Exportação na Barra da Tabela */
-.btn-quick-exp {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: #334155;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.btn-quick-exp:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-  color: #0f172a;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-}
-.btn-quick-exp.primary {
-  background: #eff6ff;
-  border-color: #bfdbfe;
-  color: #1d4ed8;
-}
-.btn-quick-exp.primary:hover {
-  background: #dbeafe;
-  border-color: #93c5fd;
-  color: #1e40af;
-}
 
-/* Barra de busca na tabela de presentes */
+
+/* Barra de busca na tabela de presentes (fundo transparente) */
 .search-bar-wrap {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 10px; flex-wrap: wrap;
@@ -1769,14 +1726,55 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   padding: 8px 14px; font-size: 0.84rem; font-family: inherit;
   border: 1.5px solid var(--gov-slate-300); border-radius: 6px;
   outline: none; transition: border-color 0.18s;
-  background: #fff; color: var(--gov-slate-900);
+  background: transparent !important; color: var(--gov-slate-900);
 }
 .search-input:focus { border-color: var(--gov-blue-600); }
 .search-count {
   font-size: 0.78rem; color: var(--gov-slate-500);
   font-weight: 600; white-space: nowrap;
-  background: var(--gov-slate-100); padding: 6px 12px;
+  background: transparent; padding: 6px 12px;
   border-radius: 5px; border: 1px solid var(--gov-slate-200);
+}
+
+/* Caixa de Seleção de Relatórios no Topo */
+.header-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.select-relatorio-topo {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #1e293b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+  color: #f8fafc;
+  border: 1.5px solid #334155;
+  border-radius: 6px;
+  padding: 8px 32px 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.select-relatorio-topo:hover {
+  background-color: #334155;
+  border-color: #60a5fa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.select-relatorio-topo:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+  border-color: #3b82f6;
+}
+.select-relatorio-topo option {
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 8px;
 }
 
 /* Rodapé Institucional da Mesa Diretora */
@@ -1886,52 +1884,15 @@ footer.diretoria-footer {
     <button class="btn btn-help btn-icon-only" id="btn-abrir-ajuda" data-tooltip="Como Funciona (Ajuda)" aria-label="Como Funciona">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
     </button>
-    <!-- Dropdown Excel (Com Hora e Sem Hora) -->
-    <div class="dropdown-export-wrap" id="wrap-dropdown-excel">
-      <button class="btn btn-ok btn-icon-only" id="btn-exportar-final" data-tooltip="Exportar Planilha Excel (.xls)" aria-label="Exportar Planilha Excel" type="button" aria-haspopup="true" aria-expanded="false">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      </button>
-      <div class="dropdown-export-menu" id="menu-dropdown-excel">
-        <div class="dropdown-export-header">Exportar Planilha (.xls)</div>
-        <button type="button" class="dropdown-ass-item" id="btn-exp-excel-com-hora">
-          <span class="item-icon">⏰</span>
-          <div>
-            <div style="font-weight:700">Com Horário</div>
-            <div style="font-size:0.7rem;color:#64748b">Planilha completa com hora de registro</div>
-          </div>
-        </button>
-        <button type="button" class="dropdown-ass-item" id="btn-exp-excel-sem-hora">
-          <span class="item-icon">📄</span>
-          <div>
-            <div style="font-weight:700">Sem Horário</div>
-            <div style="font-size:0.7rem;color:#64748b">Planilha simplificada sem coluna de hora</div>
-          </div>
-        </button>
-      </div>
-    </div>
-
-    <!-- Dropdown Print / PDF (Com Hora e Sem Hora) -->
-    <div class="dropdown-export-wrap" id="wrap-dropdown-print">
-      <button class="btn btn-print btn-icon-only" id="btn-imprimir" data-tooltip="Imprimir Lista de Presença / PDF" aria-label="Imprimir Lista" type="button" aria-haspopup="true" aria-expanded="false">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-      </button>
-      <div class="dropdown-export-menu" id="menu-dropdown-print">
-        <div class="dropdown-export-header">Ata Oficial / PDF</div>
-        <button type="button" class="dropdown-ass-item" id="btn-exp-pdf-com-hora">
-          <span class="item-icon">⏰</span>
-          <div>
-            <div style="font-weight:700">Com Horário</div>
-            <div style="font-size:0.7rem;color:#64748b">Ata impressa com coluna de hora</div>
-          </div>
-        </button>
-        <button type="button" class="dropdown-ass-item" id="btn-exp-pdf-sem-hora">
-          <span class="item-icon">📄</span>
-          <div>
-            <div style="font-weight:700">Sem Horário</div>
-            <div style="font-size:0.7rem;color:#64748b">Ata oficial sem coluna de hora</div>
-          </div>
-        </button>
-      </div>
+    <!-- Caixa de Seleção de Relatórios na Parte Superior -->
+    <div class="header-select-wrap">
+      <select id="sel-relatorio-topo" class="select-relatorio-topo" title="Selecione uma opção para exportar planilha Excel ou imprimir ata oficial" aria-label="Exportar Relatório">
+        <option value="" disabled selected>📊 Relatórios (Excel / PDF)</option>
+        <option value="excel-com-hora">⬇ Excel (Com Horário)</option>
+        <option value="excel-sem-hora">⬇ Excel (Sem Horário)</option>
+        <option value="pdf-com-hora">🖨️ PDF / Ata (Com Horário)</option>
+        <option value="pdf-sem-hora">🖨️ PDF / Ata (Sem Horário)</option>
+      </select>
     </div>
     <button class="btn btn-help btn-icon-only" id="btn-bloquear-sessao" data-tooltip="Bloquear Painel" aria-label="Bloquear">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -2444,24 +2405,10 @@ footer.diretoria-footer {
           <span id="tit-tabela-presentes">Planilha Geral de Servidores Presentes (Tempo Real)</span>
         </div>
       </div>
-      <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <input type="search" id="busca-presentes" class="search-input" style="flex:1;min-width:200px"
+      <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center">
+        <input type="search" id="busca-presentes" class="search-input" style="flex:1;background:transparent"
           placeholder="🔍 Buscar por nome, matrícula ou órgão..." autocomplete="off">
         <span class="search-count" id="search-count-presentes"></span>
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <button type="button" class="btn-quick-exp primary" onclick="exportarCSVAssembleia(assembleiaAtiva, true)" title="Baixar planilha Excel completa COM horário">
-            <span>⬇ Excel com Hora</span>
-          </button>
-          <button type="button" class="btn-quick-exp" onclick="exportarCSVAssembleia(assembleiaAtiva, false)" title="Baixar planilha Excel simplificada SEM horário">
-            <span>⬇ Excel sem Hora</span>
-          </button>
-          <button type="button" class="btn-quick-exp primary" onclick="imprimirAtaAssembleia(true)" title="Imprimir / Salvar PDF da Ata oficial COM horário">
-            <span>🖨️ PDF com Hora</span>
-          </button>
-          <button type="button" class="btn-quick-exp" onclick="imprimirAtaAssembleia(false)" title="Imprimir / Salvar PDF da Ata oficial SEM horário">
-            <span>🖨️ PDF sem Hora</span>
-          </button>
-        </div>
       </div>
       <div class="tbl-wrap">
         <table id="tbl-presentes">
@@ -4395,68 +4342,28 @@ function imprimirAtaAssembleia(comHora){
 }
 window.imprimirAtaAssembleia = imprimirAtaAssembleia;
 
-/* ---- Dropdowns de Exportação e Eventos dos Relatórios ---- */
-var wrapExcel = document.getElementById('wrap-dropdown-excel');
-var btnExcelToggle = document.getElementById('btn-exportar-final');
-var wrapPrint = document.getElementById('wrap-dropdown-print');
-var btnPrintToggle = document.getElementById('btn-imprimir');
-
-if(btnExcelToggle && wrapExcel){
-  btnExcelToggle.addEventListener('click', function(e){
-    e.stopPropagation();
-    if(wrapPrint) wrapPrint.classList.remove('open');
-    var wAss = document.getElementById('dropdown-ass-wrapper');
-    if(wAss) wAss.classList.remove('open');
-    wrapExcel.classList.toggle('open');
-  });
-}
-
-if(btnPrintToggle && wrapPrint){
-  btnPrintToggle.addEventListener('click', function(e){
-    e.stopPropagation();
-    if(wrapExcel) wrapExcel.classList.remove('open');
-    var wAss = document.getElementById('dropdown-ass-wrapper');
-    if(wAss) wAss.classList.remove('open');
-    wrapPrint.classList.toggle('open');
-  });
-}
-
-document.addEventListener('click', function(e){
-  if(wrapExcel && !wrapExcel.contains(e.target)) wrapExcel.classList.remove('open');
-  if(wrapPrint && !wrapPrint.contains(e.target)) wrapPrint.classList.remove('open');
-});
-
-// Botões Dropdown Excel
-var btnExpComHora = document.getElementById('btn-exp-excel-com-hora');
-if(btnExpComHora){
-  btnExpComHora.addEventListener('click', function(){
-    if(wrapExcel) wrapExcel.classList.remove('open');
-    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
-    exportarCSVAssembleia(assembleiaAtiva, true);
-  });
-}
-var btnExpSemHora = document.getElementById('btn-exp-excel-sem-hora');
-if(btnExpSemHora){
-  btnExpSemHora.addEventListener('click', function(){
-    if(wrapExcel) wrapExcel.classList.remove('open');
-    if(!presentes.length){ alert('Nenhum dado para exportar na assembleia atual.'); return; }
-    exportarCSVAssembleia(assembleiaAtiva, false);
-  });
-}
-
-// Botões Dropdown Print / PDF
-var btnPrintComHora = document.getElementById('btn-exp-pdf-com-hora');
-if(btnPrintComHora){
-  btnPrintComHora.addEventListener('click', function(){
-    if(wrapPrint) wrapPrint.classList.remove('open');
-    imprimirAtaAssembleia(true);
-  });
-}
-var btnPrintSemHora = document.getElementById('btn-exp-pdf-sem-hora');
-if(btnPrintSemHora){
-  btnPrintSemHora.addEventListener('click', function(){
-    if(wrapPrint) wrapPrint.classList.remove('open');
-    imprimirAtaAssembleia(false);
+/* ---- Caixa de Seleção de Relatórios no Topo ---- */
+var selRelTopo = document.getElementById('sel-relatorio-topo');
+if(selRelTopo){
+  selRelTopo.addEventListener('change', function(){
+    var val = this.value;
+    if(!val) return;
+    if(!presentes.length){
+      alert('Nenhum dado para exportar na assembleia atual.');
+      this.selectedIndex = 0;
+      return;
+    }
+    if(val === 'excel-com-hora'){
+      exportarCSVAssembleia(assembleiaAtiva, true);
+    } else if(val === 'excel-sem-hora'){
+      exportarCSVAssembleia(assembleiaAtiva, false);
+    } else if(val === 'pdf-com-hora'){
+      imprimirAtaAssembleia(true);
+    } else if(val === 'pdf-sem-hora'){
+      imprimirAtaAssembleia(false);
+    }
+    // Reseta para a opção inicial para permitir novas seleções do mesmo relatório
+    this.selectedIndex = 0;
   });
 }
 
