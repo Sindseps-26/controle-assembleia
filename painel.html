@@ -1703,28 +1703,57 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   transform: scale(1.06);
 }
 
-/* Caixa de Seleção de Relatórios no Cabeçalho Superior */
+/* Caixa de Seleção de Relatórios no Cabeçalho Superior (Apenas Símbolo) */
 .header-select-wrap {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
+.header-select-wrap::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  border: 1px solid #334155;
+  z-index: 1000;
+}
+.header-select-wrap:hover::after {
+  opacity: 1;
+  visibility: visible;
+  bottom: -38px;
+}
 .select-relatorio-topo {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: #1e293b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+  height: 38px;
+  width: 50px;
+  background: #1e293b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 6px center;
   color: #f8fafc;
   border: 1.5px solid #334155;
-  border-radius: 6px;
-  padding: 7px 30px 7px 11px;
-  font-size: 0.82rem;
-  font-weight: 700;
+  border-radius: 8px;
+  padding: 0 16px 0 8px;
+  font-size: 1.15rem;
   font-family: inherit;
   cursor: pointer;
   transition: all 0.18s ease;
-  line-height: 1.2;
+  line-height: 36px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  text-align: center;
+  text-align-last: center;
 }
 .select-relatorio-topo:hover {
   background-color: #334155;
@@ -1741,42 +1770,8 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   color: #0f172a;
   font-size: 0.84rem;
   font-weight: 600;
-  padding: 8px;
-}
-
-/* Caixa de Seleção de Relatórios no Topo da Tabela de Presentes */
-.select-relatorio-tabela {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
-  color: #1d4ed8;
-  border: 1.5px solid #3b82f6;
-  border-radius: 6px;
-  padding: 7px 32px 7px 12px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  line-height: 1.2;
-  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.12);
-}
-.select-relatorio-tabela:hover {
-  background-color: #eff6ff;
-  border-color: #1d4ed8;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
-}
-.select-relatorio-tabela:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-}
-.select-relatorio-tabela option {
-  background: #ffffff;
-  color: #0f172a;
-  font-size: 0.84rem;
-  font-weight: 600;
-  padding: 8px;
+  padding: 8px 12px;
+  text-align: left;
 }
 
 /* Barra de busca na tabela de presentes */
@@ -1906,10 +1901,10 @@ footer.diretoria-footer {
     <button class="btn btn-help btn-icon-only" id="btn-abrir-ajuda" data-tooltip="Como Funciona (Ajuda)" aria-label="Como Funciona">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
     </button>
-    <!-- Caixa de Seleção de Relatórios no Cabeçalho Superior -->
-    <div class="header-select-wrap">
-      <select id="sel-relatorio-topo" class="select-relatorio-topo" title="Selecione um relatório para exportar ou imprimir" aria-label="Exportar Relatório">
-        <option value="" disabled selected>📊 Relatórios (Excel / PDF)</option>
+    <!-- Caixa de Seleção de Relatórios no Cabeçalho Superior (Apenas Símbolo) -->
+    <div class="header-select-wrap" data-tooltip="Relatórios (Excel / PDF)">
+      <select id="sel-relatorio-topo" class="select-relatorio-topo" title="Relatórios (Excel / PDF)" aria-label="Relatórios">
+        <option value="" disabled selected>📊</option>
         <option value="excel-com-hora">⬇ Excel (Com Horário)</option>
         <option value="excel-sem-hora">⬇ Excel (Sem Horário)</option>
         <option value="pdf-com-hora">🖨️ PDF / Ata (Com Horário)</option>
@@ -2425,16 +2420,6 @@ footer.diretoria-footer {
         <div style="display:flex;align-items:center;gap:12px">
           <img src="logo-sindseps.png" alt="SINDSEPS" style="height:26px;background:#fff;padding:2px 6px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1)" onerror="this.style.display='none'">
           <span id="tit-tabela-presentes">Planilha Geral de Servidores Presentes (Tempo Real)</span>
-        </div>
-        <!-- Caixa de Seleção de Relatórios no Topo da Tabela -->
-        <div class="header-select-wrap">
-          <select id="sel-relatorio-tabela" class="select-relatorio-tabela" title="Selecione um relatório para exportar ou imprimir" aria-label="Exportar Relatório">
-            <option value="" disabled selected>📊 Relatórios (Excel / PDF)</option>
-            <option value="excel-com-hora">⬇ Excel (Com Horário)</option>
-            <option value="excel-sem-hora">⬇ Excel (Sem Horário)</option>
-            <option value="pdf-com-hora">🖨️ PDF / Ata (Com Horário)</option>
-            <option value="pdf-sem-hora">🖨️ PDF / Ata (Sem Horário)</option>
-          </select>
         </div>
       </div>
       <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center">
@@ -4421,11 +4406,6 @@ function handleRelatorioSelect(selectEl){
 var selRelTopo = document.getElementById('sel-relatorio-topo');
 if(selRelTopo){
   selRelTopo.addEventListener('change', function(){ handleRelatorioSelect(this); });
-}
-
-var selRelTbl = document.getElementById('sel-relatorio-tabela');
-if(selRelTbl){
-  selRelTbl.addEventListener('change', function(){ handleRelatorioSelect(this); });
 }
 
 // Botões Menu Assembleia (se presentes)
