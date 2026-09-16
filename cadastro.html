@@ -348,14 +348,93 @@ var geoAtual = null; /* { lat, lng, acc } — capturado ao gerar credencial */
 var _watchId  = null; /* ID do watchPosition para cancelamento */
 var _melhorAcc = Infinity; /* Melhor precisão já obtida nesta sessão */
 
+/* Helper de escape HTML */
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 /* Recuperar última localização recente do cache local (se capturada há menos de 15 minutos) */
 try {
   var geoCache = JSON.parse(localStorage.getItem('cad_geo') || 'null');
   if(geoCache && geoCache.lat && geoCache.lng && (Date.now() - (geoCache.ts || 0) < 900000)){
-    geoAtual = { lat: geoCache.lat, lng: geoCache.lng, acc: geoCache.acc || 0 };
+    geoAtual = { lat: geoCache.lat, lng: geoCache.lng, acc: geoCache.acc || 0, endereco: geoCache.endereco || '' };
     _melhorAcc = geoAtual.acc;
   }
 } catch(e){}
+
+/* Geocodificação reversa no cliente com cache */
+var _cacheEnderecoLocal = {};
+
+function buscarEnderecoReverso(lat, lng, callback){
+  var key = parseFloat(lat).toFixed(4) + '_' + parseFloat(lng).toFixed(4);
+  if(_cacheEnderecoLocal[key]){
+    return callback(_cacheEnderecoLocal[key]);
+  }
+
+  /* 1. Tentar BigDataCloud (rápido, sem bloqueio de CORS no cliente) */
+  var urlBDC = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=pt';
+  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var timeoutId = setTimeout(function(){ if(controller) controller.abort(); }, 3500);
+
+  fetch(urlBDC, { signal: controller ? controller.signal : undefined })
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      clearTimeout(timeoutId);
+      if(data){
+        var partes = [];
+        var bairro = data.locality || '';
+        var cidade = data.city || 'Salvador';
+        var uf = data.principalSubdivisionCode ? data.principalSubdivisionCode.replace('BR-', '') : 'BA';
+        if(bairro) partes.push(bairro);
+        if(cidade) partes.push(cidade + (uf ? ' - ' + uf : ''));
+        var endFormatado = partes.join(', ');
+        if(endFormatado){
+          _cacheEnderecoLocal[key] = endFormatado;
+          return callback(endFormatado);
+        }
+      }
+      tentarNominatim();
+    })
+    .catch(function(){
+      clearTimeout(timeoutId);
+      tentarNominatim();
+    });
+
+  function tentarNominatim(){
+    var urlNom = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng + '&zoom=18&addressdetails=1';
+    var c2 = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var t2 = setTimeout(function(){ if(c2) c2.abort(); }, 3500);
+
+    fetch(urlNom, {
+      signal: c2 ? c2.signal : undefined,
+      headers: { 'Accept-Language': 'pt-BR,pt;q=0.9' }
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        clearTimeout(t2);
+        if(d && d.address){
+          var a = d.address;
+          var logr = a.road || a.pedestrian || a.street || '';
+          var bai = a.neighbourhood || a.suburb || a.city_district || '';
+          var cid = a.city || a.town || a.municipality || 'Salvador';
+          var p = [];
+          if(logr) p.push(logr);
+          if(bai && bai !== logr) p.push(bai);
+          if(cid) p.push(cid);
+          var formatado = p.join(', ') || d.display_name || '';
+          if(formatado){
+            _cacheEnderecoLocal[key] = formatado;
+            return callback(formatado);
+          }
+        }
+        callback('');
+      })
+      .catch(function(){
+        clearTimeout(t2);
+        callback('');
+      });
+  }
+}
 
 function atualizarGeoStatusUI(geo, err){
   var elGeo = document.getElementById('geo-status');
@@ -364,8 +443,10 @@ function atualizarGeoStatusUI(geo, err){
     var acc = geo.acc || 0;
     /* Cor da precisão: verde <50m, amarelo <150m, laranja >150m */
     var corAcc = acc < 50 ? '#15803d' : (acc < 150 ? '#b45309' : '#b91c1c');
+    var txtEnd = geo.endereco ? ('<strong style="color:#0f172a">' + escHtml(geo.endereco) + '</strong><br>') : '';
     elGeo.innerHTML =
-      '📍 Localização capturada '
+      '📍 ' + txtEnd
+      + '<span style="font-size:0.73rem;color:#475569">Precisão do GPS: </span>'
       + '<span style="font-size:0.75rem;font-weight:700;color:' + corAcc + '">±' + acc + 'm</span>';
     elGeo.className = 'geo-ok';
   } else if(err && err.code === 1){
@@ -391,7 +472,8 @@ function enviarGeoServidor(mat, cpf, geo){
     cpf: cpf,
     lat: geo ? geo.lat : null,
     lng: geo ? geo.lng : null,
-    geo_acc: geo ? geo.acc : null
+    geo_acc: geo ? geo.acc : null,
+    endereco: geo ? (geo.endereco || '') : ''
   });
   obterRotasCadastro('/api/presenca-cpf').forEach(function(urlApi){
     fetch(urlApi, {
@@ -401,7 +483,7 @@ function enviarGeoServidor(mat, cpf, geo){
     }).then(function(res){ return res.json(); })
       .then(function(d){
         if(d && d.ok){
-          console.log('[GEO] Enviado com sucesso para ' + urlApi, geo ? ('±' + geo.acc + 'm') : 'sem geo');
+          console.log('[GEO] Enviado com sucesso para ' + urlApi, geo ? ('±' + geo.acc + 'm' + (geo.endereco ? ' [' + geo.endereco + ']' : '')) : 'sem geo');
         }
       })
       .catch(function(){});
@@ -424,10 +506,12 @@ function _processarPosicao(pos, fonte){
   if(geoAtual && novaAcc > _melhorAcc * 0.80) return;
 
   _melhorAcc = novaAcc;
+  var endAnterior = (geoAtual && geoAtual.endereco) ? geoAtual.endereco : '';
   geoAtual = {
     lat: parseFloat(pos.coords.latitude.toFixed(6)),
     lng: parseFloat(pos.coords.longitude.toFixed(6)),
-    acc: novaAcc
+    acc: novaAcc,
+    endereco: endAnterior
   };
 
   try {
@@ -435,12 +519,29 @@ function _processarPosicao(pos, fonte){
       lat: geoAtual.lat,
       lng: geoAtual.lng,
       acc: geoAtual.acc,
+      endereco: geoAtual.endereco,
       ts: Date.now()
     }));
   } catch(e){}
 
   console.log('[GEO] ' + fonte + ': ' + geoAtual.lat + ',' + geoAtual.lng + ' ±' + geoAtual.acc + 'm');
   atualizarGeoStatusUI(geoAtual);
+
+  /* Buscar endereço reverso */
+  buscarEnderecoReverso(geoAtual.lat, geoAtual.lng, function(endFormatado){
+    if(endFormatado && geoAtual){
+      geoAtual.endereco = endFormatado;
+      try {
+        var c = JSON.parse(localStorage.getItem('cad_geo') || '{}');
+        c.endereco = endFormatado;
+        localStorage.setItem('cad_geo', JSON.stringify(c));
+      } catch(e){}
+      atualizarGeoStatusUI(geoAtual);
+      if(matriculaAtual && cpfAtual){
+        enviarGeoServidor(matriculaAtual, cpfAtual, geoAtual);
+      }
+    }
+  });
 
   /* Reenviar ao servidor sempre que melhorar (ex: GPS convergindo) */
   if(matriculaAtual && cpfAtual){

@@ -1603,6 +1603,25 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
   text-align: center;
   user-select: none;
 }
+.geo-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 220px;
+  line-height: 1.25;
+}
+.geo-endereco-txt {
+  font-size: 0.74rem;
+  color: #1e293b;
+  font-weight: 600;
+  white-space: normal;
+  word-break: break-word;
+}
+.geo-coord-txt {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-family: monospace;
+}
 
 /* Barra de busca na tabela de presentes */
 .search-bar-wrap {
@@ -2247,7 +2266,7 @@ footer.diretoria-footer {
             <th style="width:130px">Conferente</th>
             <th style="width:75px">Hora</th>
             <th style="width:80px">Origem</th>
-            <th style="width:80px">Local</th>
+            <th style="min-width:150px">Local / Endereço</th>
             <th>Observações</th>
           </tr></thead>
           <tbody id="tbody-presentes">
@@ -2978,10 +2997,10 @@ function exportarCSVAssembleia(assObj){
     ' <Column ss:Width="130"/>\n' +
     ' <Column ss:Width="200"/>\n' +
     ' <Row ss:Height="34">\n' +
-    '  <Cell ss:MergeAcross="10" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="11" ss:StyleID="sBanner"><Data ss:Type="String">SINDSEPS — ' + esc(assObj.nome || 'ASSEMBLEIA').toUpperCase() + '</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="22">\n' +
-    '  <Cell ss:MergeAcross="10" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
+    '  <Cell ss:MergeAcross="11" ss:StyleID="sSubBanner"><Data ss:Type="String">Data do Evento: ' + dataRef + (assObj.pauta ? ' • Pauta: ' + esc(assObj.pauta) : '') + ' • Total: ' + lista.length + ' presentes</Data></Cell>\n' +
     ' </Row>\n' +
     ' <Row ss:Height="10"/>\n' +
     ' <Row ss:Height="24">\n' +
@@ -2994,7 +3013,8 @@ function exportarCSVAssembleia(assObj){
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Conferente</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Hora</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Validação</Data></Cell>\n' +
-    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Localização (GPS)</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Endereço de Coleta</Data></Cell>\n' +
+    '  <Cell ss:StyleID="sHeaderCenter"><Data ss:Type="String">Coordenadas (GPS)</Data></Cell>\n' +
     '  <Cell ss:StyleID="sHeader"><Data ss:Type="String">Observações</Data></Cell>\n' +
     ' </Row>\n';
 
@@ -3005,6 +3025,7 @@ function exportarCSVAssembleia(assObj){
     var sOrig = (p.origem === 'manual') ? 'sBadgeManual' : 'sBadgeQR';
     var txtOrig = (p.origem === 'manual') ? 'Manual' : 'QR Code';
     var txtGeo = (p.lat && p.lng) ? (p.lat + ', ' + p.lng + (p.geo_acc ? ' (±' + p.geo_acc + 'm)' : '')) : '—';
+    var txtEnd = p.endereco ? p.endereco : (p.lat ? 'Coordenadas registradas' : '—');
 
     xml += ' <Row ss:Height="20">\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="Number">' + (i + 1) + '</Data></Cell>\n' +
@@ -3016,6 +3037,7 @@ function exportarCSVAssembleia(assObj){
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.conferente || '') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(p.hora || '') + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sOrig + '"><Data ss:Type="String">' + txtOrig + '</Data></Cell>\n' +
+      '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(txtEnd) + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sCenter + '"><Data ss:Type="String">' + esc(txtGeo) + '</Data></Cell>\n' +
       '  <Cell ss:StyleID="' + sBase + '"><Data ss:Type="String">' + esc(p.observacao || '') + '</Data></Cell>\n' +
       ' </Row>\n';
@@ -3619,7 +3641,8 @@ function filtrarPresentes(termoBusca){
     return (p.nome||'').toLowerCase().indexOf(termo) !== -1 ||
            (p.matricula||'').toLowerCase().indexOf(termo) !== -1 ||
            (termoDigitos && (p.cpf||'').indexOf(termoDigitos) !== -1) ||
-           (p.orgao||'').toLowerCase().indexOf(termo) !== -1;
+           (p.orgao||'').toLowerCase().indexOf(termo) !== -1 ||
+           (p.endereco||'').toLowerCase().indexOf(termo) !== -1;
   }) : presOrdenados;
 
   var counter = document.getElementById('search-count-presentes');
@@ -3649,17 +3672,34 @@ function filtrarPresentes(termoBusca){
       ? '<span class="badge-manual-orig">Manual</span>'
       : '<span class="badge-qr-orig">QR</span>';
     var cpfFormatado = mascararCPF(p.cpf);
-    /* Ícone de localização: abre Google Maps se coordenadas disponíveis */
-    var geoBadge;
+
+    /* Localização e Endereço: exibe endereço + link do Google Maps */
+    var geoCellHtml;
     var latVal = (p.lat != null && p.lat !== '') ? parseFloat(p.lat) : null;
     var lngVal = (p.lng != null && p.lng !== '') ? parseFloat(p.lng) : null;
-    if(latVal !== null && lngVal !== null && !isNaN(latVal) && !isNaN(lngVal)){
+    var temCoord = (latVal !== null && lngVal !== null && !isNaN(latVal) && !isNaN(lngVal));
+    var endTxt = (p.endereco || '').trim();
+    if(temCoord){
       var mapsUrl = 'https://www.google.com/maps?q=' + latVal + ',' + lngVal;
       var accStr = p.geo_acc ? ' (precisão ±' + p.geo_acc + 'm)' : '';
-      geoBadge = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Ver</a>';
+      var btnMap = '<a class="btn-geo-mapa" href="' + mapsUrl + '" target="_blank" rel="noopener" title="Abrir no Google Maps: ' + latVal + ', ' + lngVal + accStr + '">📍 Mapa</a>';
+      if(endTxt){
+        geoCellHtml = '<div class="geo-cell">' +
+          '<span class="geo-endereco-txt" title="' + esc(endTxt) + accStr + '">' + esc(endTxt) + '</span>' +
+          '<div>' + btnMap + '</div>' +
+          '</div>';
+      } else {
+        geoCellHtml = '<div class="geo-cell">' +
+          '<span class="geo-coord-txt">' + latVal.toFixed(4) + ', ' + lngVal.toFixed(4) + '</span>' +
+          '<div>' + btnMap + '</div>' +
+          '</div>';
+      }
+    } else if(endTxt) {
+      geoCellHtml = '<span class="geo-endereco-txt">' + esc(endTxt) + '</span>';
     } else {
-      geoBadge = '<span class="btn-geo-mapa-na" title="Localização não capturada pelo participante">—</span>';
+      geoCellHtml = '<span class="btn-geo-mapa-na" title="Localização não capturada pelo participante">—</span>';
     }
+
     return '<tr>' +
       '<td class="num">' + (i + 1) + '</td>' +
       '<td class="num">' + esc(p.matricula) + '</td>' +
@@ -3670,7 +3710,7 @@ function filtrarPresentes(termoBusca){
       '<td>' + esc(p.conferente) + '</td>' +
       '<td class="num">' + esc(p.hora) + '</td>' +
       '<td>' + origBadge + '</td>' +
-      '<td>' + geoBadge + '</td>' +
+      '<td>' + geoCellHtml + '</td>' +
       '<td>' + obsCell + '</td>' +
     '</tr>';
   }).join('');
@@ -3929,28 +3969,31 @@ document.getElementById('btn-imprimir').addEventListener('click', function(){
     '<table>' +
       '<thead>' +
         '<tr>' +
-          '<th class="center" style="width:36px">#</th>' +
-          '<th style="width:90px">Matrícula</th>' +
+          '<th class="center" style="width:34px">#</th>' +
+          '<th style="width:85px">Matrícula</th>' +
           '<th>Nome do Servidor Público</th>' +
           '<th>Órgão / Lotação</th>' +
-          '<th class="center" style="width:70px">Fileira</th>' +
-          '<th class="center" style="width:60px">Hora</th>' +
+          '<th style="width:160px">Local da Coleta</th>' +
+          '<th class="center" style="width:55px">Fileira</th>' +
+          '<th class="center" style="width:55px">Hora</th>' +
           '<th class="center" style="width:65px">Validação</th>' +
         '</tr>' +
       '</thead>' +
       '<tbody>';
 
   if (!presOrdenados.length) {
-    html += '<tr><td colspan="7" style="text-align:center;padding:18px;color:#64748b;font-style:italic">Nenhum registro de presença cadastrado para esta assembleia.</td></tr>';
+    html += '<tr><td colspan="8" style="text-align:center;padding:18px;color:#64748b;font-style:italic">Nenhum registro de presença cadastrado para esta assembleia.</td></tr>';
   } else {
     html += presOrdenados.map(function(p, i){
       var isQr = (p.origem === 'qr');
       var tagHtml = isQr ? '<span class="badge-tag qr">QR Digital</span>' : '<span class="badge-tag man">Manual</span>';
+      var localColeta = p.endereco ? esc(p.endereco) : (p.lat ? ('GPS: ' + Number(p.lat).toFixed(4) + ', ' + Number(p.lng).toFixed(4)) : 'Presencial');
       return '<tr>' +
         '<td class="num center">' + (i + 1) + '</td>' +
         '<td class="num"><strong>' + esc(p.matricula) + '</strong></td>' +
         '<td>' + esc(p.nome) + '</td>' +
         '<td>' + esc(p.orgao || '—') + '</td>' +
+        '<td style="font-size:7.5pt;line-height:1.2">' + localColeta + '</td>' +
         '<td class="num center">' + esc(p.fileira || '—') + '</td>' +
         '<td class="num center">' + esc(p.hora || '—') + '</td>' +
         '<td class="center">' + tagHtml + '</td>' +
@@ -4395,6 +4438,10 @@ atualizarUI();
               presentes[existeIdx].geo_acc = item.geo_acc;
               novosAdicionados = true;
             }
+            if(item.endereco && (!presentes[existeIdx].endereco || presentes[existeIdx].endereco !== item.endereco)){
+              presentes[existeIdx].endereco = item.endereco;
+              novosAdicionados = true;
+            }
             if(item.duplicado){
               var jaAuditado = revisar.some(function(r){
                 return String(r.matricula || '').trim().toUpperCase() === mat;
@@ -4435,6 +4482,7 @@ atualizarUI();
             lat: (item.lat != null) ? item.lat : null,
             lng: (item.lng != null) ? item.lng : null,
             geo_acc: (item.geo_acc != null) ? item.geo_acc : null,
+            endereco: item.endereco || '',
             arquivo: 'tempo-real'
           });
 

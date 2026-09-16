@@ -1,7 +1,8 @@
-const http = require('http');
-const fs   = require('fs');
-const path = require('path');
-const os   = require('os');
+const http  = require('http');
+const https = require('https');
+const fs    = require('fs');
+const path  = require('path');
+const os    = require('os');
 
 const PORT          = process.env.PORT || 8080;
 const DEFAULT_TOKEN = 'sindseps-admin-2026';
@@ -13,12 +14,58 @@ const SESS_FILE   = path.join(BASE_DIR, 'sessao.json');   // Sessão ativa publi
 const CPFS_FILE   = path.join(BASE_DIR, 'cpfs.json');     // Armazenamento protegido de CPF (não vai para o QR)
 const GEO_FILE    = path.join(BASE_DIR, 'geo.json');      // Armazenamento de geolocalização capturada no cadastro
 
+/* ── Cache de Geocodificação Reversa em Memória ─────────────────────────── */
+const enderecoCache = {};
+
+function resolverEnderecoReverso(lat, lng) {
+  if (lat == null || lng == null) return Promise.resolve('');
+  const key = `${parseFloat(lat).toFixed(4)}_${parseFloat(lng).toFixed(4)}`;
+  if (enderecoCache[key]) return Promise.resolve(enderecoCache[key]);
+
+  return new Promise((resolve) => {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+    const req = https.get(url, {
+      headers: {
+        'User-Agent': 'SINDSEPS-Presenca/1.1 (contato@sindseps.org.br)',
+        'Accept-Language': 'pt-BR,pt;q=0.9'
+      },
+      timeout: 3500
+    }, (res) => {
+      let body = '';
+      res.on('data', chunk => { body += chunk; });
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(body);
+          if (json && json.address) {
+            const a = json.address;
+            const logradouro = a.road || a.pedestrian || a.street || '';
+            const bairro = a.suburb || a.neighbourhood || a.city_district || '';
+            const cidade = a.city || a.town || a.municipality || 'Salvador';
+            const partes = [];
+            if (logradouro) partes.push(logradouro);
+            if (bairro && bairro !== logradouro) partes.push(bairro);
+            if (cidade) partes.push(cidade);
+            const fmt = partes.join(', ') || json.display_name || '';
+            if (fmt) {
+              enderecoCache[key] = fmt;
+              return resolve(fmt);
+            }
+          }
+        } catch(e){}
+        resolve('');
+      });
+    });
+    req.on('error', () => resolve(''));
+    req.on('timeout', () => { req.destroy(); resolve(''); });
+  });
+}
+
 /* ── Banco de dados em memória (carregado do arquivo ao iniciar) ─────────── */
 let presencasDB   = [];
 let assembleiasDB = [];
 let sessaoAtiva   = null; // { evento, chave, rotacao, tolerancia, assId, assNome, assData }
 let cpfsDB        = {};   // { [matricula]: cpf }
-let geoDB         = {};   // { [matricula]: { lat, lng, geo_acc, timestamp } }
+let geoDB         = {};   // { [matricula]: { lat, lng, geo_acc, endereco, timestamp } }
 
 function carregarDB() {
   try {
@@ -298,24 +345,26 @@ const server = http.createServer(async (req, res) => {
         cpf: p.cpf || cpfsDB[mat] || '',
         lat: (p.lat != null) ? p.lat : (geo.lat != null ? geo.lat : null),
         lng: (p.lng != null) ? p.lng : (geo.lng != null ? geo.lng : null),
-        geo_acc: (p.geo_acc != null) ? p.geo_acc : (geo.geo_acc != null ? geo.geo_acc : null)
+        geo_acc: (p.geo_acc != null) ? p.geo_acc : (geo.geo_acc != null ? geo.geo_acc : null),
+        endereco: p.endereco || geo.endereco || ''
       });
     });
     jsonOk(res, { presencas: listaEnriquecida, total: listaEnriquecida.length });
     return;
   }
 
-  /* ── POST /api/presenca-cpf ── cadastro.html envia CPF + geo separado do QR ─── */
+  /* ── POST /api/presenca-cpf ── cadastro.html envia CPF + geo + endereço ─── */
   if (url === '/api/presenca-cpf' && method === 'POST') {
     let dados;
     try { dados = await lerBody(req); }
     catch (e) { jsonErro(res, 400, 'Body inválido'); return; }
 
-    const mat    = String(dados.matricula || '').trim().toUpperCase();
-    const cpf    = String(dados.cpf || '').replace(/\D/g, '').trim();
-    const lat    = (dados.lat != null && dados.lat !== '') ? parseFloat(dados.lat) : null;
-    const lng    = (dados.lng != null && dados.lng !== '') ? parseFloat(dados.lng) : null;
-    const geoAcc = (dados.geo_acc != null && dados.geo_acc !== '') ? parseInt(dados.geo_acc) : null;
+    const mat      = String(dados.matricula || '').trim().toUpperCase();
+    const cpf      = String(dados.cpf || '').replace(/\D/g, '').trim();
+    const lat      = (dados.lat != null && dados.lat !== '') ? parseFloat(dados.lat) : null;
+    const lng      = (dados.lng != null && dados.lng !== '') ? parseFloat(dados.lng) : null;
+    const geoAcc   = (dados.geo_acc != null && dados.geo_acc !== '') ? parseInt(dados.geo_acc) : null;
+    const endereco = String(dados.endereco || '').trim();
 
     if (!mat || !cpf) {
       jsonErro(res, 422, 'Matrícula e CPF são obrigatórios');
@@ -325,18 +374,39 @@ const server = http.createServer(async (req, res) => {
     cpfsDB[mat] = cpf;
     salvarCPFsDB();
 
-    /* Salva localização no banco geoDB para vincular quando o conferente ler o QR */
+    /* Salva localização e endereço no banco geoDB */
     if (lat !== null && lng !== null) {
+      const endExistente = (geoDB[mat] && geoDB[mat].endereco) ? geoDB[mat].endereco : '';
       geoDB[mat] = {
         lat: lat,
         lng: lng,
         geo_acc: geoAcc,
+        endereco: endereco || endExistente,
         atualizadoEm: new Date().toISOString()
       };
       salvarGeoDB();
+
+      /* Se o cliente não enviou endereço legível, resolve no servidor em background */
+      if (!geoDB[mat].endereco) {
+        resolverEnderecoReverso(lat, lng).then(endResolvido => {
+          if (endResolvido && geoDB[mat]) {
+            geoDB[mat].endereco = endResolvido;
+            salvarGeoDB();
+            let atualizouEnd = false;
+            presencasDB.forEach(p => {
+              if (String(p.matricula || '').trim().toUpperCase() === mat && !p.endereco) {
+                p.endereco = endResolvido;
+                atualizouEnd = true;
+              }
+            });
+            if (atualizouEnd) salvarDB();
+            console.log(`[API] Endereço resolvido no servidor para ${mat}: ${endResolvido}`);
+          }
+        }).catch(() => {});
+      }
     }
 
-    /* Se a presença já constar em presencasDB, enriquece com CPF + localização */
+    /* Se a presença já constar em presencasDB, enriquece com CPF + localização + endereço */
     let atualizou = false;
     presencasDB.forEach(p => {
       if (String(p.matricula || '').trim().toUpperCase() === mat) {
@@ -345,15 +415,16 @@ const server = http.createServer(async (req, res) => {
           p.lat = lat;
           p.lng = lng;
           p.geo_acc = geoAcc;
+          if (endereco) p.endereco = endereco;
         }
         atualizou = true;
       }
     });
     if (atualizou) salvarDB();
 
-    const geoLog = lat !== null ? ` | geo: ${lat},${lng} (±${geoAcc}m)` : '';
+    const geoLog = lat !== null ? ` | geo: ${lat},${lng} (±${geoAcc}m)` + (endereco ? ` [${endereco}]` : '') : '';
     console.log(`[API] CPF associado à matrícula ${mat}${geoLog}`);
-    jsonOk(res, { ok: true, matricula: mat, geoSalvo: lat !== null });
+    jsonOk(res, { ok: true, matricula: mat, geoSalvo: lat !== null, enderecoSalvo: Boolean(endereco) });
     return;
   }
 
@@ -377,6 +448,7 @@ const server = http.createServer(async (req, res) => {
     const latAssociado = (dados.lat != null && dados.lat !== '') ? parseFloat(dados.lat) : (geoAssociado.lat != null ? geoAssociado.lat : null);
     const lngAssociado = (dados.lng != null && dados.lng !== '') ? parseFloat(dados.lng) : (geoAssociado.lng != null ? geoAssociado.lng : null);
     const accAssociado = (dados.geo_acc != null && dados.geo_acc !== '') ? parseInt(dados.geo_acc) : (geoAssociado.geo_acc != null ? geoAssociado.geo_acc : null);
+    const endAssociado = String(dados.endereco || geoAssociado.endereco || '').trim();
 
     const registro = {
       matricula:  mat,
@@ -391,6 +463,7 @@ const server = http.createServer(async (req, res) => {
       lat:        latAssociado,
       lng:        lngAssociado,
       geo_acc:    accAssociado,
+      endereco:   endAssociado,
       arquivo:    'tempo-real',
       timestamp:  new Date().toISOString(),
       duplicado:  duplicado
@@ -401,7 +474,7 @@ const server = http.createServer(async (req, res) => {
 
     console.log('[API]', duplicado
       ? `[DUPLICADO] ${mat} — ${registro.nome}`
-      : `[OK] ${mat} — ${registro.nome} (${registro.conferente})` + (latAssociado ? ` [GEO: ${latAssociado},${lngAssociado}]` : '')
+      : `[OK] ${mat} — ${registro.nome} (${registro.conferente})` + (latAssociado ? ` [GEO: ${latAssociado},${lngAssociado}` + (endAssociado ? ` — ${endAssociado}` : '') + `]` : '')
     );
 
     jsonOk(res, { ok: true, duplicado, registro });
