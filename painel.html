@@ -1716,7 +1716,7 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
 
 
 
-/* Barra de busca na tabela de presentes (fundo transparente) */
+/* Barra de busca na tabela de presentes (fundo transparente sem destaque) */
 .search-bar-wrap {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 10px; flex-wrap: wrap;
@@ -1724,15 +1724,36 @@ tr:last-child td:last-child { border-bottom-right-radius: 12px; }
 .search-input {
   flex: 1; min-width: 220px;
   padding: 8px 14px; font-size: 0.84rem; font-family: inherit;
-  border: 1.5px solid var(--gov-slate-300); border-radius: 6px;
-  outline: none; transition: border-color 0.18s;
-  background: transparent !important; color: var(--gov-slate-900);
+  border: 1px solid #cbd5e1; border-radius: 6px;
+  outline: none; transition: all 0.18s ease;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  box-shadow: none !important;
+  color: var(--gov-slate-900);
 }
-.search-input:focus { border-color: var(--gov-blue-600); }
+.search-input::-webkit-search-decoration,
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-results-button,
+.search-input::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+.search-input:focus {
+  border-color: var(--gov-blue-600);
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12) !important;
+}
 .search-count {
   font-size: 0.78rem; color: var(--gov-slate-500);
   font-weight: 600; white-space: nowrap;
-  background: transparent; padding: 6px 12px;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 6px 12px;
   border-radius: 5px; border: 1px solid var(--gov-slate-200);
 }
 
@@ -2406,9 +2427,9 @@ footer.diretoria-footer {
         </div>
       </div>
       <div class="search-bar-wrap" style="display:flex;gap:10px;align-items:center">
-        <input type="search" id="busca-presentes" class="search-input" style="flex:1;background:transparent"
+        <input type="text" id="busca-presentes" class="search-input" style="flex:1;background:transparent !important;background-color:transparent !important;-webkit-appearance:none !important;box-shadow:none !important;"
           placeholder="🔍 Buscar por nome, matrícula ou órgão..." autocomplete="off">
-        <span class="search-count" id="search-count-presentes"></span>
+        <span class="search-count" id="search-count-presentes" style="background:transparent !important;background-color:transparent !important;"></span>
       </div>
       <div class="tbl-wrap">
         <table id="tbl-presentes">
