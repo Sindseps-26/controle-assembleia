@@ -445,15 +445,23 @@ main {
 .session-selector-group {
   display: flex;
   align-items: center;
+  gap: 12px;
   flex: 1;
-  min-width: 260px;
-  max-width: 520px;
+  min-width: 280px;
+  max-width: 580px;
+}
+.session-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 .select-assembleia-wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 100%;
+  flex: 1;
 }
 .select-assembleia {
   width: 100%;
@@ -2067,8 +2075,8 @@ footer.diretoria-footer {
   <div class="header-brand">
     <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
     <div>
-      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
-      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span></p>
+      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">Controle de Presença</h1>
+      <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px"><span id="txt-ass-ativa-header">Assembleia Geral</span></p>
     </div>
   </div>
   <div class="header-btns">
@@ -2366,6 +2374,7 @@ footer.diretoria-footer {
     <div class="session-controls-row">
       <!-- Seletor da Assembleia -->
       <div class="session-selector-group">
+        <label class="session-label" for="sel-assembleia">Painel da Diretoria</label>
         <div class="select-assembleia-wrapper">
           <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia estatutária"></select>
           <span class="select-custom-arrow">
