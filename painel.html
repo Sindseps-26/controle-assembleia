@@ -415,84 +415,108 @@ main {
 }
 
 /* ========================================================
-   COCKPIT EXECUTIVO: GESTÃO DA ASSEMBLEIA
+   BARRA DA ASSEMBLEIA & CONTROLES (DESIGN MINIMALISTA)
 ======================================================== */
 .session-bar {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-left: 5px solid var(--gov-navy-800);
-  border-radius: 12px;
-  padding: 12px 20px;
-  margin-bottom: 22px;
-  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+  border-left: 4px solid var(--gov-navy-800);
+  border-radius: 10px;
+  padding: 10px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
   display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.2s ease;
+  align-items: center;
+  transition: all 0.2s ease;
 }
 .session-bar:hover {
-  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.07);
 }
 
-/* Linha Superior: Marca e Retorno */
-.session-header-row {
+.session-controls-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
+  width: 100%;
 }
-.session-brand-group {
+
+.session-selector-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  flex: 1;
+  min-width: 260px;
+  max-width: 520px;
 }
-.session-icon-box {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #07101e 0%, #1d4ed8 100%);
-  color: #ffffff;
+.select-assembleia-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+.select-assembleia {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 8px 34px 8px 12px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gov-navy-900);
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+.select-assembleia:focus {
+  background: #ffffff;
+  border-color: var(--gov-blue-600);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+}
+.select-custom-arrow {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  color: var(--gov-slate-500);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.28);
-  flex-shrink: 0;
 }
-.session-titles {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.session-title-inline {
+
+.session-actions-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
-.session-title-inline h2 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--gov-slate-900);
-  margin: 0;
-  padding: 0;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+
+/* Botão Voltar ao Painel Geral */
+.btn-voltar-geral {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #f8fafc;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  white-space: nowrap;
 }
-.session-badge-tag {
-  font-size: 0.70rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: #e0e7ff;
-  color: #3730a3;
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid #c7d2fe;
+.btn-voltar-geral:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
 }
-.session-subtitle {
-  font-size: 0.80rem;
-  color: var(--gov-slate-500);
-  font-weight: 500;
   margin: 0;
   line-height: 1.3;
 }
@@ -2043,10 +2067,7 @@ footer.diretoria-footer {
   <div class="header-brand">
     <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
     <div>
-      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <span>SINDSEPS</span>
-        <span style="font-size:0.92rem;font-weight:600;color:#93c5fd">— Painel da Diretoria</span>
-      </h1>
+      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
       <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span></p>
     </div>
   </div>
@@ -2340,21 +2361,11 @@ footer.diretoria-footer {
 </div>
 
 <main>
-  <!-- Barra Superior: Gestão de Assembleias (Cockpit Executivo) -->
+  <!-- Barra de Seleção da Assembleia & Opções (Design Minimalista) -->
   <div class="session-bar">
     <div class="session-controls-row">
       <!-- Seletor da Assembleia -->
       <div class="session-selector-group">
-        <label class="assembleia-label" for="sel-assembleia">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-          Assembleia:
-        </label>
-        
         <div class="select-assembleia-wrapper">
           <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia estatutária"></select>
           <span class="select-custom-arrow">
@@ -2367,32 +2378,14 @@ footer.diretoria-footer {
 
       <!-- Barra de Ações Rápidas da Mesa Diretora -->
       <div class="session-actions-group">
-        <!-- Botão Ação Direta: Nova Assembleia -->
-        <button type="button" class="btn-quick-action btn-quick-primary" id="btn-quick-nova-ass" title="Cadastrar nova assembleia estatutária">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          <span>Nova Assembleia</span>
-        </button>
-
-        <!-- Botão Ação Direta: Histórico -->
-        <button type="button" class="btn-quick-action btn-quick-secondary" id="btn-quick-historico" title="Consultar histórico de assembleias anteriores">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          <span>Histórico</span>
-        </button>
-
-        <!-- Menu Suspenso de Mais Opções da Assembleia -->
+        <!-- Menu Suspenso de Opções da Assembleia -->
         <div class="dropdown-ass-wrapper" id="dropdown-ass-wrapper">
-          <button type="button" class="btn-ass-dropdown-toggle" id="btn-toggle-ass-menu" title="Mais opções da assembleia">
+          <button type="button" class="btn-ass-dropdown-toggle" id="btn-toggle-ass-menu" title="Opções da assembleia">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
-            <span>Mais Opções</span>
+            <span>Opções</span>
             <span class="chevron">▼</span>
           </button>
           <div class="dropdown-ass-menu" id="dropdown-ass-menu">
