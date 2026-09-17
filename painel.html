@@ -35,6 +35,9 @@
   --white: #ffffff;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 html, body {
   min-height: 100%;
   background: #f1f4f8;
@@ -2520,6 +2523,9 @@ footer.diretoria-footer {
   </div>
 </footer>
 
+<!-- Botão Flutuante: Voltar ao Topo -->
+<button id="btn-voltar-topo" type="button" onclick="voltarAoTopo()" title="Voltar ao topo da página" aria-label="Voltar ao topo">&#8593;</button>
+
 <script>
 /* ========================================================
    CONFIGURAÇÃO DE ACESSO
@@ -4638,10 +4644,19 @@ if(btnBloquear) btnBloquear.addEventListener('click', function(){
   mostrarOk('Sessão bloqueada com segurança.');
 });
 
+function voltarAoTopo(){
+  try {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch(e) {
+    window.scrollTo(0, 0);
+  }
+}
+
 var btnTopo = document.getElementById('btn-voltar-topo');
-if(btnTopo) btnTopo.addEventListener('click', function(){
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+if(btnTopo){
+  btnTopo.addEventListener('click', voltarAoTopo);
+}
 
 if(modalNovaAss){
   modalNovaAss.addEventListener('click', function(e){ if(e.target === modalNovaAss) fecharModalNovaAss(); });
@@ -4692,10 +4707,15 @@ atualizarUI();
   }
 
   /* ---- Botão Voltar ao Topo ---- */
-  window.addEventListener('scroll', function(){
+  function checarScrollTopo(){
     var btn = document.getElementById('btn-voltar-topo');
-    if(btn) btn.style.display = window.scrollY > 300 ? 'flex' : 'none';
-  });
+    if(btn){
+      var sc = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      btn.style.display = sc > 300 ? 'flex' : 'none';
+    }
+  }
+  window.addEventListener('scroll', checarScrollTopo, { passive: true });
+  checarScrollTopo();
 
   /* ========================================================
      SINCRONIZAÇÃO EM TEMPO REAL COM O SERVIDOR (SEM CSV MANUAL)
@@ -4911,9 +4931,6 @@ atualizarUI();
   }
 })();
 </script>
-
-<!-- Botão Flutuante: Voltar ao Topo -->
-<button id="btn-voltar-topo" title="Voltar ao topo da página" aria-label="Voltar ao topo">&#8593;</button>
 
 </body>
 </html>
