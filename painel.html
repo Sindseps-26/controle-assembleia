@@ -415,23 +415,22 @@ main {
 }
 
 /* ========================================================
-   COCKPIT EXECUTIVO: PAINEL DA DIRETORIA & GESTÃO DA ASSEMBLEIA
+   COCKPIT EXECUTIVO: GESTÃO DA ASSEMBLEIA
 ======================================================== */
 .session-bar {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-left: 5px solid var(--gov-navy-800);
   border-radius: 12px;
-  padding: 18px 24px;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -2px rgba(15, 23, 42, 0.03);
+  padding: 12px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 16px;
   transition: box-shadow 0.2s ease;
 }
 .session-bar:hover {
-  box-shadow: 0 6px 20px -2px rgba(15, 23, 42, 0.08), 0 3px 8px -2px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.08);
 }
 
 /* Linha Superior: Marca e Retorno */
@@ -2044,7 +2043,10 @@ footer.diretoria-footer {
   <div class="header-brand">
     <img src="logo-sindseps.png" alt="SINDSEPS" class="header-logo" onerror="this.style.display='none'">
     <div>
-      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2">SINDSEPS</h1>
+      <h1 style="font-size:1.15rem;font-weight:800;line-height:1.2;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span>SINDSEPS</span>
+        <span style="font-size:0.92rem;font-weight:600;color:#93c5fd">— Painel da Diretoria</span>
+      </h1>
       <p style="font-size:0.75rem;color:#bfdbfe;margin-top:1px">Painel de Presença — <span id="txt-ass-ativa-header">Assembleia Geral</span></p>
     </div>
   </div>
@@ -2338,35 +2340,8 @@ footer.diretoria-footer {
 </div>
 
 <main>
-  <!-- Barra Superior: Painel da Diretoria & Gestão de Assembleias (Cockpit Executivo) -->
+  <!-- Barra Superior: Gestão de Assembleias (Cockpit Executivo) -->
   <div class="session-bar">
-    <!-- Linha Superior: Cabeçalho Institucional & Retorno -->
-    <div class="session-header-row">
-      <div class="session-brand-group">
-        <div class="session-icon-box">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 2L2 7h20L12 2z"></path>
-          </svg>
-        </div>
-        <div class="session-titles">
-          <h2>Painel da Diretoria</h2>
-          <p class="session-subtitle">Gestão estatutária, validação de quórum e homologação oficial das deliberações</p>
-        </div>
-      </div>
-
-      <a href="index.html" id="btn-voltar-painel-geral" class="btn-voltar-geral" title="Retornar ao Painel Geral (Página Inicial)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        <span>Voltar ao Painel Geral</span>
-      </a>
-    </div>
-
-    <!-- Divisor Sutil -->
-    <div class="session-divider"></div>
-
-    <!-- Linha Inferior: Cockpit da Assembleia Selecionada & Ações Rápidas -->
     <div class="session-controls-row">
       <!-- Seletor da Assembleia -->
       <div class="session-selector-group">
@@ -2466,6 +2441,15 @@ footer.diretoria-footer {
             </button>
           </div>
         </div>
+
+        <!-- Botão Voltar ao Painel Geral -->
+        <a href="index.html" id="btn-voltar-painel-geral" class="btn-voltar-geral" title="Retornar ao Painel Geral (Página Inicial)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Painel Geral</span>
+        </a>
       </div>
     </div>
   </div>
