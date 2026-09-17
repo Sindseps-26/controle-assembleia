@@ -414,109 +414,195 @@ main {
   padding: 24px 24px 48px;
 }
 
-/* Banner da Sessão / Painel da Diretoria */
+/* ========================================================
+   COCKPIT EXECUTIVO: PAINEL DA DIRETORIA & GESTÃO DA ASSEMBLEIA
+======================================================== */
 .session-bar {
   background: #ffffff;
-  border: 1px solid var(--gov-slate-300);
-  border-left: 4px solid var(--gov-navy-800);
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid var(--gov-navy-800);
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -2px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: box-shadow 0.2s ease;
+}
+.session-bar:hover {
+  box-shadow: 0 6px 20px -2px rgba(15, 23, 42, 0.08), 0 3px 8px -2px rgba(15, 23, 42, 0.04);
+}
+
+/* Linha Superior: Marca e Retorno */
+.session-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.session-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.session-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #07101e 0%, #1d4ed8 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.28);
+  flex-shrink: 0;
+}
+.session-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.session-title-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.session-title-inline h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--gov-slate-900);
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.session-badge-tag {
+  font-size: 0.70rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #c7d2fe;
+}
+.session-subtitle {
+  font-size: 0.80rem;
+  color: var(--gov-slate-500);
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Botão Voltar ao Painel Geral */
+.btn-voltar-geral {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 7px 14px;
   border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.btn-voltar-geral:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+/* Divisor Sutil */
+.session-divider {
+  height: 1px;
+  background: #f1f5f9;
+  width: 100%;
+}
+
+/* Linha Inferior: Controles e Ações */
+.session-controls-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.session-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.session-title-wrap {
+
+/* Grupo de Seleção e Status */
+.session-selector-group {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 300px;
 }
-.session-title-wrap h2 {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--gov-slate-900);
-  margin: 0;
-  border: none;
-  padding: 0;
-  letter-spacing: -0.01em;
-}
-.btn-voltar-geral {
+.assembleia-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #f1f5f9;
-  color: #1e293b;
-  border: 1px solid #cbd5e1;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.btn-voltar-geral:hover {
-  background: #0d1b3e;
-  color: #ffffff;
-  border-color: #0d1b3e;
-}
-.assembleia-bar-simple {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-}
-.ass-simple-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.assembleia-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: var(--gov-slate-700);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
-.select-ass-box {
+.select-assembleia-wrapper {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 260px;
+  max-width: 480px;
 }
 .select-assembleia {
-  padding: 8px 12px;
-  font-size: 0.88rem;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 9px 36px 9px 13px;
+  font-size: 0.86rem;
   font-weight: 700;
   color: var(--gov-navy-900);
-  background: #ffffff;
-  border: 1.5px solid var(--gov-slate-300);
-  border-radius: 6px;
-  min-width: 280px;
-  max-width: 440px;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.18s ease;
+  transition: all 0.2s ease;
+  outline: none;
 }
 .select-assembleia:focus {
-  outline: none;
+  background: #ffffff;
   border-color: var(--gov-blue-600);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
 }
+.select-custom-arrow {
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  color: var(--gov-slate-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Badge Interativo com Pulso Luminoso */
 .badge-ass-status {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 13px;
+  gap: 7px;
+  padding: 7px 14px;
   border-radius: 20px;
   font-size: 0.78rem;
   font-weight: 800;
@@ -525,7 +611,8 @@ main {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   border: 1.5px solid transparent;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
 }
 .badge-ass-status:hover {
   transform: translateY(-1px);
@@ -538,7 +625,7 @@ main {
 .badge-ass-status.status-ativa:hover {
   background: #d1fae5;
   border-color: #6ee7b7;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.28);
 }
 .badge-ass-status.status-inativa {
   background: #f1f5f9;
@@ -549,11 +636,11 @@ main {
   background: #e2e8f0;
   border-color: #94a3b8;
   color: #334155;
-  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.15);
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.18);
 }
 .status-indicator-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -565,6 +652,83 @@ main {
 .status-indicator-dot.dot-inativa {
   background: #94a3b8;
   box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
+}
+
+/* Grupo de Ações Rápidas & Menu da Assembleia */
+.session-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-quick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.btn-quick-primary {
+  background: #1d4ed8;
+  color: #ffffff;
+  border-color: #1e40af;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
+}
+.btn-quick-primary:hover {
+  background: #1e40af;
+  border-color: #1e3a8a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
+}
+.btn-quick-secondary {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #cbd5e1;
+}
+.btn-quick-secondary:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 860px) {
+  .session-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-voltar-geral {
+    width: 100%;
+    justify-content: center;
+  }
+  .session-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .session-selector-group {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+  }
+  .select-assembleia-wrapper {
+    max-width: 100%;
+  }
+  .badge-ass-status {
+    justify-content: center;
+  }
+  .session-actions-group {
+    width: 100%;
+  }
+  .btn-quick-action, .dropdown-ass-wrapper, .btn-ass-dropdown-toggle {
+    flex: 1;
+    justify-content: center;
+  }
 }
 @keyframes pulseGreenDot {
   0%, 100% {
@@ -720,6 +884,16 @@ main {
   height: 1px;
   background: #e2e8f0;
   margin: 5px 0;
+}
+.dropdown-menu-header {
+  padding: 8px 14px 4px 14px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
 }
 .ass-pill-tag {
   background: #eff6ff;
@@ -2164,76 +2338,141 @@ footer.diretoria-footer {
 </div>
 
 <main>
-  <!-- Barra Superior: Painel da Diretoria & Gestão de Assembleias -->
+  <!-- Barra Superior: Painel da Diretoria & Gestão de Assembleias (Cockpit Executivo) -->
   <div class="session-bar">
-    <div class="session-info">
-      <div class="session-title-wrap">
-        <h2>Painel da Diretoria</h2>
-        <a href="index.html" id="btn-voltar-painel-geral" class="btn-voltar-geral" title="Retornar ao Painel Geral (Página Inicial)">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
-          <span>Voltar ao Painel Geral</span>
-        </a>
+    <!-- Linha Superior: Cabeçalho Institucional & Retorno -->
+    <div class="session-header-row">
+      <div class="session-brand-group">
+        <div class="session-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 2L2 7h20L12 2z"></path>
+          </svg>
+        </div>
+        <div class="session-titles">
+          <div class="session-title-inline">
+            <h2>Painel da Diretoria</h2>
+            <span class="session-badge-tag">Mesa Executiva</span>
+          </div>
+          <p class="session-subtitle">Gestão estatutária, validação de quórum e homologação oficial das deliberações</p>
+        </div>
       </div>
 
-      <!-- Controle e Ações da Assembleia: Dropdown Executivo -->
-      <div class="assembleia-bar-simple">
-        <div class="ass-simple-row">
-          <label class="assembleia-label" for="sel-assembleia">Assembleia:</label>
-          <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia"></select>
+      <a href="index.html" id="btn-voltar-painel-geral" class="btn-voltar-geral" title="Retornar ao Painel Geral (Página Inicial)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Voltar ao Painel Geral</span>
+      </a>
+    </div>
 
-          <!-- Menu Suspenso de Opções da Assembleia -->
-          <div class="dropdown-ass-wrapper" id="dropdown-ass-wrapper">
-            <button type="button" class="btn-ass-dropdown-toggle" id="btn-toggle-ass-menu" title="Opções da Assembleia">
-              <span>⚙️ Opções</span>
-              <span class="chevron">▼</span>
+    <!-- Divisor Sutil -->
+    <div class="session-divider"></div>
+
+    <!-- Linha Inferior: Cockpit da Assembleia Selecionada & Ações Rápidas -->
+    <div class="session-controls-row">
+      <!-- Seletor e Status Vivo -->
+      <div class="session-selector-group">
+        <label class="assembleia-label" for="sel-assembleia">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Assembleia:
+        </label>
+        
+        <div class="select-assembleia-wrapper">
+          <select id="sel-assembleia" class="select-assembleia" title="Selecionar assembleia estatutária"></select>
+          <span class="select-custom-arrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </span>
+        </div>
+
+        <!-- Badge Interativo com Pulso Luminoso de Status -->
+        <button type="button" id="badge-ass-status" class="badge-ass-status status-ativa" role="button" tabindex="0" title="Status: Ativa (Credenciamento aberto) — Clique para alternar">
+          <span class="status-indicator-dot dot-ativa"></span>
+          <span class="status-indicator-text">Credenciamento Aberto</span>
+        </button>
+      </div>
+
+      <!-- Barra de Ações Rápidas da Mesa Diretora -->
+      <div class="session-actions-group">
+        <!-- Botão Ação Direta: Nova Assembleia -->
+        <button type="button" class="btn-quick-action btn-quick-primary" id="btn-quick-nova-ass" title="Cadastrar nova assembleia estatutária">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Nova Assembleia</span>
+        </button>
+
+        <!-- Botão Ação Direta: Histórico -->
+        <button type="button" class="btn-quick-action btn-quick-secondary" id="btn-quick-historico" title="Consultar histórico de assembleias anteriores">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Histórico</span>
+        </button>
+
+        <!-- Menu Suspenso de Mais Opções da Assembleia -->
+        <div class="dropdown-ass-wrapper" id="dropdown-ass-wrapper">
+          <button type="button" class="btn-ass-dropdown-toggle" id="btn-toggle-ass-menu" title="Mais opções da assembleia">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Mais Opções</span>
+            <span class="chevron">▼</span>
+          </button>
+          <div class="dropdown-ass-menu" id="dropdown-ass-menu">
+            <div class="dropdown-menu-header">Gestão da Sessão</div>
+            <button type="button" class="dropdown-ass-item" id="btn-toggle-status-ass" title="Alternar status entre Ativa e Inativa">
+              <span class="item-icon" id="icon-toggle-status-ass">⏸️</span>
+              <span id="txt-toggle-status-ass">Marcar como Inativa / Encerrada</span>
             </button>
-            <div class="dropdown-ass-menu" id="dropdown-ass-menu">
-              <button type="button" class="dropdown-ass-item" id="btn-toggle-status-ass" title="Alternar status entre Ativa e Inativa">
-                <span class="item-icon" id="icon-toggle-status-ass">⏸️</span>
-                <span id="txt-toggle-status-ass">Marcar como Inativa / Encerrada</span>
-              </button>
-              <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item item-primary" id="btn-nova-ass" title="Cadastrar nova assembleia">
-                <span class="item-icon">➕</span>
-                <span>Nova Assembleia</span>
-              </button>
-              <button type="button" class="dropdown-ass-item" id="btn-editar-ass" title="Editar dados da assembleia">
-                <span class="item-icon">✏️</span>
-                <span>Editar Assembleia</span>
-              </button>
-              <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item" id="btn-historico-ass" title="Ver histórico completo de assembleias">
-                <span class="item-icon">📅</span>
-                <span>Histórico de Assembleias</span>
-              </button>
-              <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-com-hora" title="Exportar planilha Excel com horários">
-                <span class="item-icon">⏰</span>
-                <span>Baixar Excel (Com Horário)</span>
-              </button>
-              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-sem-hora" title="Exportar planilha Excel sem horários">
-                <span class="item-icon">📄</span>
-                <span>Baixar Excel (Sem Horário)</span>
-              </button>
-              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-com-hora" title="Imprimir / Salvar PDF com horários">
-                <span class="item-icon">🖨️</span>
-                <span>Imprimir Ata (Com Horário)</span>
-              </button>
-              <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-sem-hora" title="Imprimir / Salvar PDF sem horários">
-                <span class="item-icon">🖨️</span>
-                <span>Imprimir Ata (Sem Horário)</span>
-              </button>
-              <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em planilha Excel">
-                <span class="item-icon">⬇</span>
-                <span>Baixar Histórico Geral (Excel)</span>
-              </button>
-              <div class="dropdown-ass-divider"></div>
-              <button type="button" class="dropdown-ass-item item-danger" id="btn-excluir-ass" title="Excluir a assembleia e todos os seus registros">
-                <span class="item-icon">🗑️</span>
-                <span>Excluir Assembleia</span>
-              </button>
-            </div>
+            <button type="button" class="dropdown-ass-item item-primary" id="btn-nova-ass" title="Cadastrar nova assembleia">
+              <span class="item-icon">➕</span>
+              <span>Nova Assembleia</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-editar-ass" title="Editar dados da assembleia">
+              <span class="item-icon">✏️</span>
+              <span>Editar Assembleia</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-historico-ass" title="Ver histórico completo de assembleias">
+              <span class="item-icon">📅</span>
+              <span>Histórico de Assembleias</span>
+            </button>
+            <div class="dropdown-menu-header">Relatórios & Atas Oficiais</div>
+            <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-com-hora" title="Exportar planilha Excel com horários">
+              <span class="item-icon">⏰</span>
+              <span>Baixar Excel (Com Horário)</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-ass-menu-excel-sem-hora" title="Exportar planilha Excel sem horários">
+              <span class="item-icon">📄</span>
+              <span>Baixar Excel (Sem Horário)</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-com-hora" title="Imprimir / Salvar PDF com horários">
+              <span class="item-icon">🖨️</span>
+              <span>Imprimir Ata (Com Horário)</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-ass-menu-pdf-sem-hora" title="Imprimir / Salvar PDF sem horários">
+              <span class="item-icon">🖨️</span>
+              <span>Imprimir Ata (Sem Horário)</span>
+            </button>
+            <button type="button" class="dropdown-ass-item" id="btn-baixar-historico" title="Baixar histórico completo de todas as assembleias em planilha Excel">
+              <span class="item-icon">⬇</span>
+              <span>Baixar Histórico Geral (Excel)</span>
+            </button>
+            <div class="dropdown-ass-divider"></div>
+            <button type="button" class="dropdown-ass-item item-danger" id="btn-excluir-ass" title="Excluir a assembleia e todos os seus registros">
+              <span class="item-icon">🗑️</span>
+              <span>Excluir Assembleia</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2761,12 +3000,12 @@ function atualizarBadgeStatusAssembleia(){
   if(badge){
     if(isAtiva){
       badge.className = 'badge-ass-status status-ativa';
-      badge.innerHTML = '<span class="status-indicator-dot dot-ativa"></span><span class="status-indicator-text">Ativa</span>';
-      badge.setAttribute('title', 'Status: Ativa (Credenciamento aberto) — Clique para alternar para Inativa');
+      badge.innerHTML = '<span class="status-indicator-dot dot-ativa"></span><span class="status-indicator-text">Credenciamento Aberto</span>';
+      badge.setAttribute('title', 'Status: Ativa (Credenciamento aberto na portaria) — Clique para encerrar');
     } else {
       badge.className = 'badge-ass-status status-inativa';
-      badge.innerHTML = '<span class="status-indicator-dot dot-inativa"></span><span class="status-indicator-text">Inativa</span>';
-      badge.setAttribute('title', 'Status: Inativa (Credenciamento encerrado) — Clique para alternar para Ativa');
+      badge.innerHTML = '<span class="status-indicator-dot dot-inativa"></span><span class="status-indicator-text">Encerrada / Inativa</span>';
+      badge.setAttribute('title', 'Status: Encerrada / Inativa — Clique para reabrir credenciamento');
     }
   }
 
@@ -4496,6 +4735,13 @@ if(btnToggleStatus){
 document.getElementById('btn-nova-ass').addEventListener('click', abrirModalNovaAss);
 document.getElementById('btn-fechar-nova-ass').addEventListener('click', fecharModalNovaAss);
 document.getElementById('btn-cancelar-nova-ass').addEventListener('click', fecharModalNovaAss);
+
+/* Listeners dos Botões Rápidos Diretos da Barra Superior */
+var btnQuickNova = document.getElementById('btn-quick-nova-ass');
+if(btnQuickNova) btnQuickNova.addEventListener('click', abrirModalNovaAss);
+
+var btnQuickHist = document.getElementById('btn-quick-historico');
+if(btnQuickHist) btnQuickHist.addEventListener('click', abrirModalHistorico);
 
 var btnBaixarHist = document.getElementById('btn-baixar-historico');
 if(btnBaixarHist){
